@@ -42,7 +42,7 @@ export function Discovery({ stalls }: { stalls: Stall[] }) {
   );
   const openCount = stalls.filter((s) => s.open).length;
   const openStall = (s: Stall) => {
-    if (s.open) router.push(`/w/${s.id}`);
+    if (s.open) router.push(`/m/${s.id}`);
   };
 
   return (

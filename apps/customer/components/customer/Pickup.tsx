@@ -24,7 +24,7 @@ export function Pickup({ orderId }: { orderId: string }) {
 
   const finish = () => {
     clearCart();
-    router.push(`/w/${order.merchantId}`);
+    router.push(`/m/${order.merchantId}`);
   };
 
   if (done) {

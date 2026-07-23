@@ -30,7 +30,7 @@ export function Cart({ merchantId }: { merchantId: string }) {
   if (isLoading) return <LoadingState />;
   if (isError || !warung) return <ErrorState onRetry={() => refetch()} />;
 
-  const backToMenu = () => router.push(`/w/${merchantId}`);
+  const backToMenu = () => router.push(`/m/${merchantId}`);
 
   if (!totals || totals.count === 0) {
     return (

@@ -11,8 +11,8 @@ type View = 'splash' | 'landing' | 'menu';
 
 /**
  * Orchestrates the splash → landing → menu views for a merchant. These share
- * one URL (`/w/[merchantId]`) per BRIEF §4; only the transient view is local
- * state. Cart lives in the persisted store, scoped to this merchant.
+ * one URL (`/m/[merchantId]`); only the transient view is local state. Cart
+ * lives in the persisted store, scoped to this merchant.
  */
 export function MerchantExperience({ merchantId }: { merchantId: string }) {
   const { data: warung, isLoading, isError, refetch } = useWarung(merchantId);

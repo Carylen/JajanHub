@@ -75,7 +75,7 @@ export function Menu({ warung, onBack }: { warung: Warung; onBack: () => void })
         <div className="fixed left-1/2 -translate-x-1/2 bottom-4 w-full max-w-app px-4 z-30 animate-screen-in">
           <button
             type="button"
-            onClick={() => router.push(`/w/${warung.id}/cart`)}
+            onClick={() => router.push(`/m/${warung.id}/cart`)}
             className="w-full bg-ink text-white rounded-[19px] pl-[14px] pr-4 py-[14px] flex items-center justify-between shadow-[0_14px_30px_rgba(35,24,15,.34)] transition-transform active:scale-[.98]"
           >
             <span className="flex items-center gap-[11px]">
