@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#E7DCCE;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#23180F}
+a{color:#E85D04;text-decoration:none}a:hover{color:#c74e03}
+button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+::selection{background:#FFD9B8}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes qnum{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (max-width:760px){
+  .lp-nav{padding:14px 20px !important}
+  .lp-navlinks{gap:12px !important}
+  .lp-navlinks a{display:none !important}
+  .lp-hero{padding:36px 20px 56px !important}
+  .lp-h1{font-size:46px !important;letter-spacing:-1.6px !important}
+  .lp-lead{font-size:16px !important}
+  .lp-phone{width:290px !important;margin:36px auto 0 !important}
+  .lp-pad{padding-left:20px !important;padding-right:20px !important}
+  .lp-h2{font-size:33px !important;letter-spacing:-.9px !important}
+  .lp-panel{padding:34px 22px !important;border-radius:26px !important}
+  .lp-vgrid{grid-template-columns:1fr !important}
+  .lp-cta{padding:52px 22px !important;border-radius:30px !important}
+  .lp-cta-h2{font-size:36px !important}
+  .lp-stat{font-size:46px !important}
+}
+@media (max-width:520px){
+  .lp-h1{font-size:38px !important}
+  .lp-h2{font-size:28px !important}
+  .lp-cta-h2{font-size:30px !important}
+  .lp-hero button,.lp-cta button{width:100% !important;justify-content:center !important}
+}
+</style>
+</helmet>
+<div style="max-width:1180px;margin:0 auto;background:#FFF8F1;overflow-x:hidden;box-shadow:0 0 90px rgba(0,0,0,.08)">
+
+<!-- ===== NAV ===== -->
+<div style="position:sticky;top:0;z-index:50;background:rgba(255,248,241,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(35,24,15,.06)">
+  <div class="lp-nav" style="max-width:1180px;margin:0 auto;padding:16px 40px;display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:11px">
+      <div style="width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#FFB870,#FF7A1A);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(255,122,26,.3)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 20V10a6 6 0 0 1 12 0v10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20.5h16" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+      <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;letter-spacing:-.6px">Antri</span>
+    </div>
+    <div class="lp-navlinks" style="display:flex;align-items:center;gap:34px">
+      <a href="#cara" style="color:#6B5D50;font-weight:600;font-size:15px">Cara Kerja</a>
+      <a href="#pedagang" style="color:#6B5D50;font-weight:600;font-size:15px">Untuk Pedagang</a>
+      <a href="#harga" style="color:#6B5D50;font-weight:600;font-size:15px">Harga</a>
+      <button style="cursor:pointer;background:#23180F;color:#fff;border:none;border-radius:14px;padding:12px 20px;font-weight:700;font-size:15px" style-active="transform:scale(.97)">Masuk</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="lp-hero" style="position:relative;padding:70px 40px 90px;overflow:hidden">
+  <div style="position:absolute;top:-140px;right:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(255,122,26,.16),transparent 68%)"></div>
+  <div style="position:absolute;bottom:-160px;left:-120px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(52,201,168,.14),transparent 68%)"></div>
+  <div style="position:relative;display:flex;align-items:center;gap:56px;flex-wrap:wrap">
+    <div style="flex:1;min-width:340px;animation:rise .6s ease both">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#FFEEDF;color:#E4560A;font-weight:700;font-size:14px;padding:8px 15px;border-radius:999px;margin-bottom:26px"><span style="width:8px;height:8px;border-radius:50%;background:#16C784;animation:pulse 1.8s infinite"></span>Antre pintar buat gerobak favoritmu</div>
+      <h1 class="lp-h1" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:76px;line-height:.98;letter-spacing:-2.5px;margin:0 0 22px">Antre tanpa<br>berdiri.</h1>
+      <p class="lp-lead" style="font-size:19px;color:#6B5D50;line-height:1.55;margin:0 0 34px;max-width:480px">Pesan makanan dari gerobak kaki lima favoritmu, bayar pakai QRIS, lalu tinggal ambil pas dipanggil. Nggak perlu antre desak-desakan lagi.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <button style="cursor:pointer;background:#FF7A1A;color:#fff;border:none;border-radius:18px;padding:18px 28px;font-weight:800;font-size:17px;box-shadow:0 14px 30px rgba(255,122,26,.36);display:flex;align-items:center;gap:9px" style-active="transform:scale(.97)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 21V9l8-5 8 5v12" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-6h6v6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Daftarkan Gerobak</button>
+        <button style="cursor:pointer;background:#fff;color:#23180F;border:1.5px solid #EDE3D6;border-radius:18px;padding:18px 28px;font-weight:800;font-size:17px;box-shadow:0 6px 16px rgba(35,24,15,.05);display:flex;align-items:center;gap:9px" style-active="transform:scale(.97)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z" stroke="#0E9F6E" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="#0E9F6E" stroke-width="2"/></svg>Cari Makan Sekitar Sini</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:22px;margin-top:36px">
+        <div style="display:flex">
+          <sc-for list="{{ heroAvatars }}" as="a" hint-placeholder-count="4">
+            <div style="width:40px;height:40px;border-radius:50%;background:{{ a.bg }};border:3px solid #FFF8F1;margin-left:-10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;font-family:'Bricolage Grotesque'">{{ a.init }}</div>
+          </sc-for>
+        </div>
+        <div style="font-size:14px;color:#6B5D50;line-height:1.4"><b style="color:#23180F">2.400+ pekerja kantoran</b><br>udah nggak buang waktu antre</div>
+      </div>
+    </div>
+
+    <!-- phone mockup -->
+    <div class="lp-phone" style="flex:none;width:320px;animation:floaty 3.6s ease-in-out infinite">
+      <div style="position:relative;width:320px;height:640px;background:#23180F;border-radius:46px;padding:12px;box-shadow:0 40px 80px rgba(35,24,15,.32)">
+        <div style="width:100%;height:100%;background:linear-gradient(180deg,#FFF8F1,#FFF1E4);border-radius:36px;overflow:hidden;position:relative">
+          <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:130px;height:26px;background:#23180F;border-radius:0 0 16px 16px;z-index:5"></div>
+          <div style="padding:44px 24px 0;text-align:center">
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;color:#6B5D50;font-size:13px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:#16C784;animation:pulse 1.8s infinite"></span>Pesanan #AY-2071 · live</div>
+            <div style="font-size:13px;color:#9A8A7C;font-weight:600;letter-spacing:.5px;margin-top:26px">NOMOR ANTRIANMU</div>
+            <div style="display:flex;align-items:baseline;justify-content:center;gap:3px;margin-top:4px">
+              <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;color:#FF7A1A;line-height:1">A</span>
+              <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:118px;color:#23180F;line-height:.86;letter-spacing:-4px;animation:qnum .6s ease">27</span>
+            </div>
+            <div style="margin-top:16px"><span style="display:inline-flex;align-items:center;gap:8px;background:#FFEDD9;color:#E4560A;font-weight:800;font-size:15px;padding:9px 18px;border-radius:999px"><span style="width:9px;height:9px;border-radius:50%;background:#E4560A;animation:pulse 1.4s infinite"></span>Lagi Dimasak!</span></div>
+          </div>
+          <div style="display:flex;gap:11px;padding:20px 24px 0">
+            <div style="flex:1;background:#fff;border-radius:16px;padding:14px;text-align:center;box-shadow:0 5px 14px rgba(35,24,15,.05)"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">3</div><div style="font-size:10px;color:#9A8A7C;margin-top:2px">di depanmu</div></div>
+            <div style="flex:1;background:#fff;border-radius:16px;padding:14px;text-align:center;box-shadow:0 5px 14px rgba(35,24,15,.05)"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">±6</div><div style="font-size:10px;color:#9A8A7C;margin-top:2px">menit lagi</div></div>
+          </div>
+          <div style="margin:16px 24px 0;background:#fff;border-radius:18px;padding:16px;box-shadow:0 5px 14px rgba(35,24,15,.05)">
+            <div style="display:flex;align-items:center;gap:11px"><span style="width:32px;height:32px;border-radius:10px;background:#16C784;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div style="font-weight:700;font-size:13px">Dibayar via QRIS</div></div>
+            <div style="height:1px;background:#F4ECE2;margin:12px 0"></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#6B5D50">Ayam Penyet + Es Teh</span><span style="font-family:'Bricolage Grotesque';font-weight:800;color:#E4560A">Rp30.000</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TRUST MARQUEE ===== -->
+<div style="background:#23180F;padding:20px 0;overflow:hidden">
+  <div style="display:flex;width:max-content;animation:marq 26s linear infinite">
+    <sc-for list="{{ marquee }}" as="m" hint-placeholder-count="12">
+      <span style="display:inline-flex;align-items:center;gap:12px;padding:0 28px;color:#C9B8A6;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;white-space:nowrap">{{ m }}<span style="width:6px;height:6px;border-radius:50%;background:#FF7A1A"></span></span>
+    </sc-for>
+  </div>
+</div>
+
+<!-- ===== CARA KERJA ===== -->
+<div id="cara" class="lp-pad" style="padding:90px 40px">
+  <div style="text-align:center;margin-bottom:54px">
+    <div style="color:#E4560A;font-weight:800;font-size:15px;letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px">Gampang banget</div>
+    <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:52px;letter-spacing:-1.4px;margin:0;line-height:1.05" class="lp-h2">Tiga langkah,<br>langsung makan</h2>
+  </div>
+  <div style="display:flex;gap:22px;flex-wrap:wrap">
+    <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+      <div style="flex:1;min-width:280px;background:#fff;border-radius:28px;padding:34px 30px;box-shadow:0 10px 30px rgba(35,24,15,.06);position:relative;overflow:hidden">
+        <div style="position:absolute;top:22px;right:26px;font-family:'Bricolage Grotesque';font-weight:800;font-size:64px;color:{{ s.ghost }};line-height:1">{{ s.n }}</div>
+        <div style="width:64px;height:64px;border-radius:20px;background:{{ s.iconBg }};display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 8px 18px {{ s.iconShadow }}">{{ s.icon }}</div>
+        <h3 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;margin:0 0 9px;letter-spacing:-.4px">{{ s.title }}</h3>
+        <p style="font-size:15px;color:#6B5D50;line-height:1.55;margin:0">{{ s.desc }}</p>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<!-- ===== UNTUK PEDAGANG ===== -->
+<div id="pedagang" class="lp-pad" style="padding:20px 40px 90px">
+  <div class="lp-panel" style="background:linear-gradient(150deg,#23180F,#3A2A1C);border-radius:36px;padding:56px 48px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-90px;right:-70px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(255,122,26,.24),transparent 66%)"></div>
+    <div style="position:relative;display:flex;gap:48px;flex-wrap:wrap;align-items:flex-start">
+      <div style="flex:1;min-width:300px">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(22,199,132,.18);color:#4FE0A8;font-weight:700;font-size:14px;padding:8px 15px;border-radius:999px;margin-bottom:22px">Buat pemilik gerobak</div>
+        <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;color:#fff;letter-spacing:-1.2px;line-height:1.06;margin:0 0 18px" class="lp-h2">Gratis selamanya,<br>tanpa mesin EDC</h2>
+        <p style="font-size:17px;color:#C9B8A6;line-height:1.6;margin:0 0 30px;max-width:440px">Cukup pasang QR di gerobak. Nggak perlu beli alat mahal, nggak ada biaya bulanan. Kamu masak, Antri yang urus antreannya.</p>
+        <button style="cursor:pointer;background:#FF7A1A;color:#fff;border:none;border-radius:16px;padding:16px 26px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(255,122,26,.4)" style-active="transform:scale(.97)">Daftar Gratis Sekarang</button>
+      </div>
+      <div class="lp-vgrid" style="flex:1;min-width:300px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <sc-for list="{{ vendorFeatures }}" as="f" hint-placeholder-count="4">
+          <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px;{{ f.span }}">
+            <div style="width:46px;height:46px;border-radius:14px;background:{{ f.iconBg }};display:flex;align-items:center;justify-content:center;margin-bottom:16px">{{ f.icon }}</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#fff;margin-bottom:5px">{{ f.title }}</div>
+            <div style="font-size:13px;color:#9A8A7C;line-height:1.5">{{ f.desc }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== UNTUK PELANGGAN ===== -->
+<div class="lp-pad" style="padding:0 40px 90px">
+  <div style="text-align:center;margin-bottom:48px">
+    <div style="color:#7A3BF5;font-weight:800;font-size:15px;letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px">Buat kamu yang laper</div>
+    <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:52px;letter-spacing:-1.4px;margin:0;line-height:1.05" class="lp-h2">Jam makan siang,<br>tanpa drama</h2>
+  </div>
+  <div style="display:flex;gap:22px;flex-wrap:wrap">
+    <sc-for list="{{ customerFeatures }}" as="c" hint-placeholder-count="3">
+      <div style="flex:1;min-width:280px;background:{{ c.bg }};border:1px solid {{ c.border }};border-radius:28px;padding:34px 30px;box-shadow:0 8px 24px rgba(35,24,15,.05)">
+        <div style="width:58px;height:58px;border-radius:18px;background:{{ c.iconBg }};display:flex;align-items:center;justify-content:center;margin-bottom:22px;box-shadow:0 8px 18px {{ c.iconShadow }}">{{ c.icon }}</div>
+        <h3 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;margin:0 0 9px;letter-spacing:-.4px">{{ c.title }}</h3>
+        <p style="font-size:15px;color:#6B5D50;line-height:1.55;margin:0">{{ c.desc }}</p>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<!-- ===== SOCIAL PROOF ===== -->
+<div class="lp-pad" style="background:linear-gradient(180deg,#FFF1E4,#FFE9D6);padding:80px 40px">
+  <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:52px">
+    <sc-for list="{{ stats }}" as="st" hint-placeholder-count="3">
+      <div style="flex:1;min-width:200px;text-align:center">
+        <div class="lp-stat" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:60px;color:#E4560A;letter-spacing:-2px;line-height:1">{{ st.num }}</div>
+        <div style="font-size:15px;color:#6B5D50;font-weight:600;margin-top:6px">{{ st.label }}</div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:flex;gap:22px;flex-wrap:wrap">
+    <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="3">
+      <div style="flex:1;min-width:300px;background:#fff;border-radius:26px;padding:30px;box-shadow:0 10px 28px rgba(35,24,15,.07)">
+        <div style="display:flex;gap:3px;margin-bottom:16px">
+          <sc-for list="{{ t.stars }}" as="x" hint-placeholder-count="5"><svg width="18" height="18" viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6 21l1.2-6.6L2.4 9.7l6.6-.9z"/></svg></sc-for>
+        </div>
+        <p style="font-size:16px;color:#23180F;line-height:1.6;margin:0 0 22px;font-weight:500">“{{ t.quote }}”</p>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:46px;height:46px;border-radius:14px;background:{{ t.avBg }};display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px">{{ t.init }}</div>
+          <div><div style="font-weight:700;font-size:15px">{{ t.name }}</div><div style="font-size:13px;color:#9A8A7C">{{ t.role }}</div></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<!-- ===== HARGA ===== -->
+<div id="harga" class="lp-pad" style="padding:90px 40px">
+  <div style="text-align:center;margin-bottom:54px">
+    <div style="color:#E4560A;font-weight:800;font-size:15px;letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px">Harga jujur</div>
+    <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:52px;letter-spacing:-1.4px;margin:0 0 12px;line-height:1.05" class="lp-h2">Pedagang nggak bayar<br>sepeser pun</h2>
+    <p style="font-size:17px;color:#6B5D50;margin:0">Pelanggan cuma kena biaya layanan kecil Rp2.000 per pesanan.</p>
+  </div>
+  <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:stretch;max-width:820px;margin:0 auto">
+    <div style="flex:1;min-width:300px;position:relative;background:#fff;border:2px solid #FF7A1A;border-radius:30px;padding:38px 32px;box-shadow:0 20px 44px rgba(255,122,26,.16)">
+      <span style="position:absolute;top:-15px;left:32px;background:#FF7A1A;color:#fff;font-weight:800;font-size:13px;padding:6px 15px;border-radius:999px;box-shadow:0 6px 14px rgba(255,122,26,.4)">PALING POPULER</span>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;margin-bottom:4px">Pedagang</div>
+      <div style="font-size:14px;color:#9A8A7C;margin-bottom:20px">Semua yang kamu butuh buat jualan</div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:26px"><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:64px;color:#E4560A;letter-spacing:-2px;line-height:1">Rp0</span><span style="color:#9A8A7C;font-size:16px">/selamanya</span></div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:30px">
+        <sc-for list="{{ freeFeatures }}" as="f" hint-placeholder-count="5">
+          <div style="display:flex;align-items:center;gap:11px;font-size:15px"><span style="flex:none;width:24px;height:24px;border-radius:8px;background:#DFF7EC;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#0E9F6E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="font-weight:500">{{ f }}</span></div>
+        </sc-for>
+      </div>
+      <button style="width:100%;cursor:pointer;background:#FF7A1A;color:#fff;border:none;border-radius:16px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(255,122,26,.34)" style-active="transform:scale(.98)">Daftarkan Gerobak</button>
+    </div>
+    <div style="flex:1;min-width:300px;background:linear-gradient(160deg,#3A2359,#241338);border-radius:30px;padding:38px 32px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-60px;right:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(168,121,255,.3),transparent 66%)"></div>
+      <div style="position:relative">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;color:#fff">Analytics Pro</div><span style="background:rgba(168,121,255,.24);color:#D8C6FF;font-weight:800;font-size:11px;padding:5px 11px;border-radius:999px">GRATIS 30 HARI</span></div>
+        <div style="font-size:14px;color:#C6B4E6;margin-bottom:20px">Buat yang mau warungnya makin ngebut</div>
+        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:26px"><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:64px;color:#fff;letter-spacing:-2px;line-height:1">Rp49rb</span><span style="color:#C6B4E6;font-size:16px">/bln</span></div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:30px">
+          <sc-for list="{{ proFeatures }}" as="f" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:11px;font-size:15px;color:#EDE6F7"><span style="flex:none;width:24px;height:24px;border-radius:8px;background:rgba(168,121,255,.22);display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#C6B4E6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="font-weight:500">{{ f }}</span></div>
+          </sc-for>
+        </div>
+        <button style="width:100%;cursor:pointer;background:#fff;color:#7A3BF5;border:none;border-radius:16px;padding:17px;font-weight:800;font-size:16px" style-active="transform:scale(.98)">Coba Gratis 30 Hari</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CTA PENUTUP ===== -->
+<div class="lp-pad" style="padding:0 40px 90px">
+  <div class="lp-cta" style="background:radial-gradient(120% 130% at 50% 0%,#FFA24D,#FF7A1A 52%,#E4560A);border-radius:40px;padding:76px 40px;text-align:center;position:relative;overflow:hidden">
+    <svg style="position:absolute;left:-30px;bottom:-40px;opacity:.14" width="260" height="260" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.2" stroke="#fff" stroke-width="1"/><circle cx="12" cy="12" r="5" stroke="#fff" stroke-width="1"/></svg>
+    <svg style="position:absolute;right:-20px;top:-30px;opacity:.14" width="200" height="200" viewBox="0 0 24 24" fill="none"><path d="M6 20V10a6 6 0 0 1 12 0v10" stroke="#fff" stroke-width="1"/><path d="M4 20.5h16" stroke="#fff" stroke-width="1"/></svg>
+    <h2 style="position:relative;font-family:'Bricolage Grotesque';font-weight:800;font-size:56px;color:#fff;letter-spacing:-1.6px;line-height:1.02;margin:0 0 16px" class="lp-cta-h2">Siap antre<br>tanpa berdiri?</h2>
+    <p style="position:relative;font-size:18px;color:rgba(255,255,255,.92);margin:0 0 34px;line-height:1.5">Gabung ribuan gerobak & pekerja kantoran yang udah pindah ke Antri.</p>
+    <div style="position:relative;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <button style="cursor:pointer;background:#23180F;color:#fff;border:none;border-radius:18px;padding:18px 30px;font-weight:800;font-size:17px;box-shadow:0 14px 30px rgba(35,24,15,.3)" style-active="transform:scale(.97)">Daftarkan Gerobak</button>
+      <button style="cursor:pointer;background:rgba(255,255,255,.94);color:#E4560A;border:none;border-radius:18px;padding:18px 30px;font-weight:800;font-size:17px" style-active="transform:scale(.97)">Cari Makan Sekitar Sini</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="lp-pad" style="background:#23180F;padding:56px 40px 40px">
+  <div style="display:flex;gap:48px;flex-wrap:wrap;justify-content:space-between;margin-bottom:44px">
+    <div style="max-width:300px">
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
+        <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#FFB870,#FF7A1A);display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M6 20V10a6 6 0 0 1 12 0v10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20.5h16" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+        <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#fff">Antri</span>
+      </div>
+      <p style="font-size:14px;color:#9A8A7C;line-height:1.6;margin:0">Bikin antre gerobak kaki lima jadi rapi, adil, dan nggak bikin capek. Dibuat di Bandung 🧡</p>
+    </div>
+    <div style="display:flex;gap:56px;flex-wrap:wrap">
+      <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
+        <div>
+          <div style="font-weight:800;font-size:14px;color:#fff;margin-bottom:16px">{{ col.head }}</div>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <sc-for list="{{ col.links }}" as="l" hint-placeholder-count="4">
+              <a href="#" style="color:#9A8A7C;font-size:14px">{{ l }}</a>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <span style="font-size:13px;color:#6B5D50">© 2026 Antri. Semua hak dilindungi.</span>
+    <span style="font-size:13px;color:#6B5D50">Dibayar aman via QRIS · GPN</span>
+  </div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:900}}">
+const ICON = {
+  scan:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2" stroke="#E4560A" stroke-width="2.2" stroke-linecap="round"/><path d="M4 12h16" stroke="#E4560A" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  pay:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="#0E9F6E" stroke-width="2.2"/><path d="M3 10h18" stroke="#0E9F6E" stroke-width="2.2"/></svg>',
+  bell:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#7A3BF5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 21a2 2 0 0 0 3 0" stroke="#7A3BF5" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  board:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2.5" stroke="#FF9A3D" stroke-width="2"/><path d="M9 8h6M9 12h6M9 16h4" stroke="#FF9A3D" stroke-width="2" stroke-linecap="round"/></svg>',
+  chart:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke="#4FE0A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  heart:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.4-7 10-7 10z" stroke="#FFB070" stroke-width="2" stroke-linejoin="round"/></svg>',
+  qr:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="6" height="6" rx="1" stroke="#C6B4E6" stroke-width="2"/><rect x="4" y="14" width="6" height="6" rx="1" stroke="#C6B4E6" stroke-width="2"/><rect x="14" y="4" width="6" height="6" rx="1" stroke="#C6B4E6" stroke-width="2"/><path d="M14 14h3v6M20 14v6" stroke="#C6B4E6" stroke-width="2" stroke-linecap="round"/></svg>',
+  clock:'<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#E4560A" stroke-width="2.2"/><path d="M12 7.5v5l3 1.8" stroke="#E4560A" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  bolt:'<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 10-12h-6z" fill="#7A3BF5"/></svg>',
+  pin:'<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z" stroke="#0E9F6E" stroke-width="2.2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="#0E9F6E" stroke-width="2.2"/></svg>',
+};
+const H = s => React.createElement('span',{dangerouslySetInnerHTML:{__html:s},style:{display:'flex'}});
+
+class Component extends DCLogic {
+  renderVals(){
+    return {
+      heroAvatars:[
+        {init:'RP',bg:'linear-gradient(135deg,#FFB870,#FF7A1A)'},
+        {init:'SD',bg:'linear-gradient(135deg,#34C9A8,#16C784)'},
+        {init:'AW',bg:'linear-gradient(135deg,#A879FF,#7A3BF5)'},
+        {init:'NF',bg:'linear-gradient(135deg,#FFB7A0,#FF7A5C)'},
+      ],
+      marquee:['Ayam Penyet My Bosz','Mie Ayam Pak Gino','Sate Taichan Bang Jul','Es Kelapa Bu Nur','Nasi Padang Sederhana','Kopi Kaki Lima','Seblak Teteh','Batagor Kingsley'],
+      steps:[
+        {n:'1',title:'Scan QR gerobak',desc:'Sampai di gerobak, scan QR-nya. Menu langsung kebuka di HP kamu, nggak perlu install apa-apa.',icon:H(ICON.scan),iconBg:'#FFEEDF',iconShadow:'rgba(255,122,26,.16)',ghost:'#FBEEDF'},
+        {n:'2',title:'Pesan & bayar QRIS',desc:'Pilih menu, bayar pakai QRIS apa aja — GoPay, OVO, DANA, m-banking. Beres dalam hitungan detik.',icon:H(ICON.pay),iconBg:'#E7FBF2',iconShadow:'rgba(22,199,132,.16)',ghost:'#E6F7EF'},
+        {n:'3',title:'Ambil saat dipanggil',desc:'Santai aja nunggu. HP kamu bakal kasih tau pas pesanan siap. Tunjukin nomor antrian, langsung ambil.',icon:H(ICON.bell),iconBg:'#F1E9FF',iconShadow:'rgba(122,59,245,.16)',ghost:'#F0E8FC'},
+      ],
+      vendorFeatures:[
+        {title:'Papan Pesanan Live',desc:'Semua pesanan masuk rapi terurut, tinggal geser statusnya.',icon:H(ICON.board),iconBg:'rgba(255,154,61,.18)',span:'grid-column:span 2'},
+        {title:'Analytics',desc:'Jam ramai, menu terlaris, tren harian.',icon:H(ICON.chart),iconBg:'rgba(79,224,168,.16)',span:''},
+        {title:'Pelanggan Setia',desc:'Kenali yang sering balik lagi.',icon:H(ICON.heart),iconBg:'rgba(255,176,112,.16)',span:''},
+      ],
+      customerFeatures:[
+        {title:'Pesan Lebih Awal',desc:'Booking slot jam makan siang dari pagi. Sampai kantor, tinggal ambil — nggak kepotong jam istirahat.',icon:H(ICON.clock),iconBg:'#fff',iconShadow:'rgba(255,122,26,.14)',bg:'#FFF3E7',border:'rgba(255,122,26,.16)'},
+        {title:'Antrian Prioritas',desc:'Lagi buru-buru? Naik ke urutan depan biar pesananmu dimasak duluan.',icon:H(ICON.bolt),iconBg:'#fff',iconShadow:'rgba(122,59,245,.16)',bg:'#F6F0FF',border:'rgba(122,59,245,.16)'},
+        {title:'Semua Gerobak Sekitar',desc:'Lihat gerobak buka di sekitarmu, cek antreannya, pilih yang paling sepi.',icon:H(ICON.pin),iconBg:'#fff',iconShadow:'rgba(22,199,132,.16)',bg:'#E7FBF2',border:'rgba(22,199,132,.18)'},
+      ],
+      stats:[
+        {num:'1.200+',label:'Gerobak bergabung'},
+        {num:'340rb',label:'Pesanan diproses'},
+        {num:'8 mnt',label:'Rata-rata waktu tunggu'},
+      ],
+      testimonials:[
+        {quote:'Dulu antrean jam 12 bisa 20 orang, sekarang pelanggan tinggal nunggu dipanggil. Jualan jadi lebih tenang, nggak ada yang ngeyel serobot.',name:'Pak Budi',role:'Ayam Penyet My Bosz',init:'PB',avBg:'linear-gradient(135deg,#FFB870,#FF7A1A)',stars:[1,2,3,4,5]},
+        {quote:'Jam makan siang cuma 45 menit, dulu setengahnya buat ngantre. Sekarang pesen dari meja, turun pas siap. Hemat waktu banget.',name:'Sinta Dewi',role:'Karyawan, SCBD',init:'SD',avBg:'linear-gradient(135deg,#34C9A8,#16C784)',stars:[1,2,3,4,5]},
+        {quote:'Yang paling enak tuh bisa liat gerobak mana yang antreannya sepi. Jadi nggak buang waktu jalan ke yang lagi rame.',name:'Andi Wijaya',role:'Karyawan, Kuningan',init:'AW',avBg:'linear-gradient(135deg,#A879FF,#7A3BF5)',stars:[1,2,3,4,5]},
+      ],
+      freeFeatures:['Papan pesanan live tanpa batas','QR gerobak & pembayaran QRIS','Notifikasi otomatis ke pelanggan','Kelola menu & stok habis','Tanpa biaya bulanan, tanpa EDC'],
+      proFeatures:['Semua fitur gratis','Laporan pendapatan lengkap','Analisa jam & menu terlaris','Banding dengan warung sekitar','Prioritas dukungan WhatsApp'],
+      footerCols:[
+        {head:'Produk',links:['Cara Kerja','Untuk Pedagang','Untuk Pelanggan','Harga']},
+        {head:'Perusahaan',links:['Tentang Kami','Karier','Blog','Kontak']},
+        {head:'Bantuan',links:['Pusat Bantuan','Syarat & Ketentuan','Privasi','Hubungi via WhatsApp']},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

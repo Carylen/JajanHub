@@ -1,0 +1,16 @@
+import type { Config } from 'tailwindcss';
+import preset from '@jajanhub/tokens';
+
+const config: Config = {
+  presets: [preset as Partial<Config>],
+  content: [
+    './app/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    // Scan the shared UI package so its Tailwind classes are emitted.
+    '../../packages/ui/src/**/*.{ts,tsx}',
+  ],
+  theme: { extend: {} },
+  plugins: [],
+};
+
+export default config;

@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    color: theme('colors.ink');
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background: theme('colors.sand');
+    font-family: theme('fontFamily.sans');
+  }
+  ::selection {
+    background: #ffd9b8;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}

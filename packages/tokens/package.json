@@ -1,0 +1,19 @@
+{
+  "name": "@jajanhub/tokens",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./tailwind-preset.js",
+  "types": "./tailwind-preset.d.ts",
+  "exports": {
+    ".": {
+      "types": "./tailwind-preset.d.ts",
+      "default": "./tailwind-preset.js"
+    },
+    "./globals.css": "./globals.css"
+  },
+  "files": [
+    "tailwind-preset.js",
+    "tailwind-preset.d.ts",
+    "globals.css"
+  ]
+}

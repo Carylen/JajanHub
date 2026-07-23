@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#E7DCCE;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#23180F}
+a{color:#E85D04;text-decoration:none}a:hover{color:#c74e03}
+button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+::selection{background:#FFD9B8}
+@keyframes screenIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(1)}42%{transform:scale(1.32)}100%{transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.78)}}
+@keyframes dots{0%,20%{opacity:.25}50%{opacity:1}100%{opacity:.25}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes toastIn{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:none}}
+@keyframes qnum{from{opacity:0;transform:scale(.72)}to{opacity:1;transform:none}}
+@keyframes ringpulse{0%{box-shadow:0 0 0 0 rgba(255,122,26,.4)}70%{box-shadow:0 0 0 22px rgba(255,122,26,0)}100%{box-shadow:0 0 0 0 rgba(255,122,26,0)}}
+@keyframes popin{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+@keyframes ripple{0%{transform:scale(.6);opacity:.5}100%{transform:scale(2.4);opacity:0}}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes numflip{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="max-width:420px;margin:0 auto;min-height:100vh;background:#FFF8F1;position:relative;overflow-x:hidden;box-shadow:0 0 70px rgba(0,0,0,.1)">
+
+<!-- ============ SPLASH ============ -->
+<sc-if value="{{ isSplash }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;background:radial-gradient(120% 85% at 50% 0%,#FFA24D 0%,#FF7A1A 46%,#E4560A 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;color:#fff;animation:screenIn .4s ease">
+  <div style="animation:floaty 2.8s ease-in-out infinite;display:flex;flex-direction:column;align-items:center;gap:18px">
+    <div style="width:100px;height:100px;border-radius:30px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;box-shadow:0 24px 44px rgba(120,40,0,.28)">
+      <svg width="54" height="54" viewBox="0 0 24 24" fill="none"><path d="M4 20.5h16" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M6 20V10a6 6 0 0 1 12 0v10" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7V3.5M12 6.4V3M15 7V3.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;letter-spacing:-1.5px">Antri</div>
+  </div>
+  <div style="text-align:center;font-size:15px;line-height:1.55;opacity:.96">Kamu lagi ngantri di<br><b style="font-size:17px">Ayam Penyet My Bosz</b></div>
+  <div style="display:flex;gap:7px;margin-top:4px">
+    <span style="width:9px;height:9px;border-radius:50%;background:#fff;animation:dots 1.2s infinite"></span>
+    <span style="width:9px;height:9px;border-radius:50%;background:#fff;animation:dots 1.2s infinite .18s"></span>
+    <span style="width:9px;height:9px;border-radius:50%;background:#fff;animation:dots 1.2s infinite .36s"></span>
+  </div>
+  <div style="position:absolute;bottom:38px;font-size:12px;opacity:.82;display:flex;align-items:center;gap:6px">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Gerobak terverifikasi
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ LANDING ============ -->
+<sc-if value="{{ isLanding }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div style="animation:screenIn .35s ease;padding-bottom:118px">
+    <div style="position:relative;height:266px;background:linear-gradient(158deg,#FFB870,#FF7A1A 56%,#E4560A);overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(60% 60% at 82% 6%,rgba(255,255,255,.28),transparent)"></div>
+      <svg style="position:absolute;right:-34px;bottom:-30px;opacity:.16" width="230" height="230" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.2" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="12" r="5" stroke="#fff" stroke-width="1.2"/></svg>
+      <div style="position:relative;padding:22px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;color:#fff;font-size:23px;letter-spacing:-.6px">Antri</div>
+        <div style="display:flex;align-items:center;gap:9px">
+          <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.22);padding:7px 11px;border-radius:999px;color:#fff;font-size:12px;font-weight:600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Terverifikasi</div>
+          <button onClick="{{ goProfile }}" style="flex:none;width:38px;height:38px;border-radius:12px;border:none;cursor:pointer;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;color:#E4560A;font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;box-shadow:0 4px 12px rgba(120,40,0,.2)" style-active="transform:scale(.9)">RP</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin:-72px 20px 0;position:relative">
+      <div style="background:#fff;border-radius:26px;padding:22px;box-shadow:0 14px 34px rgba(35,24,15,.11)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(22,199,132,.13);color:#0E9F6E;font-weight:700;font-size:12px;padding:5px 11px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:#16C784;animation:pulse 1.9s infinite"></span>Buka sekarang</span>
+          <span style="color:#9A8A7C;font-size:12px">10.00 – 22.00</span>
+        </div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:27px;margin:0 0 8px;letter-spacing:-.6px;line-height:1.12">Ayam Penyet My Bosz</h1>
+        <div style="display:flex;align-items:center;gap:11px;color:#9A8A7C;font-size:13px;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:4px;color:#23180F;font-weight:700"><svg width="15" height="15" viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6 21l1.2-6.6L2.4 9.7l6.6-.9z"/></svg>4.8</span>
+          <span>320+ pesanan</span><span>·</span><span>Jl. Merdeka No.12</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;background:linear-gradient(135deg,#FFF3E7,#FFE7D2);border:1px solid rgba(255,122,26,.16);border-radius:24px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 8px 20px rgba(255,122,26,.08)">
+        <div style="flex:none;width:60px;height:60px;border-radius:19px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(255,122,26,.16)">
+          <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:25px;color:#FF7A1A;line-height:1">12</span>
+          <span style="font-size:9px;color:#9A8A7C;font-weight:600">antre</span>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:15px">12 orang di depanmu</div>
+          <div style="color:#9A8A7C;font-size:13px;display:flex;align-items:center;gap:5px;margin-top:2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#9A8A7C" stroke-width="2"/><path d="M12 7.5v5l3 1.8" stroke="#9A8A7C" stroke-width="2" stroke-linecap="round"/></svg>estimasi ±18 menit</div>
+        </div>
+      </div>
+      <button onClick="{{ goSub }}" style="margin-top:14px;width:100%;text-align:left;cursor:pointer;background:#2A1A3E;border:none;border-radius:22px;padding:16px 18px;display:flex;align-items:center;gap:13px;box-shadow:0 10px 24px rgba(42,26,62,.24)" style-active="transform:scale(.98)">
+        <div style="flex:none;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#A879FF,#7A3BF5);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(122,59,245,.4)"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 10-12h-6z" fill="#fff"/></svg></div>
+        <div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px">Antri Plus · Skip antrean</div><div style="color:#C6B4E6;font-size:12px;margin-top:1px">Prioritas tiap pesan, mulai Rp15rb/bln</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C6B4E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button onClick="{{ goDiscovery }}" style="margin-top:12px;width:100%;color:#23180F;text-align:left;cursor:pointer;background:#fff;border:1.5px solid #EDE3D6;border-radius:22px;padding:15px 18px;display:flex;align-items:center;gap:13px;box-shadow:0 5px 16px rgba(35,24,15,.05)" style-active="transform:scale(.98)">
+        <div style="flex:none;width:42px;height:42px;border-radius:13px;background:#E7FBF2;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z" stroke="#0E9F6E" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="#0E9F6E" stroke-width="2"/></svg></div>
+        <div style="flex:1"><div style="font-weight:700;font-size:14px">Cari makan sekitar sini</div><div style="color:#9A8A7C;font-size:12px;margin-top:1px">14 gerobak buka di Area SCBD</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C6B7A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:420px;padding:16px 20px 22px;background:linear-gradient(to top,#FFF8F1 72%,transparent);z-index:20">
+    <button onClick="{{ goMenu }}" style="width:100%;cursor:pointer;background:#FF7A1A;color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(255,122,26,.36);display:flex;align-items:center;justify-content:center;gap:8px" style-active="transform:scale(.97)">Lihat Menu <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ MENU ============ -->
+<sc-if value="{{ isMenu }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div style="animation:screenIn .35s ease;padding-bottom:120px">
+    <div style="position:sticky;top:0;z-index:15;background:rgba(255,248,241,.92);backdrop-filter:blur(10px);padding:16px 20px 10px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onClick="{{ goLanding }}" style="flex:none;width:40px;height:40px;border-radius:13px;border:none;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(35,24,15,.07)" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#23180F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;line-height:1">Menu</div><div style="font-size:12px;color:#9A8A7C">Ayam Penyet My Bosz</div></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;overflow-x:auto;padding-bottom:2px">
+        <sc-for list="{{ filters }}" as="fl" hint-placeholder-count="4">
+          <button onClick="{{ fl.onClick }}" style="flex:none;border:none;cursor:pointer;padding:9px 15px;border-radius:999px;font-weight:700;font-size:13px;background:{{ fl.bg }};color:{{ fl.color }}" style-active="transform:scale(.95)">{{ fl.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="padding:6px 20px 0;display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ menu }}" as="item" hint-placeholder-count="5">
+        <div style="background:#fff;border-radius:22px;padding:12px;display:flex;gap:14px;align-items:center;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+          <div style="flex:none;width:86px;height:86px;border-radius:17px;background:{{ item.grad }};display:flex;align-items:center;justify-content:center;position:relative;box-shadow:inset 0 -18px 30px rgba(0,0,0,.08)">
+            <sc-if value="{{ item.best }}"><span style="position:absolute;top:-7px;left:-6px;background:#FF3D57;color:#fff;font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;box-shadow:0 4px 9px rgba(255,61,87,.42);white-space:nowrap">Terlaris</span></sc-if>
+            <sc-if value="{{ item.isFood }}"><svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M2.5 11.5h19a9.5 9.5 0 0 1-19 0z" fill="rgba(255,255,255,.92)"/><path d="M8 6.5c0-1.2.9-1.6.9-2.8M12 6.3c0-1.2.9-1.6.9-2.8M16 6.5c0-1.2.9-1.6.9-2.8" stroke="rgba(255,255,255,.92)" stroke-width="1.5" stroke-linecap="round"/></svg></sc-if>
+            <sc-if value="{{ item.isDrink }}"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M6 4.5h12l-1.1 14.4a2.2 2.2 0 0 1-2.2 2H9.3a2.2 2.2 0 0 1-2.2-2z" fill="rgba(255,255,255,.92)"/><path d="M7.4 9.5h9.2" stroke="#34C9A8" stroke-width="1.5"/></svg></sc-if>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:15px;line-height:1.2">{{ item.name }}</div>
+            <div style="color:#9A8A7C;font-size:12px;margin:3px 0 9px;line-height:1.3">{{ item.desc }}</div>
+            <div style="font-family:'Bricolage Grotesque';font-weight:700;color:#E4560A;font-size:16px">{{ item.priceStr }}</div>
+          </div>
+          <div style="flex:none">
+            <sc-if value="{{ item.qtyZero }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ item.add }}" style="width:42px;height:42px;border-radius:14px;border:none;background:#FFEEDF;color:#FF7A1A;cursor:pointer;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.85)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+            </sc-if>
+            <sc-if value="{{ item.qtyPos }}">
+              <div style="display:flex;align-items:center;gap:6px;background:#FFEEDF;border-radius:14px;padding:5px">
+                <button onClick="{{ item.remove }}" style="width:32px;height:32px;border-radius:10px;border:none;background:#fff;color:#FF7A1A;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,.06)" style-active="transform:scale(.85)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+                <span key="{{ item.qty }}" style="font-weight:800;color:#23180F;min-width:18px;text-align:center;animation:pop .3s ease">{{ item.qty }}</span>
+                <button onClick="{{ item.add }}" style="width:32px;height:32px;border-radius:10px;border:none;background:#FF7A1A;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(255,122,26,.4)" style-active="transform:scale(.85)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <sc-if value="{{ hasCart }}">
+    <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:16px;width:100%;max-width:420px;padding:0 16px;z-index:30;animation:screenIn .3s ease">
+      <button onClick="{{ goCart }}" style="width:100%;cursor:pointer;background:#23180F;color:#fff;border:none;border-radius:19px;padding:14px 16px 14px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 14px 30px rgba(35,24,15,.34)" style-active="transform:scale(.98)">
+        <span style="display:flex;align-items:center;gap:11px"><span key="{{ count }}" style="background:#FF7A1A;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;animation:pop .34s ease">{{ count }}</span><span style="font-weight:700;font-size:15px">Lihat Keranjang</span></span>
+        <span style="display:flex;align-items:center;gap:8px"><span key="{{ subtotalStr }}" style="font-family:'Bricolage Grotesque';font-weight:700;font-size:16px;animation:pop .34s ease">{{ subtotalStr }}</span><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ============ CART / CHECKOUT ============ -->
+<sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div style="animation:screenIn .35s ease;padding-bottom:130px">
+    <div style="padding:16px 20px 6px;display:flex;align-items:center;gap:12px">
+      <button onClick="{{ goMenu }}" style="flex:none;width:40px;height:40px;border-radius:13px;border:none;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(35,24,15,.07)" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#23180F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Keranjang</div>
+    </div>
+    <div style="padding:8px 20px 0">
+      <div style="background:#fff;border-radius:22px;padding:8px 16px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+        <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #F4ECE2">
+            <div style="flex:none;width:46px;height:46px;border-radius:13px;background:{{ l.grad }};display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:15px">{{ l.qty }}×</div>
+            <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px;line-height:1.2">{{ l.name }}</div><div style="color:#9A8A7C;font-size:12px;margin-top:1px">{{ l.priceStr }}</div></div>
+            <div style="display:flex;align-items:center;gap:6px;background:#FFF6EE;border-radius:12px;padding:4px">
+              <button onClick="{{ l.remove }}" style="width:28px;height:28px;border-radius:9px;border:none;background:#fff;color:#FF7A1A;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.06)" style-active="transform:scale(.85)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="display:block;margin:auto"><path d="M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+              <button onClick="{{ l.add }}" style="width:28px;height:28px;border-radius:9px;border:none;background:#FF7A1A;color:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(255,122,26,.4)" style-active="transform:scale(.85)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="display:block;margin:auto"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+        </sc-for>
+        <button onClick="{{ goMenu }}" style="width:100%;background:none;border:none;cursor:pointer;color:#FF7A1A;font-weight:700;font-size:13px;padding:14px 0 12px;display:flex;align-items:center;justify-content:center;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Tambah menu lagi</button>
+      </div>
+
+      <div style="margin-top:14px;background:#fff;border-radius:22px;padding:16px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+        <div style="font-weight:800;font-size:14px;margin-bottom:12px">Waktu pengambilan</div>
+        <div style="display:flex;gap:6px;background:#F4ECE2;border-radius:15px;padding:5px">
+          <button onClick="{{ setPickupNow }}" style="flex:1;cursor:pointer;border:none;border-radius:11px;padding:12px;font-weight:700;font-size:14px;background:{{ nowBg }};color:{{ nowColor }};box-shadow:{{ nowShadow }};transition:all .18s" style-active="transform:scale(.97)">Ambil Sekarang</button>
+          <button onClick="{{ setPickupLater }}" style="flex:1;cursor:pointer;border:none;border-radius:11px;padding:12px;font-weight:700;font-size:14px;background:{{ laterBg }};color:{{ laterColor }};box-shadow:{{ laterShadow }};transition:all .18s" style-active="transform:scale(.97)">Pesan untuk Nanti</button>
+        </div>
+        <sc-if value="{{ isLater }}">
+          <div style="margin-top:15px">
+            <div style="font-size:12px;color:#9A8A7C;font-weight:600;margin-bottom:10px">Pilih slot jam makan siang</div>
+            <div style="display:flex;gap:9px;overflow-x:auto;padding:2px 0 4px">
+              <sc-for list="{{ slots }}" as="sl" hint-placeholder-count="5">
+                <button onClick="{{ sl.onClick }}" disabled="{{ sl.full }}" style="flex:none;cursor:{{ sl.cursor }};border:1.5px solid {{ sl.border }};background:{{ sl.bg }};border-radius:15px;padding:11px 8px 9px;min-width:76px;text-align:center;opacity:{{ sl.opacity }}" style-active="transform:scale(.95)">
+                  <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;color:{{ sl.color }};line-height:1">{{ sl.t }}</div>
+                  <div style="font-size:10px;font-weight:700;color:{{ sl.tagColor }};margin-top:4px;height:12px">{{ sl.tag }}</div>
+                </button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ hasSlot }}">
+              <div style="margin-top:13px;background:#DFF7EC;border-radius:15px;padding:13px 15px;display:flex;align-items:center;gap:11px">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#16C784"/><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div style="font-weight:700;font-size:14px;color:#0E7A56">Pesananmu siap diambil jam {{ pickupSlot }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+
+      <button onClick="{{ togglePriority }}" style="margin-top:14px;width:100%;text-align:left;cursor:pointer;border:1.5px solid {{ prioBorder }};background:{{ prioBg }};border-radius:20px;padding:15px 16px;display:flex;align-items:center;gap:13px" style-active="transform:scale(.99)">
+        <div style="flex:none;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#A879FF,#7A3BF5);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 10-12h-6z" fill="#fff"/></svg></div>
+        <div style="flex:1"><div style="font-weight:700;font-size:14px">Antrian Prioritas</div><div style="color:#9A8A7C;font-size:12px;margin-top:1px">Dimasak duluan, hemat waktu · {{ priorityFeeStr }}</div></div>
+        <div style="flex:none;width:46px;height:27px;border-radius:999px;background:{{ prioTrack }};position:relative;transition:background .22s"><span style="position:absolute;top:3px;left:{{ prioKnob }};width:21px;height:21px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:left .22s"></span></div>
+      </button>
+
+      <div style="margin-top:14px;background:#fff;border-radius:22px;padding:18px 18px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+        <div style="display:flex;justify-content:space-between;font-size:14px;color:#6B5D50;padding:5px 0"><span>Subtotal</span><span style="font-weight:600;color:#23180F">{{ subtotalStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;color:#6B5D50;padding:5px 0"><span style="display:flex;align-items:center;gap:5px">Biaya layanan</span><span style="font-weight:600;color:#23180F">{{ serviceFeeStr }}</span></div>
+        <sc-if value="{{ showPrio }}"><div style="display:flex;justify-content:space-between;font-size:14px;color:#7A3BF5;padding:5px 0"><span>Antrian prioritas</span><span style="font-weight:700">{{ priorityFeeStr }}</span></div></sc-if>
+        <div style="height:1px;background:#F4ECE2;margin:10px 0"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:700;font-size:15px">Total</span><span key="{{ totalStr }}" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#E4560A;animation:pop .3s ease">{{ totalStr }}</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:420px;padding:16px 20px 22px;background:linear-gradient(to top,#FFF8F1 72%,transparent);z-index:20">
+    <button onClick="{{ payNow }}" style="width:100%;cursor:pointer;background:#FF7A1A;color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(255,122,26,.36);display:flex;align-items:center;justify-content:center;gap:9px" style-active="transform:scale(.97)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="#fff" stroke-width="2"/><path d="M3 10h18" stroke="#fff" stroke-width="2"/></svg>Bayar {{ totalStr }} · QRIS</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ PAYMENT (QRIS) ============ -->
+<sc-if value="{{ isPayment }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .35s ease;min-height:100vh;padding-bottom:30px">
+  <div style="padding:16px 20px 6px;display:flex;align-items:center;gap:12px">
+    <button onClick="{{ goCart }}" style="flex:none;width:40px;height:40px;border-radius:13px;border:none;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(35,24,15,.07)" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#23180F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Pembayaran</div>
+  </div>
+  <div style="text-align:center;padding:14px 20px 0">
+    <div style="color:#9A8A7C;font-size:13px">Total tagihan</div>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;color:#23180F;letter-spacing:-.5px">{{ totalStr }}</div>
+  </div>
+  <div style="margin:16px auto 0;width:264px;background:#fff;border-radius:26px;padding:20px;box-shadow:0 16px 40px rgba(35,24,15,.12)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;color:#0A2E6E;letter-spacing:.5px">QRIS</span>
+      <span style="font-size:9px;font-weight:700;color:#9A8A7C;border:1px solid #E7DCCE;border-radius:5px;padding:2px 6px">GPN</span>
+    </div>
+    <div style="position:relative;width:224px;height:224px;margin:0 auto;background:#fff">
+      <sc-for list="{{ qrMods }}" as="m" hint-placeholder-count="80">
+        <span style="position:absolute;width:{{ qrCell }};height:{{ qrCell }};background:#1A1108;left:{{ m.left }};top:{{ m.top }}"></span>
+      </sc-for>
+      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px #fff"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#FF7A1A,#E4560A);display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 20V10a6 6 0 0 1 12 0v10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20.5h16" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div></div>
+    </div>
+    <div style="text-align:center;margin-top:14px;font-size:12px;color:#9A8A7C;line-height:1.4">Ayam Penyet My Bosz<br>NMID : ID10243398201</div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px">
+    <span style="font-size:13px;color:#9A8A7C">Bayar sebelum</span>
+    <span style="display:inline-flex;align-items:center;gap:6px;background:#FFEBE9;color:#FF3D57;font-weight:800;font-size:14px;padding:6px 12px;border-radius:999px;font-variant-numeric:tabular-nums"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FF3D57" stroke-width="2"/><path d="M12 7.5v5l3 1.8" stroke="#FF3D57" stroke-width="2" stroke-linecap="round"/></svg>{{ payMMSS }}</span>
+  </div>
+  <div style="margin:20px 20px 0;background:#fff;border-radius:18px;padding:15px 16px;display:flex;align-items:center;gap:13px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+    <span style="flex:none;width:22px;height:22px;border-radius:50%;border:2.5px solid #FFE0C4;border-top-color:#FF7A1A;animation:spin .9s linear infinite"></span>
+    <div style="flex:1"><div style="font-weight:700;font-size:14px">Menunggu pembayaran<span style="animation:dots 1.2s infinite">.</span><span style="animation:dots 1.2s infinite .2s">.</span><span style="animation:dots 1.2s infinite .4s">.</span></div><div style="color:#9A8A7C;font-size:12px;margin-top:1px">Otomatis lanjut begitu pembayaran masuk</div></div>
+  </div>
+  <div style="padding:16px 20px 0"><button onClick="{{ paidNow }}" style="width:100%;cursor:pointer;background:none;border:1.5px solid #E7DCCE;color:#6B5D50;border-radius:16px;padding:14px;font-weight:700;font-size:14px" style-active="transform:scale(.98)">Simulasikan: sudah bayar</button></div>
+  <div style="text-align:center;color:#B8A99B;font-size:11px;margin-top:14px">Scan pakai GoPay, OVO, DANA, m-banking, apa aja</div>
+</div>
+</sc-if>
+
+<!-- ============ QUEUE STATUS (HERO) ============ -->
+<sc-if value="{{ isQueue }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .35s ease;min-height:100vh;background:linear-gradient(180deg,#FFF8F1,#FFF1E4);padding-bottom:30px">
+  <sc-if value="{{ notif }}">
+    <div style="position:fixed;left:50%;transform:translateX(-50%);top:14px;width:calc(100% - 32px);max-width:388px;z-index:40;background:#0F1F17;border-radius:18px;padding:13px 15px;display:flex;align-items:center;gap:12px;box-shadow:0 16px 34px rgba(15,31,23,.34);animation:toastIn .4s ease">
+      <div style="flex:none;width:36px;height:36px;border-radius:11px;background:#16C784;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 21a2 2 0 0 0 3 0" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px">Pesananmu siap!</div><div style="color:#9DBFAF;font-size:12px">Ambil di gerobak, tunjukin nomor antrianmu ya</div></div>
+    </div>
+  </sc-if>
+  <div style="padding:18px 20px 4px;display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px"><span style="width:9px;height:9px;border-radius:50%;background:#16C784;animation:pulse 1.8s infinite"></span><span style="font-size:13px;color:#6B5D50;font-weight:600">Pesanan #AY-2071 · live</span></div>
+    <span style="font-size:12px;color:#9A8A7C">My Bosz</span>
+  </div>
+  <div style="text-align:center;margin-top:20px">
+    <div style="font-size:13px;color:#9A8A7C;font-weight:600;letter-spacing:.5px">NOMOR ANTRIANMU</div>
+    <div style="display:flex;align-items:baseline;justify-content:center;gap:4px;margin-top:2px">
+      <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;color:#FF7A1A;line-height:1">A</span>
+      <span key="{{ qNum }}" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:128px;color:#23180F;line-height:.9;letter-spacing:-4px;animation:qnum .5s ease">{{ qNum }}</span>
+    </div>
+    <div style="margin-top:14px"><span style="display:inline-flex;align-items:center;gap:8px;background:{{ statusBg }};color:{{ statusColor }};font-weight:800;font-size:15px;padding:9px 18px;border-radius:999px">{{ statusText }}</span></div>
+    <div style="color:#9A8A7C;font-size:13px;margin-top:10px;line-height:1.4">{{ statusSub }}</div>
+  </div>
+  <div style="margin:22px 20px 0;display:flex;gap:12px">
+    <div style="flex:1;background:#fff;border-radius:18px;padding:15px;text-align:center;box-shadow:0 5px 16px rgba(35,24,15,.05)"><div key="{{ ahead }}" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:#23180F;animation:numflip .4s ease">{{ ahead }}</div><div style="font-size:11px;color:#9A8A7C;margin-top:2px">di depanmu</div></div>
+    <div style="flex:1;background:#fff;border-radius:18px;padding:15px;text-align:center;box-shadow:0 5px 16px rgba(35,24,15,.05)"><div key="{{ etaVal }}" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:#23180F;animation:numflip .4s ease">{{ etaVal }}</div><div style="font-size:11px;color:#9A8A7C;margin-top:2px">{{ etaUnit }}</div></div>
+  </div>
+  <div style="margin:12px 20px 0;background:#fff;border-radius:16px;padding:12px 15px;display:flex;align-items:center;gap:11px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+    <span style="flex:none;display:inline-flex;align-items:center;gap:6px;background:{{ toneBg }};color:{{ toneColor }};font-weight:700;font-size:12px;padding:6px 11px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:{{ toneDot }};animation:pulse 1.8s infinite"></span>{{ toneLabel }}</span>
+    <span style="flex:1;font-size:12px;color:#9A8A7C;line-height:1.35">Estimasi dihitung dari kecepatan masak hari ini, bukan tebakan</span>
+  </div>
+  <div style="margin:16px 20px 0;background:#fff;border-radius:22px;padding:20px 20px 4px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+    <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+      <div style="display:flex;gap:14px;align-items:flex-start;position:relative;padding-bottom:22px">
+        <div style="position:relative;z-index:2;flex:none;width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:{{ s.circleBg }};color:{{ s.circleColor }};box-shadow:{{ s.ring }}">
+          <sc-if value="{{ s.check }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+          <sc-if value="{{ s.showNum }}"><span style="font-weight:800;font-size:15px">{{ s.num }}</span></sc-if>
+        </div>
+        <div style="padding-top:2px"><div style="font-weight:700;font-size:15px;color:{{ s.labelColor }}">{{ s.label }}</div><div style="font-size:12px;color:#9A8A7C;margin-top:1px">{{ s.sub }}</div></div>
+        <sc-if value="{{ s.line }}"><span style="position:absolute;left:19px;top:42px;height:20px;width:2px;background:{{ s.lineBg }};z-index:1"></span></sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <div style="padding:16px 20px 0">
+    <sc-if value="{{ queueReady }}">
+      <button onClick="{{ goPickup }}" style="width:100%;cursor:pointer;background:#16C784;color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(22,199,132,.34);animation:ringpulse 2s infinite;display:flex;align-items:center;justify-content:center;gap:9px" style-active="transform:scale(.97)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="7" height="7" rx="1.5" stroke="#fff" stroke-width="2"/><rect x="4" y="14" width="7" height="6" rx="1.5" stroke="#fff" stroke-width="2"/><rect x="14" y="4" width="6" height="7" rx="1.5" stroke="#fff" stroke-width="2"/><path d="M14 15h3v5M20 15v5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>Lihat Kode Pengambilan</button>
+    </sc-if>
+    <sc-if value="{{ queueWaiting }}">
+      <div style="text-align:center;color:#9A8A7C;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px"><span style="width:16px;height:16px;border-radius:50%;border:2px solid #FFE0C4;border-top-color:#FF7A1A;animation:spin .9s linear infinite"></span>Kami kabari begitu siap, santai aja</div>
+    </sc-if>
+    <div style="margin-top:14px">
+      <sc-if value="{{ canCancel }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ openCancel }}" style="width:100%;cursor:pointer;background:#fff;border:1.5px solid #F3C9C0;color:#E5484D;border-radius:16px;padding:14px;font-weight:700;font-size:14px" style-active="transform:scale(.98)">Batalkan Pesanan</button>
+      </sc-if>
+      <sc-if value="{{ cannotCancel }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#FAF4EC;border:1px solid #F1E7DC;border-radius:16px;padding:13px 15px;display:flex;align-items:center;gap:11px">
+          <span style="flex:none;width:30px;height:30px;border-radius:9px;background:#FFEDD9;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 1 0 9 9" stroke="#E4560A" stroke-width="2" stroke-linecap="round"/><path d="M12 8v4l2.5 1.5" stroke="#E4560A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div style="font-size:12px;color:#9A8A7C;line-height:1.4">Pesanan udah mulai dimasak, jadi nggak bisa dibatalkan lagi ya</div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ SUBSCRIPTION ============ -->
+<sc-if value="{{ isSub }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div style="animation:screenIn .35s ease;padding-bottom:120px">
+    <div style="position:relative;background:linear-gradient(160deg,#3A2359,#241338);padding:16px 20px 34px;overflow:hidden">
+      <svg style="position:absolute;right:-30px;top:-20px;opacity:.18" width="180" height="180" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 10-12h-6z" fill="#fff"/></svg>
+      <div style="position:relative;display:flex;align-items:center;gap:12px">
+        <button onClick="{{ subBack }}" style="flex:none;width:40px;height:40px;border-radius:13px;border:none;background:rgba(255,255,255,.14);cursor:pointer;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div style="color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:19px">Antri Plus</div>
+      </div>
+      <div style="position:relative;margin-top:22px;text-align:center;color:#fff">
+        <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(168,121,255,.22);color:#D8C6FF;font-weight:700;font-size:12px;padding:6px 13px;border-radius:999px;margin-bottom:14px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 10-12h-6z" fill="#D8C6FF"/></svg>Langganan Prioritas</div>
+        <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:27px;margin:0;line-height:1.15;letter-spacing:-.5px">Nggak usah ngantri<br>lama-lama lagi</h1>
+        <p style="color:#C6B4E6;font-size:14px;margin:10px 0 0;line-height:1.5">Prioritas otomatis tiap pesan, di semua<br>gerobak langganan Antri</p>
+      </div>
+    </div>
+    <div style="margin:-20px 20px 0;background:#fff;border-radius:24px;padding:20px;box-shadow:0 14px 34px rgba(36,19,56,.14)">
+      <div style="font-weight:800;font-size:14px;margin-bottom:14px;color:#23180F">Yang kamu dapat</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ benefits }}" as="b" hint-placeholder-count="4">
+          <div style="display:flex;gap:12px;align-items:flex-start"><span style="flex:none;width:26px;height:26px;border-radius:8px;background:#F1E9FF;display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#7A3BF5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><div style="font-weight:700;font-size:14px;line-height:1.25">{{ b.title }}</div><div style="color:#9A8A7C;font-size:12px;margin-top:1px">{{ b.sub }}</div></div></div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="padding:18px 20px 0;display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ plans }}" as="p" hint-placeholder-count="2">
+        <button onClick="{{ p.onClick }}" style="width:100%;text-align:left;cursor:pointer;background:#fff;border:2px solid {{ p.border }};border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:14px;position:relative" style-active="transform:scale(.99)">
+          <span style="flex:none;width:22px;height:22px;border-radius:50%;border:2px solid {{ p.dot }};display:flex;align-items:center;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:{{ p.dotFill }}"></span></span>
+          <div style="flex:1"><div style="font-weight:700;font-size:15px">{{ p.name }}</div><div style="color:#9A8A7C;font-size:12px;margin-top:1px">{{ p.note }}</div></div>
+          <div style="text-align:right"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#23180F">{{ p.price }}</div><div style="font-size:11px;color:#9A8A7C">{{ p.per }}</div></div>
+          <sc-if value="{{ p.badge }}"><span style="position:absolute;top:-9px;right:16px;background:#7A3BF5;color:#fff;font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px">HEMAT 17%</span></sc-if>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:420px;padding:16px 20px 22px;background:linear-gradient(to top,#FFF8F1 72%,transparent);z-index:20">
+    <button onClick="{{ subBack }}" style="width:100%;cursor:pointer;background:#7A3BF5;color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(122,59,245,.36)" style-active="transform:scale(.97)">Langganan Sekarang · {{ subCta }}</button>
+    <div style="text-align:center;color:#B8A99B;font-size:11px;margin-top:10px">Batalkan kapan aja, tanpa ribet</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ RATING ============ -->
+<sc-if value="{{ isRating }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .35s ease;min-height:100vh;padding:16px 20px 30px">
+  <button onClick="{{ goQueue }}" style="width:40px;height:40px;border-radius:13px;border:none;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(35,24,15,.07)" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#23180F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div style="text-align:center;margin-top:26px">
+    <div style="width:72px;height:72px;border-radius:22px;margin:0 auto;background:linear-gradient(135deg,#FFB870,#FF7A1A);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 26px rgba(255,122,26,.3)"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M2.5 11.5h19a9.5 9.5 0 0 1-19 0z" fill="#fff"/><path d="M8 6.5c0-1.2.9-1.6.9-2.8M12 6.3c0-1.2.9-1.6.9-2.8M16 6.5c0-1.2.9-1.6.9-2.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;margin:18px 0 6px;letter-spacing:-.4px">Gimana pesananmu?</h1>
+    <p style="color:#9A8A7C;font-size:14px;margin:0">Ayam Penyet My Bosz · Pesanan #AY-2071</p>
+  </div>
+  <div style="display:flex;justify-content:center;gap:10px;margin-top:26px">
+    <sc-for list="{{ stars }}" as="st" hint-placeholder-count="5">
+      <button onClick="{{ st.onClick }}" style="background:none;border:none;cursor:pointer;padding:2px" style-active="transform:scale(.85)"><svg width="42" height="42" viewBox="0 0 24 24" fill="{{ st.fill }}"><path d="M12 2l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6 21l1.2-6.6L2.4 9.7l6.6-.9z" stroke="{{ st.stroke }}" stroke-width="1.4" stroke-linejoin="round"/></svg></button>
+    </sc-for>
+  </div>
+  <div style="text-align:center;color:#FF7A1A;font-weight:700;font-size:14px;margin-top:10px;height:18px">{{ ratingLabel }}</div>
+  <div style="display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:20px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="5">
+      <button onClick="{{ c.onClick }}" style="border:1.5px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};cursor:pointer;padding:9px 15px;border-radius:999px;font-weight:600;font-size:13px" style-active="transform:scale(.95)">{{ c.label }}</button>
+    </sc-for>
+  </div>
+  <div style="margin-top:22px;background:#fff;border-radius:18px;padding:4px 16px;box-shadow:0 5px 16px rgba(35,24,15,.05)"><textarea placeholder="Ada masukan buat pedagang? (opsional)" style="width:100%;border:none;outline:none;resize:none;height:64px;padding:14px 0;font-family:'Plus Jakarta Sans';font-size:14px;color:#23180F;background:none"></textarea></div>
+  <button onClick="{{ submitRating }}" style="width:100%;cursor:pointer;background:#FF7A1A;color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(255,122,26,.36);margin-top:20px" style-active="transform:scale(.97)">Kirim Rating</button>
+  <button onClick="{{ submitRating }}" style="width:100%;cursor:pointer;background:none;border:none;color:#9A8A7C;font-weight:600;font-size:13px;padding:14px 0 0">Nanti aja</button>
+</div>
+</sc-if>
+
+<!-- ============ PROFILE ============ -->
+<sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .35s ease;padding-bottom:40px">
+  <div style="position:relative;background:linear-gradient(158deg,#FFB870,#FF7A1A 56%,#E4560A);padding:16px 20px 58px;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(60% 60% at 82% 6%,rgba(255,255,255,.28),transparent)"></div>
+    <div style="position:relative;display:flex;align-items:center;gap:12px">
+      <button onClick="{{ goLanding }}" style="flex:none;width:40px;height:40px;border-radius:13px;border:none;background:rgba(255,255,255,.16);cursor:pointer;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div style="color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Profil</div>
+    </div>
+  </div>
+
+  <div style="margin:-42px 20px 0;position:relative">
+    <div style="background:#fff;border-radius:24px;padding:18px;box-shadow:0 14px 34px rgba(35,24,15,.11);display:flex;align-items:center;gap:15px">
+      <div style="flex:none;width:60px;height:60px;border-radius:19px;background:linear-gradient(135deg,#FFB870,#FF7A1A);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;box-shadow:0 6px 16px rgba(255,122,26,.3)">RP</div>
+      <div style="flex:1;min-width:0"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;line-height:1.1">Rizky Pratama</div><div style="font-size:13px;color:#9A8A7C;margin-top:2px">+62 812-3456-7890</div></div>
+      <button style="flex:none;width:38px;height:38px;border-radius:12px;border:none;cursor:pointer;background:#FFEEDF;color:#FF7A1A;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.9)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14.5 4.5l3 3M4 20l1-4L16 5a1.8 1.8 0 0 1 2.6 0l.4.4a1.8 1.8 0 0 1 0 2.6L8 19l-4 1z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <div style="padding:14px 20px 0;display:flex;gap:11px">
+    <div style="flex:1;background:#fff;border-radius:18px;padding:15px;box-shadow:0 5px 16px rgba(35,24,15,.05);text-align:center"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:#23180F">48</div><div style="font-size:11px;color:#9A8A7C;margin-top:2px">total pesanan</div></div>
+    <div style="flex:1;background:#fff;border-radius:18px;padding:15px;box-shadow:0 5px 16px rgba(35,24,15,.05);text-align:center"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:#FF7A1A">320</div><div style="font-size:11px;color:#9A8A7C;margin-top:2px">poin</div></div>
+    <div style="flex:1;background:#fff;border-radius:18px;padding:15px;box-shadow:0 5px 16px rgba(35,24,15,.05);text-align:center"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:#0E9F6E">6</div><div style="font-size:11px;color:#9A8A7C;margin-top:2px">gerobak favorit</div></div>
+  </div>
+
+  <div style="padding:14px 20px 0">
+    <button onClick="{{ goSub }}" style="width:100%;text-align:left;cursor:pointer;background:#2A1A3E;border:none;border-radius:22px;padding:16px 18px;display:flex;align-items:center;gap:13px;box-shadow:0 10px 24px rgba(42,26,62,.24)" style-active="transform:scale(.98)">
+      <div style="flex:none;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#A879FF,#7A3BF5);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(122,59,245,.4)"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 10-12h-6z" fill="#fff"/></svg></div>
+      <div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px">Antri Plus belum aktif</div><div style="color:#C6B4E6;font-size:12px;margin-top:1px">Aktifkan buat skip antrean, mulai Rp15rb/bln</div></div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C6B4E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div style="padding:16px 20px 0">
+    <div style="font-size:12px;font-weight:700;color:#9A8A7C;letter-spacing:.4px;padding:0 4px 8px">AKUN</div>
+    <div style="background:#fff;border-radius:22px;padding:4px 6px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+      <button style="width:100%;color:#23180F;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 12px;border-bottom:1px solid #F4ECE2" style-active="background:#FFF6EE">
+        <span style="flex:none;width:36px;height:36px;border-radius:11px;background:#FFF3E7;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#E4560A" stroke-width="2"/><path d="M12 7.5v5l3 1.8" stroke="#E4560A" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <span style="flex:1;text-align:left;font-weight:700;font-size:14px">Riwayat Pesanan</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C6B7A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button style="width:100%;color:#23180F;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 12px;border-bottom:1px solid #F4ECE2" style-active="background:#FFF6EE">
+        <span style="flex:none;width:36px;height:36px;border-radius:11px;background:#F1E9FF;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="#7A3BF5" stroke-width="2"/><path d="M3 10h18" stroke="#7A3BF5" stroke-width="2"/></svg></span>
+        <span style="flex:1;text-align:left;font-weight:700;font-size:14px">Metode Pembayaran</span>
+        <span style="font-size:12px;color:#9A8A7C;margin-right:2px">GoPay</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C6B7A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button style="width:100%;color:#23180F;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 12px" style-active="background:#FFF6EE">
+        <span style="flex:none;width:36px;height:36px;border-radius:11px;background:#E7FBF2;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z" stroke="#0E9F6E" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="#0E9F6E" stroke-width="2"/></svg></span>
+        <span style="flex:1;text-align:left;font-weight:700;font-size:14px">Gerobak Favorit</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C6B7A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div style="padding:16px 20px 0">
+    <div style="font-size:12px;font-weight:700;color:#9A8A7C;letter-spacing:.4px;padding:0 4px 8px">NOTIFIKASI</div>
+    <div style="background:#fff;border-radius:22px;padding:4px 6px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+      <button onClick="{{ toggleNotifStatus }}" style="width:100%;color:#23180F;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 12px;border-bottom:1px solid #F4ECE2">
+        <span style="flex:none;width:36px;height:36px;border-radius:11px;background:#FFF3E7;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#E4560A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 21a2 2 0 0 0 3 0" stroke="#E4560A" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <span style="flex:1;text-align:left"><span style="display:block;font-weight:700;font-size:14px">Status pesanan</span><span style="display:block;font-size:12px;color:#9A8A7C;margin-top:1px">Kabar begitu pesanan siap</span></span>
+        <span style="flex:none;width:46px;height:27px;border-radius:999px;background:{{ nsTrack }};position:relative;transition:background .22s"><span style="position:absolute;top:3px;left:{{ nsKnob }};width:21px;height:21px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:left .22s"></span></span>
+      </button>
+      <button onClick="{{ toggleNotifPromo }}" style="width:100%;color:#23180F;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 12px">
+        <span style="flex:none;width:36px;height:36px;border-radius:11px;background:#F1E9FF;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 9v6h4l6 4V5L8 9H4z" stroke="#7A3BF5" stroke-width="2" stroke-linejoin="round"/></svg></span>
+        <span style="flex:1;text-align:left"><span style="display:block;font-weight:700;font-size:14px">Promo & menu baru</span><span style="display:block;font-size:12px;color:#9A8A7C;margin-top:1px">Diskon dari gerobak favorit</span></span>
+        <span style="flex:none;width:46px;height:27px;border-radius:999px;background:{{ npTrack }};position:relative;transition:background .22s"><span style="position:absolute;top:3px;left:{{ npKnob }};width:21px;height:21px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:left .22s"></span></span>
+      </button>
+    </div>
+  </div>
+
+  <div style="padding:16px 20px 0">
+    <div style="background:#fff;border-radius:22px;padding:4px 6px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+      <button style="width:100%;color:#23180F;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 12px;border-bottom:1px solid #F4ECE2" style-active="background:#FFF6EE">
+        <span style="flex:none;width:36px;height:36px;border-radius:11px;background:#F4ECE2;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6B5D50" stroke-width="2"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.2-2.5 3.9" stroke="#6B5D50" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#6B5D50"/></svg></span>
+        <span style="flex:1;text-align:left;font-weight:700;font-size:14px">Bantuan & FAQ</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C6B7A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button style="width:100%;color:#23180F;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 12px" style-active="background:#FFF6EE">
+        <span style="flex:none;width:36px;height:36px;border-radius:11px;background:#F4ECE2;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6B5D50" stroke-width="2"/><path d="M12 11v5" stroke="#6B5D50" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="1" fill="#6B5D50"/></svg></span>
+        <span style="flex:1;text-align:left;font-weight:700;font-size:14px">Tentang Antri</span>
+        <span style="font-size:12px;color:#9A8A7C;margin-right:2px">v1.4.0</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C6B7A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div style="padding:20px 20px 0">
+    <button onClick="{{ goLanding }}" style="width:100%;cursor:pointer;background:#FFEBE9;color:#E5484D;border:none;border-radius:18px;padding:16px;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px" style-active="transform:scale(.98)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" stroke="#E5484D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 8l-4 4 4 4M6 12h12" stroke="#E5484D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Keluar</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ DISCOVERY / SEKITAR SINI ============ -->
+<sc-if value="{{ isDiscovery }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .35s ease;padding-bottom:30px">
+  <div style="position:sticky;top:0;z-index:15;background:rgba(255,248,241,.94);backdrop-filter:blur(10px);padding:16px 20px 10px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+      <div style="display:flex;align-items:center;gap:11px">
+        <button onClick="{{ goLanding }}" style="flex:none;width:40px;height:40px;border-radius:13px;border:none;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(35,24,15,.07)" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#23180F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div>
+          <div style="font-size:12px;color:#9A8A7C;font-weight:600">Lokasimu</div>
+          <div style="display:flex;align-items:center;gap:5px;font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;line-height:1.05"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z" stroke="#FF7A1A" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="#FF7A1A" stroke-width="2"/></svg>Area SCBD</div>
+        </div>
+      </div>
+      <div style="flex:none;display:flex;gap:4px;background:#F1E7DC;border-radius:13px;padding:4px">
+        <button onClick="{{ setDiscoList }}" style="cursor:pointer;border:none;border-radius:9px;width:38px;height:32px;display:flex;align-items:center;justify-content:center;background:{{ listBg }};color:{{ listColor }};box-shadow:{{ listShadow }}" style-active="transform:scale(.92)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 6h12M8 12h12M8 18h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="4" cy="6" r="1.4" fill="currentColor"/><circle cx="4" cy="12" r="1.4" fill="currentColor"/><circle cx="4" cy="18" r="1.4" fill="currentColor"/></svg></button>
+        <button onClick="{{ setDiscoMap }}" style="cursor:pointer;border:none;border-radius:9px;width:38px;height:32px;display:flex;align-items:center;justify-content:center;background:{{ mapBg }};color:{{ mapColor }};box-shadow:{{ mapShadow }}" style-active="transform:scale(.92)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" stroke="currentColor" stroke-width="2"/></svg></button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px;margin-top:8px;padding-left:2px"><span style="width:8px;height:8px;border-radius:50%;background:#16C784;animation:pulse 1.8s infinite"></span><span style="font-size:13px;color:#6B5D50;font-weight:600">14 gerobak buka sekarang</span></div>
+    <div style="display:flex;gap:8px;margin-top:13px;overflow-x:auto;padding-bottom:2px">
+      <sc-for list="{{ discoFilters }}" as="fl" hint-placeholder-count="6">
+        <button onClick="{{ fl.onClick }}" style="flex:none;border:none;cursor:pointer;padding:9px 15px;border-radius:999px;font-weight:700;font-size:13px;background:{{ fl.bg }};color:{{ fl.color }};white-space:nowrap" style-active="transform:scale(.95)">{{ fl.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <sc-if value="{{ discoList }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:6px 20px 0;display:flex;flex-direction:column;gap:12px">
+    <sc-for list="{{ stallList }}" as="s" hint-placeholder-count="6">
+      <button onClick="{{ s.onClick }}" style="width:100%;color:#23180F;text-align:left;cursor:{{ s.cursor }};background:#fff;border:none;border-radius:22px;padding:12px;display:flex;gap:14px;align-items:center;box-shadow:0 5px 16px rgba(35,24,15,.05);opacity:{{ s.opacity }}" style-active="transform:scale(.99)">
+        <div style="flex:none;width:82px;height:82px;border-radius:17px;background:{{ s.grad }};display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -16px 28px rgba(0,0,0,.08);position:relative">
+          <sc-if value="{{ s.isFood }}"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M2.5 11.5h19a9.5 9.5 0 0 1-19 0z" fill="rgba(255,255,255,.92)"/><path d="M8 6.5c0-1.2.9-1.6.9-2.8M12 6.3c0-1.2.9-1.6.9-2.8M16 6.5c0-1.2.9-1.6.9-2.8" stroke="rgba(255,255,255,.92)" stroke-width="1.5" stroke-linecap="round"/></svg></sc-if>
+          <sc-if value="{{ s.isDrink }}"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M6 4.5h12l-1.1 14.4a2.2 2.2 0 0 1-2.2 2H9.3a2.2 2.2 0 0 1-2.2-2z" fill="rgba(255,255,255,.92)"/></svg></sc-if>
+          <sc-if value="{{ s.closed }}"><span style="position:absolute;inset:0;background:rgba(35,24,15,.28);border-radius:17px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px">Tutup</span></sc-if>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:15px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.name }}</div>
+          <div style="color:#9A8A7C;font-size:12px;margin:3px 0 8px;display:flex;align-items:center;gap:6px"><span>{{ s.type }}</span><span>·</span><span style="font-weight:700;color:#6B5D50">{{ s.dist }}</span></div>
+          <span style="display:inline-flex;align-items:center;gap:5px;background:{{ s.badgeBg }};color:{{ s.badgeColor }};font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px"><sc-if value="{{ s.open }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ s.badgeColor }}"></span></sc-if>{{ s.badgeLabel }}</span>
+        </div>
+        <sc-if value="{{ s.open }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C6B7A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+      </button>
+    </sc-for>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ discoMap }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:8px 20px 0">
+    <div style="position:relative;height:440px;border-radius:24px;overflow:hidden;background:linear-gradient(160deg,#E8F5EE,#F3ECDE);box-shadow:0 6px 18px rgba(35,24,15,.06)">
+      <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.5" viewBox="0 0 340 440" preserveAspectRatio="none"><path d="M0 120 H340 M0 300 H340 M120 0 V440 M240 0 V440" stroke="#fff" stroke-width="14" fill="none"/><path d="M0 120 H340 M0 300 H340 M120 0 V440 M240 0 V440" stroke="#DFE9DE" stroke-width="2" fill="none"/><path d="M60 0 L200 440" stroke="#fff" stroke-width="20" fill="none" opacity=".7"/></svg>
+      <sc-for list="{{ stallList }}" as="mk" hint-placeholder-count="6">
+        <button onClick="{{ mk.onClick }}" style="position:absolute;left:{{ mk.mx }};top:{{ mk.my }};transform:translate(-50%,-100%);cursor:{{ mk.cursor }};border:none;background:none;padding:0;display:flex;flex-direction:column;align-items:center" style-active="transform:translate(-50%,-100%) scale(.9)">
+          <div style="background:{{ mk.pinBg }};color:#fff;font-weight:800;font-size:12px;padding:6px 11px;border-radius:12px;box-shadow:0 6px 14px rgba(0,0,0,.2);white-space:nowrap">{{ mk.pinLabel }}</div>
+          <div style="width:11px;height:11px;background:{{ mk.pinBg }};transform:rotate(45deg);margin-top:-5px;border-radius:2px"></div>
+        </button>
+      </sc-for>
+      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center">
+        <div style="position:relative;width:20px;height:20px"><span style="position:absolute;inset:0;border-radius:50%;background:rgba(37,99,235,.35);animation:ripple 1.8s infinite"></span><span style="position:absolute;inset:4px;border-radius:50%;background:#2563EB;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.25)"></span></div>
+        <span style="margin-top:5px;background:#23180F;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px">Kamu di sini</span>
+      </div>
+    </div>
+    <div style="text-align:center;color:#B8A99B;font-size:11px;margin-top:12px">Ketuk pin buat lihat gerobaknya</div>
+  </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ============ PICKUP CODE ============ -->
+<sc-if value="{{ isPickup }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .35s ease;min-height:100vh;background:linear-gradient(180deg,#FFF8F1,#FFF1E4);padding-bottom:130px">
+  <sc-if value="{{ pickupWaiting }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <div style="padding:16px 20px 6px;display:flex;align-items:center;gap:12px">
+      <button onClick="{{ goQueue }}" style="flex:none;width:40px;height:40px;border-radius:13px;border:none;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(35,24,15,.07)" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#23180F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Kode Pengambilan</div>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      <span style="display:inline-flex;align-items:center;gap:8px;background:#DFF7EC;color:#0E9F6E;font-weight:800;font-size:14px;padding:8px 16px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:#16C784;animation:pulse 1.8s infinite"></span>Pesanan Siap Diambil</span>
+    </div>
+    <div style="margin:20px 20px 0;background:#fff;border-radius:28px;padding:26px 22px;box-shadow:0 18px 44px rgba(35,24,15,.13);text-align:center">
+      <div style="font-size:13px;color:#9A8A7C;font-weight:700;letter-spacing:1px">TUNJUKKAN KODE INI</div>
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:16px">
+        <sc-for list="{{ codeDigits }}" as="d" hint-placeholder-count="4">
+          <div style="width:64px;height:84px;border-radius:18px;background:linear-gradient(160deg,#FFF3E7,#FFE7D2);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -6px 14px rgba(255,122,26,.1),0 5px 14px rgba(255,122,26,.08)"><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:52px;color:#E4560A;line-height:1">{{ d }}</span></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin:22px 8px 0;color:#C6B7A8"><span style="flex:1;height:1px;background:#F1E7DC"></span><span style="font-size:12px;font-weight:700;color:#B8A99B">atau scan QR</span><span style="flex:1;height:1px;background:#F1E7DC"></span></div>
+      <div style="display:flex;justify-content:center;margin-top:16px">
+        <div style="width:110px;height:110px;overflow:hidden;border-radius:14px;border:1px solid #F1E7DC;padding:6px;background:#fff">
+          <div style="position:relative;width:224px;height:224px;background:#fff;transform:scale(.437);transform-origin:top left">
+            <sc-for list="{{ qrMods }}" as="m" hint-placeholder-count="80">
+              <span style="position:absolute;width:{{ qrCell }};height:{{ qrCell }};background:#1A1108;left:{{ m.left }};top:{{ m.top }}"></span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin:16px 20px 0;background:#fff;border-radius:22px;padding:16px 18px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+      <div style="display:flex;align-items:center;gap:11px;padding-bottom:12px;border-bottom:1px solid #F4ECE2">
+        <div style="flex:none;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#FFB870,#FF7A1A);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 20V10a6 6 0 0 1 12 0v10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20.5h16" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+        <div style="flex:1"><div style="font-weight:700;font-size:14px">Ayam Penyet My Bosz</div><div style="font-size:12px;color:#9A8A7C">Pesanan #AY-2071</div></div>
+      </div>
+      <div style="padding-top:12px;display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="flex:none;min-width:28px;height:26px;padding:0 7px;border-radius:8px;background:#FFF3E7;color:#E4560A;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">{{ l.qty }}×</span><span style="font-weight:600">{{ l.name }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:420px;padding:16px 20px 22px;background:linear-gradient(to top,#FFF1E4 72%,transparent);z-index:20">
+    <button onClick="{{ confirmPickup }}" style="width:100%;cursor:pointer;background:#16C784;color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(22,199,132,.34);display:flex;align-items:center;justify-content:center;gap:9px" style-active="transform:scale(.97)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Konfirmasi Sudah Diambil</button>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ pickupDone }}" hint-placeholder-val="{{ false }}">
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;text-align:center">
+    <div style="position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center">
+      <span style="position:absolute;inset:0;border-radius:50%;background:rgba(22,199,132,.16);animation:ripple 2s infinite"></span>
+      <div style="width:96px;height:96px;border-radius:32px;background:linear-gradient(135deg,#34E0A8,#16C784);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 34px rgba(22,199,132,.4);animation:popin .5s ease"><svg width="52" height="52" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:28px;margin:24px 0 8px;letter-spacing:-.5px">Selamat menikmati!</h1>
+    <p style="color:#9A8A7C;font-size:15px;margin:0;line-height:1.5;max-width:280px">Pesananmu udah diambil. Makasih udah antre bareng Antri 🧡</p>
+    <div style="margin-top:22px;background:#fff;border-radius:18px;padding:14px 22px;box-shadow:0 5px 16px rgba(35,24,15,.05);display:flex;align-items:center;gap:20px">
+      <div style="text-align:center"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#FF7A1A">+15</div><div style="font-size:11px;color:#9A8A7C">poin</div></div>
+      <div style="width:1px;height:30px;background:#F1E7DC"></div>
+      <div style="text-align:center"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:#23180F">9</div><div style="font-size:11px;color:#9A8A7C">menit tunggu</div></div>
+    </div>
+    <button onClick="{{ goRating }}" style="width:100%;max-width:320px;cursor:pointer;background:#FF7A1A;color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(255,122,26,.36);margin-top:30px" style-active="transform:scale(.97)">Beri Rating</button>
+    <button onClick="{{ submitRating }}" style="cursor:pointer;background:none;border:none;color:#9A8A7C;font-weight:600;font-size:13px;padding:14px 0 0">Kembali ke beranda</button>
+  </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ============ CANCEL SHEET ============ -->
+<sc-if value="{{ cancelSheet }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeCancel }}" style="position:fixed;left:50%;transform:translateX(-50%);top:0;bottom:0;width:100%;max-width:420px;z-index:60;background:rgba(23,15,8,.55);backdrop-filter:blur(3px);display:flex;flex-direction:column;justify-content:flex-end;animation:fadeIn .2s ease">
+  <div onClick="{{ stopProp }}" style="background:#FFF8F1;border-radius:28px 28px 0 0;padding:12px 20px 26px;animation:sheetUp .3s cubic-bezier(.2,.8,.2,1)">
+    <div style="width:44px;height:5px;border-radius:999px;background:#E0D4C4;margin:0 auto 16px"></div>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Batalkan pesanan?</div>
+    <div style="font-size:14px;color:#9A8A7C;margin-top:4px;line-height:1.5">Boleh cerita alasannya? (opsional)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:16px">
+      <sc-for list="{{ cancelReasons }}" as="r" hint-placeholder-count="3">
+        <button onClick="{{ r.onClick }}" style="border:1.5px solid {{ r.border }};background:{{ r.bg }};color:{{ r.color }};cursor:pointer;padding:10px 16px;border-radius:999px;font-weight:600;font-size:13px" style-active="transform:scale(.95)">{{ r.label }}</button>
+      </sc-for>
+    </div>
+    <div style="margin-top:18px;background:#DFF7EC;border-radius:16px;padding:14px 15px;display:flex;align-items:center;gap:12px">
+      <span style="flex:none;width:38px;height:38px;border-radius:11px;background:#16C784;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v13M6 11l6 6 6-6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 21h14" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+      <div style="flex:1"><div style="font-weight:800;font-size:14px;color:#0E7A56">Dana kembali penuh {{ refundAmountStr }}</div><div style="font-size:12px;color:#3FA980;margin-top:1px">Balik ke QRIS/e-wallet dalam 1–3 hari kerja</div></div>
+    </div>
+    <button onClick="{{ confirmCancel }}" style="margin-top:18px;width:100%;cursor:pointer;background:#E5484D;color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(229,72,77,.3)" style-active="transform:scale(.98)">Ya, Batalkan Pesanan</button>
+    <button onClick="{{ closeCancel }}" style="margin-top:8px;width:100%;cursor:pointer;background:none;border:none;color:#9A8A7C;font-weight:700;font-size:14px;padding:12px 0" style-active="transform:scale(.98)">Nggak jadi</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ REFUND STATUS ============ -->
+<sc-if value="{{ isRefund }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .35s ease;min-height:100vh;background:linear-gradient(180deg,#FFF8F1,#FFF1E4);padding-bottom:130px">
+  <div style="padding:16px 20px 6px;display:flex;align-items:center;gap:12px">
+    <button onClick="{{ goLanding }}" style="flex:none;width:40px;height:40px;border-radius:13px;border:none;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(35,24,15,.07)" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#23180F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Status Refund</div>
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <div style="width:72px;height:72px;border-radius:22px;margin:0 auto;background:linear-gradient(135deg,#FF9A8A,#E5484D);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 26px rgba(229,72,77,.28);animation:popin .5s ease"><svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M5 8h14l-1.4 11.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="#fff" stroke-width="2"/><path d="M10 12v5M14 12v5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+    <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;margin:16px 0 6px;letter-spacing:-.4px">Pesanan dibatalkan</h1>
+    <p style="color:#9A8A7C;font-size:14px;margin:0">Pesanan #AY-2071 · Ayam Penyet My Bosz</p>
+  </div>
+  <div style="margin:20px 20px 0;background:#fff;border-radius:24px;padding:22px;box-shadow:0 14px 34px rgba(35,24,15,.1);text-align:center">
+    <div style="font-size:13px;color:#9A8A7C;font-weight:600">Dana dikembalikan</div>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:38px;color:#0E9F6E;letter-spacing:-.5px;margin-top:2px">{{ refundAmountStr }}</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;background:#DFF7EC;color:#0E7A56;font-weight:700;font-size:12px;padding:6px 12px;border-radius:999px">ke GoPay •••• 7890</div>
+  </div>
+  <div style="margin:16px 20px 0;background:#fff;border-radius:22px;padding:22px 20px 6px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+    <sc-for list="{{ refundSteps }}" as="s" hint-placeholder-count="3">
+      <div style="display:flex;gap:14px;align-items:flex-start;position:relative;padding-bottom:24px">
+        <div style="position:relative;z-index:2;flex:none;width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:{{ s.circleBg }};color:{{ s.circleColor }};box-shadow:{{ s.ring }}">
+          <sc-if value="{{ s.check }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+          <sc-if value="{{ s.spin }}"><span style="width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.5);border-top-color:#fff;animation:spin .9s linear infinite"></span></sc-if>
+          <sc-if value="{{ s.dotOnly }}"><span style="width:9px;height:9px;border-radius:50%;background:currentColor"></span></sc-if>
+        </div>
+        <div style="padding-top:3px;flex:1"><div style="font-weight:700;font-size:15px;color:{{ s.labelColor }}">{{ s.label }}</div><div style="font-size:12px;color:#9A8A7C;margin-top:2px;line-height:1.4">{{ s.sub }}</div></div>
+        <sc-if value="{{ s.line }}"><span style="position:absolute;left:19px;top:42px;height:24px;width:2px;background:{{ s.lineBg }};z-index:1"></span></sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:420px;padding:16px 20px 22px;background:linear-gradient(to top,#FFF1E4 72%,transparent);z-index:20">
+    <button onClick="{{ pesanLagi }}" style="width:100%;cursor:pointer;background:#FF7A1A;color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:0 12px 26px rgba(255,122,26,.36)" style-active="transform:scale(.97)">Pesan Lagi</button>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:400,&quot;height&quot;:860},&quot;priorityFee&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:8000,&quot;tsType&quot;:&quot;number&quot;,&quot;unit&quot;:&quot;Rp&quot;,&quot;section&quot;:&quot;Harga&quot;,&quot;min&quot;:0,&quot;max&quot;:20000,&quot;step&quot;:1000},&quot;serviceFee&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:2000,&quot;tsType&quot;:&quot;number&quot;,&quot;unit&quot;:&quot;Rp&quot;,&quot;section&quot;:&quot;Harga&quot;,&quot;min&quot;:0,&quot;max&quot;:10000,&quot;step&quot;:500}}">
+const MENU = [
+  {id:'ayam-ijo', name:'Ayam Penyet Sambal Ijo', desc:'Ayam goreng garing, sambal hijau nampol', price:22000, cat:'food', best:true},
+  {id:'ayam-ori', name:'Ayam Penyet Original', desc:'Sambal terasi khas + lalapan segar', price:20000, cat:'food'},
+  {id:'lele', name:'Lele Penyet', desc:'Lele goreng kremes, sambal mentah', price:19000, cat:'food'},
+  {id:'nasgor', name:'Nasi Goreng Spesial', desc:'Telur, ayam suwir, kerupuk, acar', price:18000, cat:'food', best:true},
+  {id:'seblak', name:'Seblak Ceker Pedas', desc:'Kerupuk basah, ceker, level 1–5', price:15000, cat:'food'},
+  {id:'tahutempe', name:'Tahu Tempe Penyet', desc:'Gorengan hangat + sambal bawang', price:8000, cat:'food'},
+  {id:'esteh', name:'Es Teh Jumbo', desc:'Manis segar, gelas jumbo', price:8000, cat:'drink', best:true},
+  {id:'esjeruk', name:'Es Jeruk Peras', desc:'Jeruk peras asli, seger', price:10000, cat:'drink'},
+];
+const GRADS = ['linear-gradient(135deg,#FFCE8F,#FF9A3D)','linear-gradient(135deg,#FFB7A0,#FF7A5C)','linear-gradient(135deg,#FFD98A,#F5A623)','linear-gradient(135deg,#FFC48F,#F97B3D)','linear-gradient(135deg,#FFD0A0,#FF8A4D)','linear-gradient(135deg,#F5C48A,#E8863D)'];
+const BENEFITS = [
+  {title:'Prioritas antrean tiap pesan', sub:'Pesananmu naik ke urutan depan otomatis'},
+  {title:'Gratis biaya prioritas', sub:'Hemat Rp8.000 setiap kali pesan'},
+  {title:'Berlaku di semua gerobak Antri', sub:'Sekali langganan, dipakai di mana aja'},
+  {title:'Promo & menu spesial mingguan', sub:'Diskon rutin khusus member'},
+];
+const CHIPS = ['Enak banget','Cepet','Porsi pas','Sambalnya mantap','Ramah'];
+const RLABEL = ['','Kurang oke','Lumayan','Cukup enak','Enak!','Mantap banget!'];
+const MINT='linear-gradient(135deg,#A6ECD9,#34C9A8)';
+const STALLS = [
+  {name:'Ayam Penyet My Bosz', type:'Nasi · Ayam', dist:'80 m', q:3, cat:'nasi', open:true, mx:'46%', my:'42%'},
+  {name:'Mie Ayam Pak Gino', type:'Mie · Bakso', dist:'120 m', q:15, cat:'mie', open:true, mx:'72%', my:'26%'},
+  {name:'Es Kelapa Bu Nur', type:'Minuman', dist:'60 m', q:2, cat:'minuman', open:true, grad:MINT, mx:'28%', my:'62%'},
+  {name:'Sate Taichan Bang Jul', type:'Jajanan · Sate', dist:'200 m', q:8, cat:'jajanan', open:true, mx:'60%', my:'68%'},
+  {name:'Nasi Padang Sederhana', type:'Nasi Padang', dist:'150 m', q:6, cat:'nasi', open:true, mx:'18%', my:'32%'},
+  {name:'Kopi Kaki Lima', type:'Minuman · Kopi', dist:'90 m', q:4, cat:'minuman', open:true, grad:MINT, mx:'84%', my:'54%'},
+  {name:'Batagor Kingsley', type:'Jajanan', dist:'240 m', q:0, cat:'jajanan', open:false, mx:'48%', my:'82%'},
+  {name:'Bakmi GM Gerobak', type:'Mie', dist:'300 m', q:0, cat:'mie', open:false, mx:'86%', my:'80%'},
+];
+const DFLT = [{v:'all',l:'Semua'},{v:'nasi',l:'Nasi'},{v:'mie',l:'Mie'},{v:'minuman',l:'Minuman'},{v:'jajanan',l:'Jajanan'},{v:'sepi',l:'Antrian Sepi'}];
+const SLOTS = [{t:'11.00',left:2},{t:'11.30'},{t:'12.00'},{t:'12.30',full:true},{t:'13.00'}];
+const CANCEL_REASONS = ['Salah pesan','Kelamaan','Berubah pikiran'];
+
+class Component extends DCLogic {
+  state = { screen:'splash', cart:{}, priority:false, payLeft:299, queueStage:0, peopleAhead:12, etaMin:18, rating:0, chips:{}, menuFilter:'all', subPlan:'tahun', subFrom:'landing', notif:false, notifStatus:true, notifPromo:true, discoView:'list', discoFilter:'all', pickupMode:'now', pickupSlot:'', pickupDone:false, pickupCode:'4729', cancelSheet:false, cancelReason:'', refundStage:0 };
+  _t = [];
+  componentDidMount(){ this._t.push(setTimeout(()=>this.go('landing'), 2100)); }
+  componentWillUnmount(){ this.clearT(); }
+  clearT(){ this._t.forEach(id=>{clearTimeout(id);clearInterval(id);}); this._t=[]; }
+  rp(n){ return 'Rp' + (n||0).toLocaleString('id-ID'); }
+  go(s){ this.clearT(); this.setState({screen:s}); try{window.scrollTo(0,0);}catch(e){}
+    if(s==='payment') this.startPay();
+    if(s==='queue') this.startQueue();
+    if(s==='refund') this.startRefund();
+  }
+  startPay(){ this.setState({payLeft:299});
+    this._t.push(setInterval(()=>this.setState(st=>({payLeft:Math.max(0,st.payLeft-1)})),1000));
+    this._t.push(setTimeout(()=>this.go('queue'),7000));
+  }
+  startQueue(){ this.setState({queueStage:0,peopleAhead:12,etaMin:18,notif:false});
+    this._t.push(setTimeout(()=>this.setState({queueStage:1}),3600));
+    this._t.push(setInterval(()=>this.setState(st=>({peopleAhead:Math.max(0,st.peopleAhead-2),etaMin:Math.max(2,st.etaMin-3)})),2000));
+    this._t.push(setTimeout(()=>{this.clearT();this.setState({queueStage:2,peopleAhead:0,etaMin:0,notif:true});},11000));
+  }
+  startRefund(){ this.setState({refundStage:0});
+    this._t.push(setTimeout(()=>this.setState({refundStage:1}),1500));
+  }
+  add(id){ this.setState(st=>({cart:{...st.cart,[id]:(st.cart[id]||0)+1}})); }
+  remove(id){ this.setState(st=>{const c={...st.cart};const q=(c[id]||0)-1;if(q<=0)delete c[id];else c[id]=q;return{cart:c};}); }
+  qr(){ if(this._qr) return this._qr; const N=28, cell=8; let s=99;
+    const rnd=()=>{ s=(s*1103515245+12345)&0x7fffffff; return (s>>17)&1; };
+    const boxes=[[0,0],[0,21],[21,0]];
+    const mods=[];
+    for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+      const b=boxes.find(([br,bc])=>r>=br&&r<br+7&&c>=bc&&c<bc+7);
+      let on;
+      if(b){ const rr=r-b[0], cc=c-b[1]; on=(rr===0||rr===6||cc===0||cc===6)||(rr>=2&&rr<=4&&cc>=2&&cc<=4); }
+      else on = rnd()===1;
+      if(on) mods.push({left:(c*cell)+'px', top:(r*cell)+'px'});
+    }
+    this._qr={mods, cell:cell+'px'}; return this._qr;
+  }
+  renderVals(){
+    const S=this.state;
+    const priorityFee=this.props.priorityFee ?? 8000;
+    const serviceFee=this.props.serviceFee ?? 2000;
+    const cart=S.cart;
+    const menuAll=MENU.map((m,i)=>{ const q=cart[m.id]||0; return {...m,
+      priceStr:this.rp(m.price), qty:q, qtyZero:q===0, qtyPos:q>0,
+      isDrink:m.cat==='drink', isFood:m.cat!=='drink',
+      grad: m.cat==='drink' ? 'linear-gradient(135deg,#A6ECD9,#34C9A8)' : GRADS[i%GRADS.length],
+      add:()=>this.add(m.id), remove:()=>this.remove(m.id) }; });
+    const f=S.menuFilter;
+    const menu=menuAll.filter(m=> f==='all'?true : f==='best'?m.best : m.cat===f);
+    const lines=menuAll.filter(m=>m.qty>0);
+    const count=Object.values(cart).reduce((a,b)=>a+b,0);
+    const subtotal=MENU.reduce((a,m)=>a+(cart[m.id]||0)*m.price,0);
+    const service=count?serviceFee:0;
+    const prio=S.priority?priorityFee:0;
+    const total=subtotal+service+prio;
+
+    const FLT=[{v:'all',l:'Semua'},{v:'best',l:'Terlaris'},{v:'food',l:'Makanan'},{v:'drink',l:'Minuman'}];
+    const filters=FLT.map(x=>{ const sel=S.menuFilter===x.v; return {label:x.l, onClick:()=>this.setState({menuFilter:x.v}),
+      bg: sel?'#23180F':'#fff', color: sel?'#fff':'#6B5D50' }; });
+
+    const q=this.qr();
+
+    const mm=Math.floor(S.payLeft/60), ss=S.payLeft%60;
+    const payMMSS=mm+':'+String(ss).padStart(2,'0');
+
+    const meta=[{k:'Dibayar',sub:'Pembayaran diterima'},{k:'Dimasak',sub:'Chef lagi masak pesananmu'},{k:'Siap Diambil',sub:'Ambil di gerobak, tunjukin nomormu'}];
+    const qs=S.queueStage;
+    const steps=meta.map((st,i)=>{ const done=i<qs, active=i===qs; return {
+      label:st.k, sub:st.sub, num:String(i+1), check:done, showNum:!done, line:i<meta.length-1,
+      circleBg: done?'#16C784':active?'#FF7A1A':'#F1E7DC',
+      circleColor:(done||active)?'#fff':'#B8A99B',
+      ring: active?'0 0 0 6px rgba(255,122,26,.16)':'none',
+      labelColor:(done||active)?'#23180F':'#B8A99B',
+      lineBg: done?'#16C784':'#F1E7DC' }; });
+    const statusText=['Menunggu dibayar','Lagi Dimasak!','Siap Diambil!'][qs];
+    const statusSub=['Pembayaran sedang dikonfirmasi','Sabar ya, enak nggak bakal lari','Buruan ke gerobak, mumpung hangat!'][qs];
+    const statusBg=['#FFF0E0','#FFEDD9','#DFF7EC'][qs];
+    const statusColor=['#B8791F','#E4560A','#0E9F6E'][qs];
+    const aheadLabel = S.peopleAhead>0 ? String(S.peopleAhead) : '0';
+    const etaVal = S.etaMin>0 ? '±'+S.etaMin : '≈';
+    const etaUnit = S.etaMin>0 ? 'menit lagi' : 'sebentar lagi';
+
+    const stars=[1,2,3,4,5].map(n=>({ n, onClick:()=>this.setState({rating:n}),
+      fill: n<=S.rating?'#FFB020':'#EFE6DA', stroke: n<=S.rating?'#FFB020':'#E0D4C4' }));
+    const chips=CHIPS.map(c=>{ const sel=!!S.chips[c]; return { label:c, onClick:()=>this.setState(s=>({chips:{...s.chips,[c]:!s.chips[c]}})),
+      border: sel?'#FF7A1A':'#EDE3D6', bg: sel?'#FFEEDF':'#fff', color: sel?'#E4560A':'#6B5D50' }; });
+
+    const subTahun=S.subPlan==='tahun';
+    const plans=[
+      {v:'bulan', name:'Bulanan', note:'Fleksibel, bisa stop kapan aja', price:this.rp(15000), per:'/bulan'},
+      {v:'tahun', name:'Tahunan', note:'Cuma Rp12.400/bulan', price:this.rp(149000), per:'/tahun', badge:true},
+    ].map(p=>{ const sel=S.subPlan===p.v; return {...p, onClick:()=>this.setState({subPlan:p.v}),
+      border: sel?'#7A3BF5':'#EDE3D6', dot: sel?'#7A3BF5':'#D6C9BA', dotFill: sel?'#7A3BF5':'transparent', badge:!!p.badge }; });
+
+    const discoFilters=DFLT.map(x=>{ const sel=S.discoFilter===x.v; return {label:x.l, onClick:()=>this.setState({discoFilter:x.v}),
+      bg: sel?'#23180F':'#fff', color: sel?'#fff':'#6B5D50' }; });
+    const df=S.discoFilter;
+    const stallList=STALLS.filter(s=> df==='all'?true : df==='sepi'?(s.open&&s.q<=5) : s.cat===df).map((s,i)=>{
+      const badge = !s.open ? {label:'Tutup',bg:'#F1E7DC',color:'#9A8A7C'}
+        : s.q<=5 ? {label:'Antrian '+s.q+' orang',bg:'#DFF7EC',color:'#0E9F6E'}
+        : {label:'Ramai · '+s.q+' orang',bg:'#FFEDD9',color:'#E4560A'};
+      const pinBg = !s.open?'#B8A99B' : s.q<=5?'#16C784':'#FF9A3D';
+      return {...s, grad:s.grad||GRADS[i%GRADS.length], isDrink:s.cat==='minuman', isFood:s.cat!=='minuman',
+        closed:!s.open, opacity:s.open?'1':'.6', cursor:s.open?'pointer':'default',
+        badgeLabel:badge.label, badgeBg:badge.bg, badgeColor:badge.color,
+        pinBg, pinLabel: s.open?(s.q+' org'):'Tutup',
+        onClick:()=>{ if(s.open) this.go('landing'); } };
+    });
+    const discoList=S.discoView==='list', discoMap=S.discoView==='map';
+
+    const isLater=S.pickupMode==='later';
+    const slots=SLOTS.map(s=>{ const sel=S.pickupSlot===s.t, full=!!s.full; return { t:s.t, full,
+      cursor: full?'not-allowed':'pointer', onClick: full?(()=>{}):(()=>this.setState({pickupSlot:s.t})),
+      border: (sel&&!full)?'#FF7A1A':'#EDE3D6', bg: full?'#F4ECE2':(sel?'#FFEEDF':'#fff'),
+      color: full?'#B8A99B':(sel?'#E4560A':'#23180F'), opacity: full?'.6':'1',
+      tag: full?'Penuh':(s.left?('Sisa '+s.left):''), tagColor: full?'#C4402F':(s.left?'#B8791F':'transparent') }; });
+    const chosen=SLOTS.find(x=>x.t===S.pickupSlot);
+    const hasSlot=isLater && !!S.pickupSlot && !(chosen&&chosen.full);
+    const codeDigits=(S.pickupCode||'4729').split('');
+
+    const aheadN=S.peopleAhead;
+    const tone = aheadN<=6 ? {label:'Antrean lancar',bg:'#DFF7EC',color:'#0E9F6E',dot:'#16C784'}
+      : aheadN<=13 ? {label:'Agak ramai',bg:'#FFF0E0',color:'#B8791F',dot:'#F5A623'}
+      : {label:'Lagi padat',bg:'#FFEBE9',color:'#E5484D',dot:'#F5566B'};
+    const cancelReasons=CANCEL_REASONS.map(r=>{ const sel=S.cancelReason===r; return {label:r,
+      onClick:()=>this.setState({cancelReason: sel?'':r}),
+      border:sel?'#E5484D':'#EDE3D6', bg:sel?'#FFEBE9':'#fff', color:sel?'#E5484D':'#6B5D50' }; });
+    const rstg=S.refundStage;
+    const rmeta=[{label:'Pesanan Dibatalkan',sub:'Pembatalan berhasil diterima'},{label:'Refund Diproses',sub:'Dana lagi dikembalikan ke metode pembayaranmu'},{label:'Dana Kembali',sub:'Masuk ke QRIS/e-wallet dalam 1–3 hari kerja'}];
+    const refundSteps=rmeta.map((m,i)=>{ let stt=i===0?'done':i===1?(rstg>=1?'done':'active'):'pending';
+      const done=stt==='done',active=stt==='active',pending=stt==='pending';
+      return {label:m.label, sub:m.sub, line:i<2, check:done, spin:active, dotOnly:pending,
+        circleBg:done?'#16C784':active?'#FF7A1A':'#F1E7DC', circleColor:(done||active)?'#fff':'#B8A99B',
+        ring:active?'0 0 0 6px rgba(255,122,26,.16)':'none', labelColor:(done||active)?'#23180F':'#9A8A7C',
+        lineBg:done?'#16C784':'#F1E7DC' }; });
+
+    return {
+      isSplash:S.screen==='splash', isLanding:S.screen==='landing', isMenu:S.screen==='menu',
+      isCart:S.screen==='cart', isPayment:S.screen==='payment', isQueue:S.screen==='queue',
+      isSub:S.screen==='sub', isRating:S.screen==='rating', isProfile:S.screen==='profile',
+      isDiscovery:S.screen==='discovery', isPickup:S.screen==='pickup',
+      discoFilters, stallList, discoList, discoMap,
+      listBg:discoList?'#fff':'transparent', listColor:discoList?'#E4560A':'#9A8A7C', listShadow:discoList?'0 2px 6px rgba(35,24,15,.1)':'none',
+      mapBg:discoMap?'#fff':'transparent', mapColor:discoMap?'#E4560A':'#9A8A7C', mapShadow:discoMap?'0 2px 6px rgba(35,24,15,.1)':'none',
+      isLater, slots, hasSlot, pickupSlot:S.pickupSlot,
+      nowBg:isLater?'transparent':'#fff', nowColor:isLater?'#9A8A7C':'#E4560A', nowShadow:isLater?'none':'0 3px 8px rgba(35,24,15,.08)',
+      laterBg:isLater?'#fff':'transparent', laterColor:isLater?'#E4560A':'#9A8A7C', laterShadow:isLater?'0 3px 8px rgba(35,24,15,.08)':'none',
+      codeDigits, pickupWaiting:!S.pickupDone, pickupDone:S.pickupDone,
+      isRefund:S.screen==='refund',
+      canCancel:S.queueStage===0, cannotCancel:S.queueStage===1,
+      toneLabel:tone.label, toneBg:tone.bg, toneColor:tone.color, toneDot:tone.dot,
+      cancelSheet:S.cancelSheet, cancelReasons, refundSteps, refundAmountStr:this.rp(total),
+      openCancel:()=>this.setState({cancelSheet:true}), closeCancel:()=>this.setState({cancelSheet:false}),
+      confirmCancel:()=>{ this.setState({cancelSheet:false}); this.go('refund'); },
+      pesanLagi:()=>{ this.setState({cart:{},priority:false,cancelReason:'',pickupMode:'now',pickupSlot:''}); this.go('landing'); },
+      stopProp:(e)=>{ if(e&&e.stopPropagation) e.stopPropagation(); },
+      goDiscovery:()=>this.go('discovery'), goPickup:()=>{ this.setState({pickupDone:false}); this.go('pickup'); },
+      setDiscoList:()=>this.setState({discoView:'list'}), setDiscoMap:()=>this.setState({discoView:'map'}),
+      setPickupNow:()=>this.setState({pickupMode:'now'}), setPickupLater:()=>this.setState({pickupMode:'later'}),
+      confirmPickup:()=>this.setState({pickupDone:true}),
+      nsTrack:S.notifStatus?'#FF7A1A':'#DDD2C4', nsKnob:S.notifStatus?'22px':'3px',
+      npTrack:S.notifPromo?'#7A3BF5':'#DDD2C4', npKnob:S.notifPromo?'22px':'3px',
+      goProfile:()=>this.go('profile'),
+      toggleNotifStatus:()=>this.setState(st=>({notifStatus:!st.notifStatus})),
+      toggleNotifPromo:()=>this.setState(st=>({notifPromo:!st.notifPromo})),
+      menu, lines, filters, hasCart:count>0, count,
+      subtotalStr:this.rp(subtotal), serviceFeeStr:this.rp(service||serviceFee), priorityFeeStr:this.rp(priorityFee), totalStr:this.rp(total),
+      showPrio:S.priority,
+      prioBorder:S.priority?'#7A3BF5':'#EDE3D6', prioBg:S.priority?'#F6F0FF':'#fff',
+      prioTrack:S.priority?'#7A3BF5':'#DDD2C4', prioKnob:S.priority?'22px':'3px',
+      qrMods:q.mods, qrCell:q.cell, payMMSS,
+      steps, statusText, statusSub, statusBg, statusColor,
+      qNum:'27', ahead:aheadLabel, etaVal, etaUnit, notif:S.notif,
+      queueReady:qs===2, queueWaiting:qs<2,
+      stars, chips, ratingLabel:RLABEL[S.rating]||'',
+      plans, subCta:this.rp(subTahun?149000:15000),
+      benefits:BENEFITS,
+      goLanding:()=>this.go('landing'), goMenu:()=>this.go('menu'), goCart:()=>this.go('cart'),
+      goQueue:()=>this.go('queue'), goRating:()=>this.go('rating'),
+      goSub:()=>{ this.setState({subFrom:this.state.screen}); this.go('sub'); },
+      subBack:()=>this.go(this.state.subFrom||'landing'),
+      payNow:()=>{ if(count) this.go('payment'); }, paidNow:()=>this.go('queue'),
+      togglePriority:()=>this.setState(st=>({priority:!st.priority})),
+      submitRating:()=>{ this.setState({cart:{},priority:false,rating:0,chips:{},menuFilter:'all',pickupMode:'now',pickupSlot:'',pickupDone:false,cancelReason:'',refundStage:0}); this.go('landing'); },
+    };
+  }
+}
+</script>
+</body>
+</html>
