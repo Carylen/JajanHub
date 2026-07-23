@@ -8,14 +8,18 @@ import type {
   LoyalCustomer,
   Order,
   Payout,
+  PickupRecord,
+  Preorder,
   QueueState,
   RefundState,
   Stall,
   SubscriptionBenefit,
   SubscriptionPlan,
+  Txn,
   UserProfile,
+  VendorMenuItem,
   VendorOrder,
-  VendorOrderStatus,
+  VendorSummary,
   Warung,
 } from './types';
 
@@ -43,9 +47,17 @@ export interface JajanhubClient {
   getProfile(): Promise<UserProfile>;
 
   /* vendor */
+  getVendorSummary(): Promise<VendorSummary>;
   getVendorOrders(): Promise<VendorOrder[]>;
-  updateVendorOrder(id: string, status: VendorOrderStatus): Promise<VendorOrder>;
-  rejectVendorOrder(id: string, reasonId: string): Promise<void>;
+  /** Move an order to its next stage (baru→masak→siap→done/removed). */
+  advanceVendorOrder(id: string): Promise<VendorOrder[]>;
+  rejectVendorOrder(id: string, reason: string): Promise<VendorOrder[]>;
+  getPreorders(): Promise<Preorder[]>;
+  verifyPickupCode(code: string): Promise<PickupRecord | null>;
+  getVendorMenu(): Promise<VendorMenuItem[]>;
+  setStock(itemId: string, inStock: boolean): Promise<VendorMenuItem[]>;
+  markAllOut(): Promise<VendorMenuItem[]>;
   getPayouts(): Promise<Payout[]>;
+  getTxns(): Promise<Txn[]>;
   getLoyalCustomers(): Promise<LoyalCustomer[]>;
 }

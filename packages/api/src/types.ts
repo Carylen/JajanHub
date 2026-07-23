@@ -157,7 +157,8 @@ export interface UserProfile {
 
 /* ----------------------------- Vendor domain ----------------------------- */
 
-export type VendorOrderStatus = 'new' | 'cooking' | 'ready';
+/** baru → masak → siap → (done, removed) or ditolak. */
+export type VendorOrderStatus = 'baru' | 'masak' | 'siap' | 'ditolak';
 
 export interface VendorOrderLine {
   name: string;
@@ -166,34 +167,79 @@ export interface VendorOrderLine {
 
 export interface VendorOrder {
   id: string;
-  code: string;
-  queueLabel: string;
-  customerName: string;
+  no: string;
+  waitMins: number;
   lines: VendorOrderLine[];
   total: number;
   priority: boolean;
   status: VendorOrderStatus;
-  pickupCode: string;
-  placedAgo: string;
+  rejectReason?: string;
+}
+
+/** A scheduled ("nanti") pre-order shown grouped by pickup slot. */
+export interface Preorder {
+  no: string;
+  slot: string;
+  customer: string;
+  lines: VendorOrderLine[];
+  priority: boolean;
+}
+
+/** A pickup code a vendor can verify against a ready order. */
+export interface PickupRecord {
+  code: string;
+  no: string;
+  customer: string;
+  slot: string;
+  lines: VendorOrderLine[];
+}
+
+export interface VendorMenuItem {
+  id: string;
+  name: string;
+  price: number;
+  cat: MenuCategory;
+  inStock: boolean;
 }
 
 export interface Payout {
   id: string;
   date: string;
   amount: number;
-  status: 'settled' | 'pending' | 'processing';
+  status: 'Cair' | 'Diproses';
+  sub: string;
+}
+
+export interface Txn {
+  no: string;
+  items: string;
+  time: string;
+  amount: number;
+  refund: boolean;
 }
 
 export interface LoyalCustomer {
   id: string;
   name: string;
   initials: string;
-  orders: number;
-  lastVisit: string;
-  spend: number;
+  transactions: number;
+  member: boolean;
+  favorite: string;
+  avatarGradient: string;
 }
 
 export interface RejectReason {
   id: string;
   label: string;
+}
+
+/** Home dashboard summary numbers. */
+export interface VendorSummary {
+  merchantName: string;
+  greeting: string;
+  dateLabel: string;
+  revenueToday: number;
+  revenueDeltaPct: number;
+  ordersToday: number;
+  avgServeLabel: string;
 }

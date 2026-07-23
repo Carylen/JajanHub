@@ -56,6 +56,14 @@ module.exports = {
         fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
         numflip: { from: { opacity: '0', transform: 'translateY(8px)' }, to: { opacity: '1', transform: 'none' } },
         spin: { to: { transform: 'rotate(360deg)' } },
+        barGrow: { from: { transform: 'scaleY(0)' }, to: { transform: 'scaleY(1)' } },
+        shakex: {
+          '0%,100%': { transform: 'translateX(0)' },
+          '20%': { transform: 'translateX(-8px)' },
+          '40%': { transform: 'translateX(8px)' },
+          '60%': { transform: 'translateX(-5px)' },
+          '80%': { transform: 'translateX(5px)' },
+        },
       },
       animation: {
         'screen-in': 'screenIn .4s ease',

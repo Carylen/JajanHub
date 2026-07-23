@@ -17,14 +17,18 @@ import type {
   LoyalCustomer,
   Order,
   Payout,
+  PickupRecord,
+  Preorder,
   QueueState,
   RefundState,
   Stall,
   SubscriptionBenefit,
   SubscriptionPlan,
+  Txn,
   UserProfile,
+  VendorMenuItem,
   VendorOrder,
-  VendorOrderStatus,
+  VendorSummary,
   Warung,
 } from './types';
 
@@ -35,8 +39,12 @@ export const queryKeys = {
   plans: ['plans'] as const,
   benefits: ['benefits'] as const,
   profile: ['profile'] as const,
+  vendorSummary: ['vendor', 'summary'] as const,
   vendorOrders: ['vendor', 'orders'] as const,
+  preorders: ['vendor', 'preorders'] as const,
+  vendorMenu: ['vendor', 'menu'] as const,
   payouts: ['vendor', 'payouts'] as const,
+  txns: ['vendor', 'txns'] as const,
   loyalCustomers: ['vendor', 'customers'] as const,
 };
 
@@ -97,33 +105,58 @@ export function useProfile(): UseQueryResult<UserProfile> {
   return useQuery({ queryKey: queryKeys.profile, queryFn: () => getClient().getProfile() });
 }
 
+export function useVendorSummary(): UseQueryResult<VendorSummary> {
+  return useQuery({ queryKey: queryKeys.vendorSummary, queryFn: () => getClient().getVendorSummary() });
+}
 export function useVendorOrders(): UseQueryResult<VendorOrder[]> {
   return useQuery({ queryKey: queryKeys.vendorOrders, queryFn: () => getClient().getVendorOrders() });
 }
-export function useUpdateVendorOrder(): UseMutationResult<
-  VendorOrder,
-  Error,
-  { id: string; status: VendorOrderStatus }
-> {
+export function useAdvanceVendorOrder(): UseMutationResult<VendorOrder[], Error, string> {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status }) => getClient().updateVendorOrder(id, status),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.vendorOrders }),
+    mutationFn: (id: string) => getClient().advanceVendorOrder(id),
+    onSuccess: (orders) => qc.setQueryData(queryKeys.vendorOrders, orders),
   });
 }
 export function useRejectVendorOrder(): UseMutationResult<
-  void,
+  VendorOrder[],
   Error,
-  { id: string; reasonId: string }
+  { id: string; reason: string }
 > {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, reasonId }) => getClient().rejectVendorOrder(id, reasonId),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.vendorOrders }),
+    mutationFn: ({ id, reason }) => getClient().rejectVendorOrder(id, reason),
+    onSuccess: (orders) => qc.setQueryData(queryKeys.vendorOrders, orders),
   });
+}
+export function usePreorders(): UseQueryResult<Preorder[]> {
+  return useQuery({ queryKey: queryKeys.preorders, queryFn: () => getClient().getPreorders() });
+}
+export function useVendorMenu(): UseQueryResult<VendorMenuItem[]> {
+  return useQuery({ queryKey: queryKeys.vendorMenu, queryFn: () => getClient().getVendorMenu() });
+}
+export function useSetStock(): UseMutationResult<VendorMenuItem[], Error, { itemId: string; inStock: boolean }> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ itemId, inStock }) => getClient().setStock(itemId, inStock),
+    onSuccess: (menu) => qc.setQueryData(queryKeys.vendorMenu, menu),
+  });
+}
+export function useMarkAllOut(): UseMutationResult<VendorMenuItem[], Error, void> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => getClient().markAllOut(),
+    onSuccess: (menu) => qc.setQueryData(queryKeys.vendorMenu, menu),
+  });
+}
+export function useVerifyPickupCode(): UseMutationResult<PickupRecord | null, Error, string> {
+  return useMutation({ mutationFn: (code: string) => getClient().verifyPickupCode(code) });
 }
 export function usePayouts(): UseQueryResult<Payout[]> {
   return useQuery({ queryKey: queryKeys.payouts, queryFn: () => getClient().getPayouts() });
+}
+export function useTxns(): UseQueryResult<Txn[]> {
+  return useQuery({ queryKey: queryKeys.txns, queryFn: () => getClient().getTxns() });
 }
 export function useLoyalCustomers(): UseQueryResult<LoyalCustomer[]> {
   return useQuery({ queryKey: queryKeys.loyalCustomers, queryFn: () => getClient().getLoyalCustomers() });

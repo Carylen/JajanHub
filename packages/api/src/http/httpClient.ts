@@ -11,14 +11,18 @@ import type {
   LoyalCustomer,
   Order,
   Payout,
+  PickupRecord,
+  Preorder,
   QueueState,
   RefundState,
   Stall,
   SubscriptionBenefit,
   SubscriptionPlan,
+  Txn,
   UserProfile,
+  VendorMenuItem,
   VendorOrder,
-  VendorOrderStatus,
+  VendorSummary,
   Warung,
 } from '../types';
 
@@ -77,18 +81,25 @@ export function createHttpClient(baseUrl: string): JajanhubClient {
     getBenefits: () => req<SubscriptionBenefit[]>('/benefits'),
     getProfile: () => req<UserProfile>('/me'),
 
+    getVendorSummary: () => req<VendorSummary>('/vendor/summary'),
     getVendorOrders: () => req<VendorOrder[]>('/vendor/orders'),
-    updateVendorOrder: (id, status: VendorOrderStatus) =>
-      req<VendorOrder>(`/vendor/orders/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ status }),
-      }),
-    rejectVendorOrder: (id, reasonId) =>
-      req<void>(`/vendor/orders/${id}/reject`, {
+    advanceVendorOrder: (id) => req<VendorOrder[]>(`/vendor/orders/${id}/advance`, { method: 'POST' }),
+    rejectVendorOrder: (id, reason) =>
+      req<VendorOrder[]>(`/vendor/orders/${id}/reject`, {
         method: 'POST',
-        body: JSON.stringify({ reasonId }),
+        body: JSON.stringify({ reason }),
       }),
+    getPreorders: () => req<Preorder[]>('/vendor/preorders'),
+    verifyPickupCode: (code) => req<PickupRecord | null>(`/vendor/pickup/${code}`),
+    getVendorMenu: () => req<VendorMenuItem[]>('/vendor/menu'),
+    setStock: (itemId, inStock) =>
+      req<VendorMenuItem[]>(`/vendor/menu/${itemId}/stock`, {
+        method: 'PATCH',
+        body: JSON.stringify({ inStock }),
+      }),
+    markAllOut: () => req<VendorMenuItem[]>('/vendor/menu/mark-all-out', { method: 'POST' }),
     getPayouts: () => req<Payout[]>('/vendor/payouts'),
+    getTxns: () => req<Txn[]>('/vendor/txns'),
     getLoyalCustomers: () => req<LoyalCustomer[]>('/vendor/customers'),
   };
 }

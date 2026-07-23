@@ -28,7 +28,24 @@ export type IconName =
   | 'list'
   | 'map'
   | 'cart-arrow'
-  | 'cup';
+  | 'cup'
+  | 'home'
+  | 'chart'
+  | 'users'
+  | 'grid4'
+  | 'play'
+  | 'bag'
+  | 'box'
+  | 'store'
+  | 'phone'
+  | 'printer'
+  | 'warning'
+  | 'x'
+  | 'backspace'
+  | 'qr'
+  | 'arrow-up'
+  | 'download'
+  | 'volume';
 
 const PATHS: Record<IconName, JSX.Element> = {
   'chevron-left': <path d="M15 6l-6 6 6 6" />,
@@ -131,6 +148,85 @@ const PATHS: Record<IconName, JSX.Element> = {
     <>
       <path d="M6 4.5h12l-1.1 14.4a2.2 2.2 0 0 1-2.2 2H9.3a2.2 2.2 0 0 1-2.2-2z" />
       <path d="M7.4 9.5h9.2" />
+    </>
+  ),
+  home: <path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" />,
+  chart: <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />,
+  users: (
+    <>
+      <circle cx="9" cy="8" r="3.2" />
+      <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
+      <path d="M16 6.5a3 3 0 0 1 0 5.5M20.5 19a5 5 0 0 0-3.5-4.8" />
+    </>
+  ),
+  grid4: (
+    <>
+      <rect x="3.5" y="3.5" width="7" height="7" rx="2" />
+      <rect x="13.5" y="3.5" width="7" height="7" rx="2" />
+      <rect x="3.5" y="13.5" width="7" height="7" rx="2" />
+      <rect x="13.5" y="13.5" width="7" height="7" rx="2" />
+    </>
+  ),
+  play: <path d="M8 5l11 7-11 7z" fill="currentColor" stroke="none" />,
+  bag: (
+    <>
+      <path d="M6 8h12l-1 12H7z" />
+      <path d="M9 8a3 3 0 0 1 6 0" />
+    </>
+  ),
+  box: (
+    <>
+      <path d="M4 7l8-4 8 4v10l-8 4-8-4z" />
+      <path d="M4 7l8 4 8-4M12 11v10" />
+    </>
+  ),
+  store: (
+    <>
+      <path d="M4 21V9l8-5 8 5v12" />
+      <path d="M9 21v-6h6v6" />
+    </>
+  ),
+  phone: <path d="M4.5 5.5c0 8 6 14 14 14l2-3.2-4-2-1.6 1.6a11 11 0 0 1-4.4-4.4L12.6 9l-2-4z" />,
+  printer: (
+    <>
+      <rect x="6" y="3" width="12" height="5" />
+      <path d="M6 17H4v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6h-2" />
+      <rect x="7" y="15" width="10" height="6" />
+    </>
+  ),
+  warning: (
+    <>
+      <path d="M12 8v5" />
+      <circle cx="12" cy="16.5" r="1.2" fill="currentColor" stroke="none" />
+      <path d="M12 3.5L2.5 20h19z" />
+    </>
+  ),
+  x: <path d="M6 6l12 12M18 6L6 18" />,
+  backspace: (
+    <>
+      <path d="M9 5h11v14H9L3 12z" />
+      <path d="M12 10l4 4M16 10l-4 4" />
+    </>
+  ),
+  qr: (
+    <>
+      <rect x="4" y="4" width="6" height="6" rx="1" />
+      <rect x="4" y="14" width="6" height="6" rx="1" />
+      <rect x="14" y="4" width="6" height="6" rx="1" />
+      <path d="M14 14h3v6M20 14v6" />
+    </>
+  ),
+  'arrow-up': <path d="M5 15l7-7 7 7" />,
+  download: (
+    <>
+      <path d="M12 3v13M6 11l6 6 6-6" />
+      <path d="M5 21h14" />
+    </>
+  ),
+  volume: (
+    <>
+      <path d="M4 9v6h4l6 4V5L8 9H4z" />
+      <path d="M17 9a4 4 0 0 1 0 6" />
     </>
   ),
 };

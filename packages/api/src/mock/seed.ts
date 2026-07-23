@@ -8,13 +8,18 @@ import type {
   LoyalCustomer,
   MenuItem,
   Payout,
+  PickupRecord,
   PickupSlot,
+  Preorder,
   RejectReason,
   Stall,
   SubscriptionBenefit,
   SubscriptionPlan,
+  Txn,
   UserProfile,
+  VendorMenuItem,
   VendorOrder,
+  VendorSummary,
   Warung,
 } from '../types';
 
@@ -97,66 +102,77 @@ export const PROFILE: UserProfile = {
 
 /* ------------------------------ Vendor seed ------------------------------ */
 
+export const VENDOR_SUMMARY: VendorSummary = {
+  merchantName: 'Ayam Penyet My Bosz',
+  greeting: 'Halo Pak Budi',
+  dateLabel: 'Senin, 22 Jul',
+  revenueToday: 1_240_000,
+  revenueDeltaPct: 18,
+  ordersToday: 42,
+  avgServeLabel: '4 mnt 30 dtk',
+};
+
 export const VENDOR_ORDERS: VendorOrder[] = [
-  {
-    id: 'AY-2071',
-    code: '#AY-2071',
-    queueLabel: 'A27',
-    customerName: 'Rizky P.',
-    lines: [
-      { name: 'Ayam Penyet Sambal Ijo', qty: 1 },
-      { name: 'Es Teh Jumbo', qty: 2 },
-    ],
-    total: 40000,
-    priority: true,
-    status: 'new',
-    pickupCode: '4729',
-    placedAgo: '2 mnt lalu',
-  },
-  {
-    id: 'AY-2072',
-    code: '#AY-2072',
-    queueLabel: 'A28',
-    customerName: 'Dewi S.',
-    lines: [{ name: 'Nasi Goreng Spesial', qty: 1 }],
-    total: 20000,
-    priority: false,
-    status: 'cooking',
-    pickupCode: '8153',
-    placedAgo: '5 mnt lalu',
-  },
-  {
-    id: 'AY-2073',
-    code: '#AY-2073',
-    queueLabel: 'A29',
-    customerName: 'Bagus W.',
-    lines: [
-      { name: 'Lele Penyet', qty: 2 },
-      { name: 'Es Jeruk Peras', qty: 1 },
-    ],
-    total: 48000,
-    priority: false,
-    status: 'ready',
-    pickupCode: '3061',
-    placedAgo: '9 mnt lalu',
-  },
+  { id: '5', no: 'A-26', waitMins: 1, lines: [{ name: 'Ayam Penyet Original', qty: 1 }, { name: 'Es Teh Jumbo', qty: 2 }], total: 36000, priority: true, status: 'baru' },
+  { id: '1', no: 'A-24', waitMins: 2, lines: [{ name: 'Ayam Penyet Sambal Ijo', qty: 1 }, { name: 'Es Teh Jumbo', qty: 1 }], total: 30000, priority: true, status: 'baru' },
+  { id: '2', no: 'A-25', waitMins: 4, lines: [{ name: 'Nasi Goreng Spesial', qty: 2 }], total: 38000, priority: false, status: 'baru' },
+  { id: '3', no: 'A-23', waitMins: 6, lines: [{ name: 'Lele Penyet', qty: 1 }, { name: 'Tahu Tempe Penyet', qty: 1 }, { name: 'Es Jeruk Peras', qty: 1 }], total: 37000, priority: false, status: 'masak' },
+  { id: '4', no: 'A-22', waitMins: 9, lines: [{ name: 'Seblak Ceker Pedas', qty: 1 }], total: 15000, priority: false, status: 'siap' },
 ];
 
+export const PREORDERS: Preorder[] = [
+  { no: 'P-31', slot: '11.00', customer: 'Bu Sari', lines: [{ name: 'Ayam Penyet Sambal Ijo', qty: 2 }, { name: 'Es Teh Jumbo', qty: 2 }], priority: true },
+  { no: 'P-32', slot: '11.00', customer: 'Kantor Pak Deni', lines: [{ name: 'Nasi Goreng Spesial', qty: 4 }], priority: false },
+  { no: 'P-33', slot: '11.30', customer: 'Mbak Tuti', lines: [{ name: 'Lele Penyet', qty: 1 }, { name: 'Es Jeruk Peras', qty: 1 }], priority: false },
+  { no: 'P-34', slot: '12.00', customer: 'Rapat Lantai 3', lines: [{ name: 'Ayam Penyet Original', qty: 6 }], priority: false },
+  { no: 'P-35', slot: '12.00', customer: 'Mas Andi', lines: [{ name: 'Seblak Ceker Pedas', qty: 2 }], priority: true },
+  { no: 'P-36', slot: '12.00', customer: 'Bu Rina', lines: [{ name: 'Nasi Goreng Spesial', qty: 1 }, { name: 'Es Teh Jumbo', qty: 2 }], priority: false },
+  { no: 'P-37', slot: '12.30', customer: 'Pak Rahmat', lines: [{ name: 'Tahu Tempe Penyet', qty: 3 }], priority: false },
+];
+
+export const SLOT_ORDER = ['11.00', '11.30', '12.00', '12.30', '13.00'] as const;
+
+export const PICKUP_RECORDS: PickupRecord[] = [
+  { code: '4729', no: 'A-22', customer: 'Andi Wijaya', slot: 'Ambil sekarang', lines: [{ name: 'Seblak Ceker Pedas', qty: 1 }] },
+  { code: '8315', no: 'A-23', customer: 'Sinta Dewi', slot: 'Ambil sekarang', lines: [{ name: 'Lele Penyet', qty: 1 }, { name: 'Tahu Tempe Penyet', qty: 1 }, { name: 'Es Jeruk Peras', qty: 1 }] },
+  { code: '6042', no: 'P-31', customer: 'Bu Sari', slot: 'Slot 11.00', lines: [{ name: 'Ayam Penyet Sambal Ijo', qty: 2 }, { name: 'Es Teh Jumbo', qty: 2 }] },
+];
+
+export const VENDOR_MENU: VendorMenuItem[] = MENU.map((m) => ({
+  id: m.id,
+  name: m.name,
+  price: m.price,
+  cat: m.cat,
+  inStock: true,
+}));
+
 export const PAYOUTS: Payout[] = [
-  { id: 'p1', date: '22 Jul 2026', amount: 1_240_000, status: 'settled' },
-  { id: 'p2', date: '21 Jul 2026', amount: 980_000, status: 'settled' },
-  { id: 'p3', date: '20 Jul 2026', amount: 1_115_000, status: 'settled' },
+  { id: 'p0', date: 'Hari ini', amount: 420_000, status: 'Diproses', sub: 'Menunggu dicairkan besok' },
+  { id: 'p1', date: 'Kemarin · 21 Jul', amount: 1_180_000, status: 'Cair', sub: 'BCA •••• 3391' },
+  { id: 'p2', date: '20 Jul', amount: 960_000, status: 'Cair', sub: 'BCA •••• 3391' },
+  { id: 'p3', date: '19 Jul', amount: 1_035_000, status: 'Cair', sub: 'BCA •••• 3391' },
+];
+
+export const TXNS: Txn[] = [
+  { no: 'A-24', items: 'Ayam Sambal Ijo, Es Teh', time: '12.31', amount: 29000, refund: false },
+  { no: 'A-23', items: 'Lele Penyet, Tahu, Es Jeruk', time: '12.24', amount: 35800, refund: false },
+  { no: 'A-22', items: 'Seblak Ceker Pedas', time: '12.09', amount: 14500, refund: false },
+  { no: 'A-21', items: 'Nasi Goreng Spesial ×2', time: '11.58', amount: 36000, refund: false },
+  { no: 'A-20', items: 'Ayam Penyet Original', time: '11.47', amount: 20000, refund: true },
+  { no: 'A-19', items: 'Es Teh Jumbo ×3', time: '11.32', amount: 23400, refund: false },
 ];
 
 export const LOYAL_CUSTOMERS: LoyalCustomer[] = [
-  { id: 'l1', name: 'Rizky Pratama', initials: 'RP', orders: 48, lastVisit: 'Hari ini', spend: 1_120_000 },
-  { id: 'l2', name: 'Dewi Sartika', initials: 'DS', orders: 31, lastVisit: 'Kemarin', spend: 740_000 },
-  { id: 'l3', name: 'Bagus Wibowo', initials: 'BW', orders: 22, lastVisit: '2 hari lalu', spend: 560_000 },
+  { id: 'l1', name: 'Bu Sari', initials: 'BS', transactions: 38, member: true, favorite: 'Ayam Sambal Ijo', avatarGradient: 'linear-gradient(135deg,#FFB870,#FF7A1A)' },
+  { id: 'l2', name: 'Mas Andi', initials: 'MA', transactions: 27, member: true, favorite: 'Nasi Goreng Spesial', avatarGradient: 'linear-gradient(135deg,#34C9A8,#16C784)' },
+  { id: 'l3', name: 'Pak Rahmat', initials: 'PR', transactions: 19, member: false, favorite: 'Lele Penyet', avatarGradient: 'linear-gradient(135deg,#A879FF,#7A3BF5)' },
+  { id: 'l4', name: 'Dinda', initials: 'DN', transactions: 15, member: true, favorite: 'Seblak Ceker', avatarGradient: 'linear-gradient(135deg,#FFB7A0,#FF7A5C)' },
+  { id: 'l5', name: 'Koh Aliong', initials: 'KA', transactions: 12, member: false, favorite: 'Es Teh Jumbo', avatarGradient: 'linear-gradient(135deg,#FFD98A,#F5A623)' },
+  { id: 'l6', name: 'Mbak Tuti', initials: 'MT', transactions: 9, member: false, favorite: 'Tahu Tempe Penyet', avatarGradient: 'linear-gradient(135deg,#8FB7FF,#4D7BF5)' },
 ];
 
 export const REJECT_REASONS: RejectReason[] = [
   { id: 'habis', label: 'Bahan habis' },
-  { id: 'tutup', label: 'Mau tutup' },
-  { id: 'ramai', label: 'Lagi ramai banget' },
-  { id: 'lain', label: 'Alasan lain' },
+  { id: 'ramai', label: 'Terlalu ramai' },
+  { id: 'tutup', label: 'Tutup dulu' },
 ];

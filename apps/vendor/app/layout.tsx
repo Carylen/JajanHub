@@ -33,7 +33,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id" className={`${bricolage.variable} ${jakarta.variable}`}>
       <body className="bg-sand text-ink font-sans">
-        <Providers>{children}</Providers>
+        <Providers>
+          {/* Vendor app is app-like: a centered column that reads well on phone & tablet. */}
+          <div className="mx-auto max-w-[480px] min-h-screen bg-cream relative overflow-x-hidden shadow-[0_0_70px_rgba(0,0,0,.1)]">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );

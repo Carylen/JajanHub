@@ -13,6 +13,7 @@ import type {
   OrderStatus,
   QueueState,
   RefundState,
+  VendorMenuItem,
   VendorOrder,
   VendorOrderStatus,
   Warung,
@@ -22,10 +23,15 @@ import {
   DEFAULT_MERCHANT_ID,
   LOYAL_CUSTOMERS,
   PAYOUTS,
+  PICKUP_RECORDS,
   PLANS,
+  PREORDERS,
   PROFILE,
   STALLS,
+  TXNS,
+  VENDOR_MENU,
   VENDOR_ORDERS,
+  VENDOR_SUMMARY,
   WARUNGS,
 } from './seed';
 import { orderStore } from './store';
@@ -47,7 +53,16 @@ export function stageOf(status: OrderStatus): number {
   return 0;
 }
 
+const VENDOR_NEXT: Record<VendorOrderStatus, VendorOrderStatus | 'done'> = {
+  baru: 'masak',
+  masak: 'siap',
+  siap: 'done',
+  ditolak: 'ditolak',
+};
+
+// Module-level mutable vendor state (mirrors the design's local component state).
 let vendorOrders: VendorOrder[] = VENDOR_ORDERS.map((o) => ({ ...o }));
+let vendorMenu: VendorMenuItem[] = VENDOR_MENU.map((m) => ({ ...m }));
 
 export function createMockClient(): JajanhubClient {
   return {
@@ -232,24 +247,59 @@ export function createMockClient(): JajanhubClient {
       return PROFILE;
     },
 
+    async getVendorSummary() {
+      await delay(150);
+      return VENDOR_SUMMARY;
+    },
     async getVendorOrders() {
       await delay(200);
       return vendorOrders.map((o) => ({ ...o }));
     },
-    async updateVendorOrder(id, status: VendorOrderStatus) {
-      await delay(150);
-      vendorOrders = vendorOrders.map((o) => (o.id === id ? { ...o, status } : o));
-      const updated = vendorOrders.find((o) => o.id === id);
-      if (!updated) throw new Error('Pesanan tidak ditemukan');
-      return { ...updated };
+    async advanceVendorOrder(id) {
+      await delay(120);
+      vendorOrders = vendorOrders
+        .map((o) => {
+          if (o.id !== id) return o;
+          const next = VENDOR_NEXT[o.status];
+          return next === 'done' ? { ...o, status: 'done' as VendorOrderStatus } : { ...o, status: next };
+        })
+        .filter((o) => (o.status as string) !== 'done');
+      return vendorOrders.map((o) => ({ ...o }));
     },
-    async rejectVendorOrder(id) {
+    async rejectVendorOrder(id, reason: string) {
+      await delay(120);
+      vendorOrders = vendorOrders.map((o) => (o.id === id ? { ...o, status: 'ditolak', rejectReason: reason } : o));
+      return vendorOrders.map((o) => ({ ...o }));
+    },
+    async getPreorders() {
       await delay(150);
-      vendorOrders = vendorOrders.filter((o) => o.id !== id);
+      return PREORDERS;
+    },
+    async verifyPickupCode(code: string) {
+      await delay(200);
+      return PICKUP_RECORDS.find((r) => r.code === code) ?? null;
+    },
+    async getVendorMenu() {
+      await delay(150);
+      return vendorMenu.map((m) => ({ ...m }));
+    },
+    async setStock(itemId, inStock) {
+      await delay(80);
+      vendorMenu = vendorMenu.map((m) => (m.id === itemId ? { ...m, inStock } : m));
+      return vendorMenu.map((m) => ({ ...m }));
+    },
+    async markAllOut() {
+      await delay(120);
+      vendorMenu = vendorMenu.map((m) => ({ ...m, inStock: false }));
+      return vendorMenu.map((m) => ({ ...m }));
     },
     async getPayouts() {
       await delay(200);
       return PAYOUTS;
+    },
+    async getTxns() {
+      await delay(200);
+      return TXNS;
     },
     async getLoyalCustomers() {
       await delay(200);
