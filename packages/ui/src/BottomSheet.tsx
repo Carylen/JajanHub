@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { cn } from './cn';
+import { useOverlayBehavior } from './useOverlayBehavior';
 
 export interface BottomSheetProps {
   open: boolean;
@@ -29,19 +30,7 @@ export function BottomSheet({
   const [dragY, setDragY] = useState(0);
   const startY = useRef<number | null>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [open, onClose]);
+  useOverlayBehavior(open, onClose);
 
   if (!open) return null;
 

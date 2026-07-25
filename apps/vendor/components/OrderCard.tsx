@@ -2,7 +2,7 @@
 import type { VendorOrder, VendorOrderStatus } from '@jajanhub/api';
 import { Icon, Money, cn, type IconName } from '@jajanhub/ui';
 
-interface StatusConfig {
+export interface StatusConfig {
   chipText: string;
   chipClass: string;
   cooking: boolean;
@@ -11,7 +11,9 @@ interface StatusConfig {
   btnIcon: IconName;
 }
 
-const CONFIG: Record<Exclude<VendorOrderStatus, 'ditolak'>, StatusConfig> = {
+/** Exported so KanbanOrderCard (desktop) reuses the same text/icon/cooking
+ * mapping, applying its own color classes for the reference's palette. */
+export const ORDER_STATUS_CONFIG: Record<Exclude<VendorOrderStatus, 'ditolak'>, StatusConfig> = {
   baru: {
     chipText: 'Pesanan Baru',
     chipClass: 'bg-[#FFF0E0] text-[#B8791F]',
@@ -45,7 +47,7 @@ interface OrderCardProps {
 }
 
 export function OrderCard({ order, onAdvance, onReject }: OrderCardProps) {
-  const cfg = order.status === 'ditolak' ? null : CONFIG[order.status];
+  const cfg = order.status === 'ditolak' ? null : ORDER_STATUS_CONFIG[order.status];
   const rejected = cfg === null;
   const num = order.no.split('-')[1];
   const canReject = !rejected && (order.status === 'baru' || order.status === 'masak');

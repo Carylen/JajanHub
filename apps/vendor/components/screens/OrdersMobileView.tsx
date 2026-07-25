@@ -1,51 +1,30 @@
 'use client';
-import { useMemo, useState } from 'react';
-import {
-  useVendorOrders,
-  useAdvanceVendorOrder,
-  useRejectVendorOrder,
-  usePreorders,
-  SLOT_ORDER,
-  type Preorder,
-} from '@jajanhub/api';
+import { useState } from 'react';
+import { usePreorders, SLOT_ORDER, type Preorder } from '@jajanhub/api';
 import { Icon, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
 import { OrderCard } from '../OrderCard';
 import { RejectSheet } from '../RejectSheet';
 import { VerifyCodeSheet } from '../VerifyCodeSheet';
 import { useVendorUi } from '../../lib/ui-store';
+import type { OrdersScreenView } from './useOrdersScreen';
 
 type Tab = 'now' | 'later';
 
-export function Orders() {
-  const { data: orders, isLoading, isError, refetch } = useVendorOrders();
+export function OrdersMobileView(vm: OrdersScreenView) {
   const { data: preorders = [] } = usePreorders();
-  const advance = useAdvanceVendorOrder();
-  const reject = useRejectVendorOrder();
+  const verifyOpen = useVendorUi((s) => s.verifyOpen);
+  const openVerify = useVendorUi((s) => s.openVerify);
+  const closeVerify = useVendorUi((s) => s.closeVerify);
   const openStock = useVendorUi((s) => s.openStockSheet);
 
   const [tab, setTab] = useState<Tab>('now');
-  const [verifyOpen, setVerifyOpen] = useState(false);
-  const [rejectId, setRejectId] = useState<string | null>(null);
   const [quota, setQuota] = useState<Record<string, number>>(() =>
     Object.fromEntries(SLOT_ORDER.map((s) => [s, 6])),
   );
 
-  const sorted = useMemo(() => {
-    const list = [...(orders ?? [])];
-    return list.sort((a, b) => {
-      const ar = a.status === 'ditolak' ? 1 : 0;
-      const br = b.status === 'ditolak' ? 1 : 0;
-      if (ar !== br) return ar - br;
-      return Number(b.priority) - Number(a.priority) || b.waitMins - a.waitMins;
-    });
-  }, [orders]);
-
-  const activeCount = (orders ?? []).filter((o) => o.status !== 'ditolak').length;
-  const rejectingOrder = orders?.find((o) => o.id === rejectId);
-
-  if (isLoading) return <LoadingState label="Memuat pesanan…" />;
-  if (isError || !orders) return <ErrorState onRetry={() => refetch()} />;
+  if (vm.isLoading) return <LoadingState label="Memuat pesanan…" />;
+  if (vm.isError || !vm.orders) return <ErrorState onRetry={vm.refetch} />;
 
   const slotGroups = SLOT_ORDER.filter((sl) => preorders.some((p) => p.slot === sl)).map((sl) => {
     const list = preorders.filter((p) => p.slot === sl);
@@ -61,7 +40,7 @@ export function Orders() {
         <div className="font-display font-extrabold text-2xl tracking-[-.5px]">Pesanan Masuk</div>
         <div className="text-[13px] text-faint flex items-center gap-1.5 mt-0.5">
           <span className="w-2 h-2 rounded-full bg-mint animate-pulse" />
-          Live · {activeCount} pesanan aktif
+          Live · {vm.activeCount} pesanan aktif
         </div>
         <div className="flex gap-1.5 bg-[#F1E7DC] rounded-[15px] p-[5px] mt-3.5">
           <button
@@ -86,14 +65,14 @@ export function Orders() {
 
       {tab === 'now' ? (
         <div className="px-5 pt-1.5 flex flex-col gap-3.5">
-          {sorted.length === 0 ? (
+          {vm.sorted.length === 0 ? (
             <div className="text-center py-16 text-faint">
               <div className="font-display font-extrabold text-[19px] text-ink">Semua pesanan beres!</div>
               <div className="text-sm mt-1.5">Belum ada antrian baru. Santai dulu ☕</div>
             </div>
           ) : (
-            sorted.map((o) => (
-              <OrderCard key={o.id} order={o} onAdvance={() => advance.mutate(o.id)} onReject={() => setRejectId(o.id)} />
+            vm.sorted.map((o) => (
+              <OrderCard key={o.id} order={o} onAdvance={() => vm.advance(o.id)} onReject={() => vm.openReject(o.id)} />
             ))
           )}
         </div>
@@ -130,7 +109,7 @@ export function Orders() {
       <div className="fixed left-1/2 -translate-x-1/2 bottom-[104px] w-full max-w-[480px] px-5 z-40 flex gap-2.5">
         <button
           type="button"
-          onClick={() => setVerifyOpen(true)}
+          onClick={openVerify}
           className="flex-1 bg-mint text-white rounded-[18px] py-[17px] font-extrabold text-base flex items-center justify-center gap-2.5 shadow-[0_12px_28px_rgba(22,199,132,.4)] transition-transform active:scale-[.97]"
         >
           <Icon name="grid" size={21} className="text-white" />
@@ -147,15 +126,13 @@ export function Orders() {
         </button>
       </div>
 
-      <VerifyCodeSheet open={verifyOpen} onClose={() => setVerifyOpen(false)} />
+      <VerifyCodeSheet open={verifyOpen} onClose={closeVerify} />
       <RejectSheet
-        open={rejectId !== null}
-        orderNo={rejectingOrder?.no ?? ''}
-        onClose={() => setRejectId(null)}
-        pending={reject.isPending}
-        onConfirm={(reason) => {
-          if (rejectId) reject.mutate({ id: rejectId, reason }, { onSuccess: () => setRejectId(null) });
-        }}
+        open={vm.rejectId !== null}
+        orderNo={vm.rejectingOrder?.no ?? ''}
+        onClose={vm.closeReject}
+        pending={vm.rejectPending}
+        onConfirm={vm.confirmReject}
       />
     </div>
   );
@@ -192,7 +169,6 @@ function SlotGroupCard({
         {full && <span className="flex-none bg-[#FDE0DA] text-brand-press text-[11px] font-extrabold px-[11px] py-[5px] rounded-full">PENUH</span>}
       </div>
 
-      {/* Quota control */}
       <div className="mt-3.5 bg-[#FAF4EC] rounded-[16px] px-3.5 py-3 flex items-center justify-between">
         <div>
           <div className="text-[13px] font-bold text-muted">Kuota per slot</div>
@@ -209,7 +185,6 @@ function SlotGroupCard({
         </div>
       </div>
 
-      {/* Preorder rows */}
       <div className="mt-3.5 flex flex-col gap-[9px]">
         {list.map((p) => {
           const porsiP = p.lines.reduce((a, l) => a + l.qty, 0);

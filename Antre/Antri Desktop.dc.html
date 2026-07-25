@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#E7DCCE;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#23180F}
+a{color:#E85D04;text-decoration:none}a:hover{color:#c74e03}
+button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+::selection{background:#FFD9B8}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-thumb{background:#D6C7B4;border-radius:99px;border:3px solid transparent;background-clip:content-box}
+::-webkit-scrollbar-thumb:hover{background:#C4B29B;background-clip:content-box}
+@keyframes screenIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(1)}42%{transform:scale(1.28)}100%{transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.78)}}
+@keyframes ringpulse{0%{box-shadow:0 0 0 0 rgba(255,122,26,.4)}70%{box-shadow:0 0 0 20px rgba(255,122,26,0)}100%{box-shadow:0 0 0 0 rgba(255,122,26,0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popin{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes qnum{from{opacity:0;transform:scale(.72)}to{opacity:1;transform:none}}
+@keyframes cartIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="display:flex;min-height:100vh;width:100%;background:#E7DCCE">
+
+<!-- ============ SIDEBAR ============ -->
+<aside style="flex:none;width:266px;background:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:24px 18px;box-shadow:2px 0 24px rgba(35,24,15,.05)">
+  <div style="display:flex;align-items:center;gap:11px;padding:2px 6px 20px">
+    <div style="flex:none;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#FFB870,#FF7A1A);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(255,122,26,.32)">
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M4 20.5h16" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M6 20V10a6 6 0 0 1 12 0v10" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7V3.5M12 6.4V3M15 7V3.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;letter-spacing:-.6px">Antri</div>
+  </div>
+
+  <div style="background:linear-gradient(155deg,#FFB870,#FF7A1A 60%,#E4560A);border-radius:20px;padding:18px;color:#fff;position:relative;overflow:hidden">
+    <svg style="position:absolute;right:-20px;bottom:-24px;opacity:.16" width="130" height="130" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.2" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="12" r="5" stroke="#fff" stroke-width="1.2"/></svg>
+    <div style="position:relative">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.22);font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Terverifikasi</span>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;line-height:1.15;margin-top:11px">Ayam Penyet<br>My Bosz</div>
+      <div style="font-size:12.5px;opacity:.92;margin-top:5px;display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.9s infinite"></span>Buka · 10.00–22.00</div>
+    </div>
+  </div>
+
+  <nav style="display:flex;flex-direction:column;gap:3px;margin-top:20px">
+    <div style="font-size:11px;font-weight:800;color:#B0A192;letter-spacing:.5px;padding:0 12px 8px">KATEGORI</div>
+    <sc-for list="{{ cats }}" as="c" hint-placeholder-count="4">
+      <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;border:none;text-align:left;padding:11px 13px;border-radius:13px;background:{{ c.bg }};color:{{ c.color }};font-weight:700;font-size:14.5px;transition:background .15s" style-hover="background:#FBF1E6">
+        <span style="flex:none;display:flex;color:{{ c.iconColor }}">{{ c.icon }}</span>
+        <span style="flex:1">{{ c.label }}</span>
+        <span style="flex:none;font-size:13px;font-weight:700;color:{{ c.countColor }}">{{ c.count }}</span>
+      </button>
+    </sc-for>
+  </nav>
+
+  <div style="margin-top:auto;background:#F4F0FF;border:1px solid #E4D8FF;border-radius:16px;padding:15px;display:flex;align-items:center;gap:12px">
+    <span style="flex:none;width:38px;height:38px;border-radius:12px;background:#7A3BF5;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.6-.7z" fill="#fff"/></svg></span>
+    <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:13.5px;color:#5B2BC4">Antri Priority</div><div style="font-size:11.5px;color:#8B6FC9">Naik antrean tiap pesan</div></div>
+  </div>
+</aside>
+
+<!-- ============ MAIN ============ -->
+<main style="flex:1;min-width:0;display:flex;background:#F1E7DC">
+
+  <!-- catalog -->
+  <sc-if value="{{ isOrder }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <div style="position:relative;height:180px;background:linear-gradient(158deg,#FFB870,#FF7A1A 56%,#E4560A);overflow:hidden;flex:none">
+      <div style="position:absolute;inset:0;background:radial-gradient(60% 80% at 82% 0%,rgba(255,255,255,.28),transparent)"></div>
+      <div style="position:relative;padding:34px 40px;color:#fff">
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;letter-spacing:-.8px;line-height:1">Mau makan apa hari ini?</div>
+        <div style="font-size:15px;opacity:.95;margin-top:8px;max-width:520px;line-height:1.5">Pesan sekarang, bayar online, tinggal ambil pas nomormu dipanggil. Nggak pakai antre lama.</div>
+      </div>
+    </div>
+
+    <div style="padding:22px 40px 12px;display:flex;align-items:center;gap:16px;flex:none">
+      <div style="flex:1;display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:13px 17px;box-shadow:0 3px 12px rgba(35,24,15,.05)">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#B0A192" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#B0A192" stroke-width="2" stroke-linecap="round"/></svg>
+        <input value="{{ query }}" onInput="{{ onSearch }}" placeholder="Cari menu favoritmu…" style="flex:1;border:none;outline:none;background:none;font-size:15px;color:#23180F;min-width:0">
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;background:#EAF6EF;color:#0E9F6E;font-weight:700;font-size:13.5px;padding:12px 15px;border-radius:14px"><span style="width:8px;height:8px;border-radius:50%;background:#16C784;animation:pulse 1.9s infinite"></span>Antrean sekarang · {{ queueNow }} orang</div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:12px 40px 40px">
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;margin:8px 0 16px">{{ catTitle }} <span style="color:#B0A192;font-weight:700;font-size:15px">· {{ filteredCount }} menu</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px">
+        <sc-for list="{{ menu }}" as="m" hint-placeholder-count="6">
+          <div style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 5px 16px rgba(35,24,15,.05);display:flex;flex-direction:column">
+            <div style="height:120px;background:{{ m.grad }};position:relative">
+              <sc-if value="{{ m.best }}"><span style="position:absolute;top:12px;left:12px;background:rgba(35,24,15,.82);color:#fff;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px">★ Terlaris</span></sc-if>
+            </div>
+            <div style="padding:16px;display:flex;flex-direction:column;flex:1">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16.5px;line-height:1.2">{{ m.name }}</div>
+              <div style="font-size:13px;color:#9A8A7C;margin-top:5px;line-height:1.4;flex:1">{{ m.desc }}</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px">
+                <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;color:#E4560A">{{ m.priceStr }}</div>
+                <sc-if value="{{ m.inCart }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:11px;background:#FFF3E7;border-radius:12px;padding:5px">
+                  <button onClick="{{ m.dec }}" style="cursor:pointer;border:none;width:32px;height:32px;border-radius:9px;background:#fff;color:#E4560A;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(35,24,15,.08)" style-active="transform:scale(.9)">−</button>
+                  <span key="{{ m.qty }}" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;min-width:18px;text-align:center;animation:pop .3s ease">{{ m.qty }}</span>
+                  <button onClick="{{ m.inc }}" style="cursor:pointer;border:none;width:32px;height:32px;border-radius:9px;background:#FF7A1A;color:#fff;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(255,122,26,.3)" style-active="transform:scale(.9)">+</button>
+                </div>
+                </sc-if>
+                <sc-if value="{{ m.notInCart }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ m.add }}" style="cursor:pointer;border:none;display:flex;align-items:center;gap:6px;background:#23180F;color:#fff;font-weight:800;font-size:13.5px;padding:9px 15px;border-radius:12px" style-active="transform:scale(.94)" style-hover="background:#3A2A1C">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>Tambah
+                </button>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- cart -->
+  <aside style="flex:none;width:366px;background:#fff;box-shadow:-2px 0 24px rgba(35,24,15,.05);display:flex;flex-direction:column;position:sticky;top:0;height:100vh">
+    <div style="padding:24px 24px 16px;border-bottom:1px solid #F4ECE2">
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:21px">Pesananmu</div>
+      <div style="font-size:13px;color:#9A8A7C;margin-top:2px">{{ cartCountStr }}</div>
+    </div>
+
+    <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center">
+      <div style="width:80px;height:80px;border-radius:24px;background:#FBF1E6;display:flex;align-items:center;justify-content:center"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M6 8h12l-1.2 12H7.2z" stroke="#E4A96B" stroke-width="2" stroke-linejoin="round"/><path d="M9 8a3 3 0 0 1 6 0" stroke="#E4A96B" stroke-width="2"/></svg></div>
+      <div style="font-weight:700;font-size:15px;color:#9A8A7C;max-width:200px;line-height:1.5">Keranjang masih kosong. Pilih menu di sebelah kiri ya!</div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ cartHasItems }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;overflow-y:auto;padding:16px 24px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="2">
+          <div style="display:flex;gap:13px;align-items:center;animation:cartIn .25s ease">
+            <div style="flex:none;width:52px;height:52px;border-radius:14px;background:{{ c.grad }}"></div>
+            <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px;line-height:1.2">{{ c.name }}</div><div style="font-size:13px;color:#E4560A;font-weight:700;margin-top:3px">{{ c.lineStr }}</div></div>
+            <div style="flex:none;display:flex;align-items:center;gap:9px">
+              <button onClick="{{ c.dec }}" style="cursor:pointer;border:none;width:28px;height:28px;border-radius:8px;background:#F1E7DC;color:#23180F;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.9)">−</button>
+              <span style="font-weight:800;font-size:15px;min-width:16px;text-align:center">{{ c.qty }}</span>
+              <button onClick="{{ c.inc }}" style="cursor:pointer;border:none;width:28px;height:28px;border-radius:8px;background:#FF7A1A;color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.9)">+</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <button onClick="{{ togglePriority }}" style="width:100%;cursor:pointer;text-align:left;margin-top:20px;background:{{ prioBg }};border:2px solid {{ prioBorder }};border-radius:16px;padding:15px;display:flex;align-items:center;gap:13px" style-active="transform:scale(.99)">
+        <span style="flex:none;width:40px;height:40px;border-radius:12px;background:{{ prioIconBg }};display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.6-.7z" fill="{{ prioIconColor }}"/></svg></span>
+        <div style="flex:1"><div style="font-weight:800;font-size:14px;color:{{ prioTitleColor }}">Prioritas antrean</div><div style="font-size:12px;color:#9A8A7C;margin-top:1px">Naik ke depan · +Rp8.000</div></div>
+        <span style="flex:none;width:46px;height:26px;border-radius:999px;background:{{ prioTrack }};position:relative"><span style="position:absolute;top:3px;left:{{ prioKnob }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.25);transition:left .2s"></span></span>
+      </button>
+    </div>
+
+    <div style="flex:none;padding:20px 24px;border-top:1px solid #F4ECE2;background:#FFFCF8">
+      <div style="display:flex;justify-content:space-between;font-size:14px;color:#6B5D4F;margin-bottom:8px"><span>Subtotal</span><span style="font-weight:700">{{ subtotalStr }}</span></div>
+      <sc-if value="{{ priority }}"><div style="display:flex;justify-content:space-between;font-size:14px;color:#6B5D4F;margin-bottom:8px"><span>Biaya prioritas</span><span style="font-weight:700">Rp8.000</span></div></sc-if>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 16px"><span style="font-weight:700;font-size:15px">Total</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#23180F">{{ totalStr }}</span></div>
+      <button onClick="{{ checkout }}" style="width:100%;cursor:pointer;border:none;border-radius:15px;padding:17px;font-weight:800;font-size:16px;background:linear-gradient(135deg,#FFB870,#FF7A1A);color:#fff;box-shadow:0 10px 22px rgba(255,122,26,.32);display:flex;align-items:center;justify-content:center;gap:9px" style-active="transform:scale(.98)" style-hover="filter:brightness(1.04)">Bayar dengan QRIS<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    </sc-if>
+  </aside>
+  </sc-if>
+
+  <!-- ============ QUEUE STATUS ============ -->
+  <sc-if value="{{ isQueue }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;min-width:0;overflow-y:auto;padding:40px;display:flex;justify-content:center;animation:screenIn .35s ease">
+    <div style="width:100%;max-width:920px;display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start">
+
+      <div style="grid-column:span 2;background:linear-gradient(150deg,#FFB870,#FF7A1A 60%,#E4560A);border-radius:26px;padding:34px;color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;gap:34px">
+        <div style="flex:none;text-align:center">
+          <div style="font-size:14px;opacity:.9;font-weight:600">Nomor antreanmu</div>
+          <div key="{{ orderNo }}" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:92px;line-height:.9;letter-spacing:-2px;animation:qnum .4s ease">{{ orderNo }}</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;line-height:1.15">{{ queueHeadline }}</div>
+          <div style="font-size:15px;opacity:.95;margin-top:8px;line-height:1.5">{{ queueSub }}</div>
+          <div style="display:flex;gap:12px;margin-top:18px">
+            <div style="background:rgba(255,255,255,.18);border-radius:15px;padding:14px 18px"><div style="font-size:12px;opacity:.9">Di depanmu</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;line-height:1;margin-top:3px">{{ peopleAhead }}</div></div>
+            <div style="background:rgba(255,255,255,.18);border-radius:15px;padding:14px 18px"><div style="font-size:12px;opacity:.9">Estimasi</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;line-height:1;margin-top:3px">~{{ etaMin }} mnt</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:22px;padding:26px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;margin-bottom:20px">Status pesanan</div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <sc-for list="{{ stages }}" as="s" hint-placeholder-count="3">
+            <div style="display:flex;gap:15px">
+              <div style="flex:none;display:flex;flex-direction:column;align-items:center">
+                <div style="width:38px;height:38px;border-radius:50%;background:{{ s.bg }};display:flex;align-items:center;justify-content:center;{{ s.ring }}">{{ s.icon }}</div>
+                <sc-if value="{{ s.hasLine }}"><div style="width:3px;flex:1;min-height:34px;background:{{ s.lineColor }};border-radius:2px;margin:4px 0"></div></sc-if>
+              </div>
+              <div style="padding-top:7px;padding-bottom:14px"><div style="font-weight:800;font-size:15px;color:{{ s.titleColor }}">{{ s.title }}</div><div style="font-size:13px;color:#9A8A7C;margin-top:2px">{{ s.sub }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <div style="background:#23180F;border-radius:22px;padding:26px;color:#fff;text-align:center">
+          <div style="font-size:13px;color:#C9B8A6;font-weight:600">Tunjukkan ini saat ambil</div>
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:44px;letter-spacing:6px;margin:10px 0 16px">{{ pickCode }}</div>
+          <div style="width:132px;height:132px;background:#fff;border-radius:16px;margin:0 auto;padding:11px">{{ qrSvg }}</div>
+          <div style="font-size:12.5px;color:#C9B8A6;margin-top:14px;line-height:1.5">Sebutkan kode atau scan QR ini ke penjual pas nomormu dipanggil</div>
+        </div>
+        <button onClick="{{ openCancel }}" style="cursor:pointer;border:1px solid #F0D9D3;background:#fff;color:#C4402F;font-weight:700;font-size:14.5px;padding:15px;border-radius:15px" style-active="transform:scale(.98)" style-hover="background:#FBEEE9">Batalkan pesanan</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</main>
+
+<!-- ============ QRIS PAY MODAL ============ -->
+<sc-if value="{{ payOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closePay }}" style="position:fixed;inset:0;z-index:60;background:rgba(35,24,15,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:30px;animation:fadeIn .2s ease">
+  <div onClick="{{ stop }}" style="background:#FFF8F1;border-radius:26px;padding:30px;width:420px;max-width:100%;box-shadow:0 30px 70px rgba(0,0,0,.35);animation:popin .3s ease;text-align:center">
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px"><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">Bayar dengan QRIS</span></div>
+    <div style="font-size:14px;color:#9A8A7C">Scan pakai aplikasi bank / e-wallet apa aja</div>
+    <div style="width:210px;height:210px;background:#fff;border-radius:20px;margin:20px auto;padding:16px;box-shadow:0 8px 20px rgba(35,24,15,.08)">{{ payQrSvg }}</div>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;color:#23180F">{{ totalStr }}</div>
+    <div style="font-size:13px;color:#9A8A7C;margin-top:2px">Ayam Penyet My Bosz</div>
+    <button onClick="{{ confirmPay }}" style="margin-top:22px;width:100%;cursor:pointer;border:none;border-radius:15px;padding:16px;font-weight:800;font-size:16px;background:#16C784;color:#fff;box-shadow:0 10px 22px rgba(22,199,132,.3)" style-active="transform:scale(.98)">Saya sudah bayar</button>
+    <button onClick="{{ closePay }}" style="margin-top:10px;width:100%;cursor:pointer;border:none;background:none;color:#9A8A7C;font-weight:700;font-size:14px;padding:6px">Batal</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ CANCEL MODAL ============ -->
+<sc-if value="{{ cancelOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeCancel }}" style="position:fixed;inset:0;z-index:60;background:rgba(35,24,15,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:30px;animation:fadeIn .2s ease">
+  <div onClick="{{ stop }}" style="background:#FFF8F1;border-radius:26px;padding:28px;width:420px;max-width:100%;box-shadow:0 30px 70px rgba(0,0,0,.35);animation:popin .3s ease">
+    <sc-if value="{{ cancelIdle }}" hint-placeholder-val="{{ true }}">
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">Batalkan pesanan?</div>
+    <div style="font-size:14px;color:#9A8A7C;margin-top:5px;line-height:1.5">Dana kamu akan dikembalikan penuh ke metode pembayaran. Pilih alasannya:</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin:20px 0">
+      <sc-for list="{{ cancelReasons }}" as="r" hint-placeholder-count="3">
+        <button onClick="{{ r.onClick }}" style="cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px;border:2px solid {{ r.border }};background:{{ r.bg }};border-radius:15px;padding:14px 16px" style-active="transform:scale(.98)">
+          <span style="flex:1;font-weight:700;font-size:15px">{{ r.v }}</span>
+          <sc-if value="{{ r.sel }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#C4402F"/><path d="M8 12l3 3 5-6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+        </button>
+      </sc-for>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button onClick="{{ closeCancel }}" style="flex:1;cursor:pointer;border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:#F1E7DC;color:#23180F" style-active="transform:scale(.98)">Nggak jadi</button>
+      <button onClick="{{ confirmCancel }}" disabled="{{ cancelDisabled }}" style="flex:1.4;cursor:{{ cancelCursor }};border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:{{ cancelBtnBg }};color:#fff" style-active="transform:scale(.98)">Batalkan & refund</button>
+    </div>
+    </sc-if>
+    <sc-if value="{{ cancelDone }}" hint-placeholder-val="{{ false }}">
+    <div style="text-align:center;animation:popin .3s ease">
+      <div style="width:80px;height:80px;border-radius:50%;background:#DFF7EC;display:flex;align-items:center;justify-content:center;margin:4px auto 16px"><svg width="42" height="42" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#16C784" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">Pesanan dibatalkan</div>
+      <div style="font-size:14px;color:#9A8A7C;margin-top:6px;line-height:1.5">Dana {{ totalStr }} lagi diproses balik ke kamu. Biasanya masuk dalam 1×24 jam.</div>
+      <button onClick="{{ backToOrder }}" style="margin-top:22px;width:100%;cursor:pointer;border:none;border-radius:14px;padding:16px;font-weight:800;font-size:16px;background:#23180F;color:#fff" style-active="transform:scale(.98)">Pesan lagi</button>
+    </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:940}}">
+const rp = n => 'Rp' + (n||0).toLocaleString('id-ID');
+const H = s => React.createElement('span',{dangerouslySetInnerHTML:{__html:s},style:{display:'flex'}});
+const GRADS = ['linear-gradient(135deg,#FFCE8F,#FF9A3D)','linear-gradient(135deg,#FFB7A0,#FF7A5C)','linear-gradient(135deg,#FFD98A,#F5A623)','linear-gradient(135deg,#FFC48F,#F97B3D)','linear-gradient(135deg,#FFD0A0,#FF8A4D)','linear-gradient(135deg,#F5C48A,#E8863D)'];
+const MINT='linear-gradient(135deg,#A6ECD9,#34C9A8)';
+const MENU = [
+  {id:'ayam-ijo', name:'Ayam Penyet Sambal Ijo', desc:'Ayam goreng garing, sambal hijau nampol', price:22000, cat:'food', best:true},
+  {id:'ayam-ori', name:'Ayam Penyet Original', desc:'Sambal terasi khas + lalapan segar', price:20000, cat:'food'},
+  {id:'lele', name:'Lele Penyet', desc:'Lele goreng kremes, sambal mentah', price:19000, cat:'food'},
+  {id:'nasgor', name:'Nasi Goreng Spesial', desc:'Telur, ayam suwir, kerupuk, acar', price:18000, cat:'food', best:true},
+  {id:'seblak', name:'Seblak Ceker Pedas', desc:'Kerupuk basah, ceker, level 1–5', price:15000, cat:'food'},
+  {id:'tahutempe', name:'Tahu Tempe Penyet', desc:'Gorengan hangat + sambal bawang', price:8000, cat:'food'},
+  {id:'esteh', name:'Es Teh Jumbo', desc:'Manis segar, gelas jumbo', price:8000, cat:'drink', best:true},
+  {id:'esjeruk', name:'Es Jeruk Peras', desc:'Jeruk peras asli, seger', price:10000, cat:'drink'},
+];
+const CATS = [
+  {v:'all', label:'Semua menu', icon:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/></svg>'},
+  {v:'food', label:'Makanan', icon:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M6 3v8a2 2 0 0 0 4 0V3M8 11v10M17 3c-1.5 0-3 2-3 5s1 4 1 4v9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'},
+  {v:'drink', label:'Minuman', icon:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M6 4h12l-1.2 15a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6.6 9h10.8" stroke="currentColor" stroke-width="2"/></svg>'},
+  {v:'best', label:'Terlaris', icon:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.6-.7z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>'},
+];
+const CAT_TITLE = {all:'Semua menu', food:'Makanan', drink:'Minuman', best:'Menu terlaris'};
+const CANCEL_REASONS = ['Salah pesan','Kelamaan nunggu','Berubah pikiran'];
+const QR = '<svg viewBox="0 0 100 100" width="100%" height="100%" shape-rendering="crispEdges"><rect width="100" height="100" fill="#fff"/><g fill="#23180F"><rect x="6" y="6" width="26" height="26"/><rect x="10" y="10" width="18" height="18" fill="#fff"/><rect x="14" y="14" width="10" height="10"/><rect x="68" y="6" width="26" height="26"/><rect x="72" y="10" width="18" height="18" fill="#fff"/><rect x="76" y="14" width="10" height="10"/><rect x="6" y="68" width="26" height="26"/><rect x="10" y="72" width="18" height="18" fill="#fff"/><rect x="14" y="76" width="10" height="10"/><rect x="40" y="8" width="6" height="6"/><rect x="52" y="8" width="6" height="6"/><rect x="40" y="20" width="6" height="6"/><rect x="48" y="16" width="6" height="6"/><rect x="60" y="40" width="6" height="6"/><rect x="8" y="40" width="6" height="6"/><rect x="20" y="40" width="6" height="6"/><rect x="32" y="46" width="6" height="6"/><rect x="44" y="40" width="6" height="6"/><rect x="52" y="52" width="6" height="6"/><rect x="40" y="60" width="6" height="6"/><rect x="68" y="60" width="6" height="6"/><rect x="80" y="52" width="6" height="6"/><rect x="88" y="44" width="6" height="6"/><rect x="60" y="72" width="6" height="6"/><rect x="72" y="80" width="6" height="6"/><rect x="84" y="72" width="6" height="6"/><rect x="48" y="84" width="6" height="6"/><rect x="60" y="88" width="6" height="6"/><rect x="40" y="48" width="6" height="6"/><rect x="88" y="84" width="6" height="6"/></g></svg>';
+
+class Component extends DCLogic {
+  state = {
+    screen:'order', cat:'all', query:'', cart:{}, priority:false,
+    payOpen:false, cancelOpen:false, cancelReason:'', cancelResult:null,
+    queueStage:1, peopleAhead:3, etaMin:12, orderNo:'A-24', pickCode:'4729',
+  };
+  gradFor(id){ const i=MENU.findIndex(m=>m.id===id); const m=MENU[i]; return m&&m.cat==='drink'?MINT:GRADS[i%GRADS.length]; }
+  setCat(c){ this.setState({cat:c, query:''}); }
+  onSearch(e){ this.setState({query:e.target.value}); }
+  add(id){ this.setState(st=>({cart:{...st.cart,[id]:(st.cart[id]||0)+1}})); }
+  inc(id){ this.add(id); }
+  dec(id){ this.setState(st=>{ const c={...st.cart}; const n=(c[id]||0)-1; if(n<=0) delete c[id]; else c[id]=n; return {cart:c}; }); }
+  togglePriority(){ this.setState(s=>({priority:!s.priority})); }
+  checkout(){ this.setState({payOpen:true}); }
+  closePay(){ this.setState({payOpen:false}); }
+  confirmPay(){ this.setState({payOpen:false, screen:'queue', queueStage:1, peopleAhead:3, etaMin:12});
+    try{window.scrollTo(0,0);}catch(e){} this.startQueue(); }
+  startQueue(){ this.clearQueue();
+    this._qt = setInterval(()=>{ this.setState(st=>{
+      if(st.screen!=='queue') return {};
+      let {queueStage,peopleAhead,etaMin}=st;
+      if(peopleAhead>0){ peopleAhead-=1; etaMin=Math.max(1,etaMin-3); if(peopleAhead<=1 && queueStage<2) queueStage=2; }
+      else if(queueStage<3){ queueStage=3; }
+      return {queueStage,peopleAhead,etaMin}; }); }, 2600); }
+  clearQueue(){ if(this._qt){ clearInterval(this._qt); this._qt=null; } }
+  componentWillUnmount(){ this.clearQueue(); }
+  openCancel(){ this.setState({cancelOpen:true, cancelReason:'', cancelResult:null}); }
+  closeCancel(){ this.setState({cancelOpen:false}); }
+  confirmCancel(){ if(!this.state.cancelReason) return; this.clearQueue(); this.setState({cancelResult:'done'}); }
+  backToOrder(){ this.setState({cancelOpen:false, screen:'order', cart:{}, priority:false, cancelResult:null}); }
+  renderVals(){
+    const S=this.state;
+    const filtered = MENU.filter(m=>{
+      if(S.query){ return (m.name+' '+m.desc).toLowerCase().includes(S.query.toLowerCase()); }
+      if(S.cat==='all') return true;
+      if(S.cat==='best') return m.best;
+      return m.cat===S.cat; });
+    const menu = filtered.map(m=>{ const qty=S.cart[m.id]||0; return {
+      ...m, priceStr:rp(m.price), grad:this.gradFor(m.id), qty,
+      inCart:qty>0, notInCart:qty===0,
+      add:()=>this.add(m.id), inc:()=>this.inc(m.id), dec:()=>this.dec(m.id) }; });
+
+    const cartIds = Object.keys(S.cart).filter(id=>S.cart[id]>0);
+    const cartItems = cartIds.map(id=>{ const m=MENU.find(x=>x.id===id); const qty=S.cart[id]; return {
+      name:m.name, qty, grad:this.gradFor(id), lineStr:rp(m.price*qty),
+      inc:()=>this.inc(id), dec:()=>this.dec(id) }; });
+    const totalQty = cartIds.reduce((a,id)=>a+S.cart[id],0);
+    const subtotal = cartIds.reduce((a,id)=>{ const m=MENU.find(x=>x.id===id); return a+m.price*S.cart[id]; },0);
+    const total = subtotal + (S.priority?8000:0);
+
+    // queue stages
+    const stageDef=[
+      {n:1, title:'Pesanan diterima', sub:'Penjual sudah lihat pesananmu'},
+      {n:2, title:'Lagi dimasak', sub:'Makananmu lagi disiapkan'},
+      {n:3, title:'Siap diambil', sub:'Tunjukkan kode ke penjual'},
+    ];
+    const CHK='<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const stages = stageDef.map((s,i)=>{ const done=S.queueStage>s.n, active=S.queueStage===s.n;
+      const on=done||active;
+      return { title:s.title, sub:s.sub, hasLine:i<stageDef.length-1,
+        bg: done?'#16C784':active?'#FF7A1A':'#EFE6DA',
+        ring: active?'animation:ringpulse 1.8s infinite;':'',
+        icon: done?H(CHK):active?React.createElement('span',{style:{width:11,height:11,borderRadius:'50%',background:'#fff',animation:'pulse 1.4s infinite'}}):React.createElement('span',{style:{width:9,height:9,borderRadius:'50%',background:'#C9B8A6'}}),
+        titleColor: on?'#23180F':'#B0A192',
+        lineColor: done?'#16C784':'#EFE6DA' }; });
+    const queueHeadline = S.queueStage>=3?'Pesananmu siap! 🎉':(S.peopleAhead<=0?'Bentar lagi giliranmu':'Pesananmu lagi diproses');
+    const queueSub = S.queueStage>=3?'Langsung ambil ke gerobak dan tunjukkan kode di bawah.':'Santai aja, kami kabarin pas nomormu dipanggil. Nggak perlu berdiri antre.';
+
+    const cancelReasons = CANCEL_REASONS.map(v=>{ const sel=S.cancelReason===v; return {
+      v, sel, border:sel?'#C4402F':'#F1E7DC', bg:sel?'#FBEEE9':'#fff',
+      onClick:()=>this.setState({cancelReason:v}) }; });
+
+    const catCount = c => c==='all'?MENU.length : c==='best'?MENU.filter(m=>m.best).length : MENU.filter(m=>m.cat===c).length;
+    const cats = CATS.map(c=>{ const on=S.cat===c.v && !S.query; return {
+      label:c.label, icon:H(c.icon), count:String(catCount(c.v)), onClick:()=>this.setCat(c.v),
+      bg: on?'#FFF3E7':'transparent', color: on?'#E4560A':'#5D4E40',
+      iconColor: on?'#E4560A':'#B0A192', countColor: on?'#E4560A':'#C4B29B' }; });
+
+    return {
+      isOrder:S.screen==='order', isQueue:S.screen==='queue',
+      cats, catTitle: S.query?('Hasil "'+S.query+'"'):CAT_TITLE[S.cat], filteredCount:String(filtered.length),
+      menu, query:S.query, onSearch:(e)=>this.onSearch(e), queueNow:'3',
+      // cart
+      cartItems, cartEmpty:cartItems.length===0, cartHasItems:cartItems.length>0,
+      cartCountStr: totalQty>0?(totalQty+' item dipilih'):'Belum ada item',
+      subtotalStr:rp(subtotal), totalStr:rp(total),
+      priority:S.priority, togglePriority:()=>this.togglePriority(),
+      prioBg:S.priority?'#F4F0FF':'#FBF6EF', prioBorder:S.priority?'#C9B0FF':'#F1E7DC',
+      prioIconBg:S.priority?'#7A3BF5':'#E4D8FF', prioIconColor:S.priority?'#fff':'#7A3BF5',
+      prioTitleColor:S.priority?'#5B2BC4':'#23180F',
+      prioTrack:S.priority?'#7A3BF5':'#DDD2C4', prioKnob:S.priority?'23px':'3px',
+      checkout:()=>this.checkout(),
+      // pay
+      payOpen:S.payOpen, closePay:()=>this.closePay(), confirmPay:()=>this.confirmPay(),
+      stop:(e)=>e.stopPropagation(), payQrSvg:H(QR), qrSvg:H(QR),
+      // queue
+      orderNo:S.orderNo, peopleAhead:String(S.peopleAhead), etaMin:String(S.etaMin),
+      stages, queueHeadline, queueSub, pickCode:S.pickCode, openCancel:()=>this.openCancel(),
+      // cancel
+      cancelOpen:S.cancelOpen, closeCancel:()=>this.closeCancel(), cancelReasons,
+      cancelIdle:S.cancelResult!=='done', cancelDone:S.cancelResult==='done',
+      confirmCancel:()=>this.confirmCancel(), backToOrder:()=>this.backToOrder(),
+      cancelDisabled:!S.cancelReason, cancelCursor:S.cancelReason?'pointer':'not-allowed',
+      cancelBtnBg:S.cancelReason?'#C4402F':'#E0B5AD',
+    };
+  }
+}
+</script>
+</body>
+</html>

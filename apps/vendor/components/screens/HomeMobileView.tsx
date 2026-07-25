@@ -1,10 +1,7 @@
-'use client';
-import { useState } from 'react';
 import Link from 'next/link';
-import { useVendorSummary, useVendorOrders, useVendorMenu } from '@jajanhub/api';
 import { Card, Icon, Money, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
-import { useVendorUi } from '../../lib/ui-store';
+import type { HomeScreenView } from './useHomeScreen';
 
 const STATUS_LABEL: Record<string, { text: string; color: string }> = {
   baru: { text: 'Pesanan Baru', color: 'text-[#B8791F]' },
@@ -13,19 +10,11 @@ const STATUS_LABEL: Record<string, { text: string; color: string }> = {
   ditolak: { text: 'Ditolak', color: 'text-brand-press' },
 };
 
-export function Home() {
-  const summary = useVendorSummary();
-  const { data: orders = [] } = useVendorOrders();
-  const { data: menu = [] } = useVendorMenu();
-  const openStock = useVendorUi((s) => s.openStockSheet);
-  const [warungOpen, setWarungOpen] = useState(true);
+export function HomeMobileView(vm: HomeScreenView) {
+  if (vm.isLoading) return <LoadingState />;
+  if (vm.isError || !vm.summary) return <ErrorState onRetry={vm.refetch} />;
 
-  if (summary.isLoading) return <LoadingState />;
-  if (summary.isError || !summary.data) return <ErrorState onRetry={() => summary.refetch()} />;
-
-  const s = summary.data;
-  const active = orders.filter((o) => o.status !== 'ditolak');
-  const habisCount = menu.filter((m) => !m.inStock).length;
+  const s = vm.summary;
 
   return (
     <div className="animate-screen-in">
@@ -77,8 +66,8 @@ export function Home() {
         </Card>
         <div className="flex-1 bg-[#FFF3E7] border border-brand/[.16] rounded-[22px] p-[18px] shadow-[0_5px_16px_rgba(255,122,26,.06)]">
           <div className="text-[13px] text-[#B8791F] font-semibold">Pesanan aktif</div>
-          <div key={active.length} className="font-display font-extrabold text-[38px] leading-none mt-1.5 text-brand-deep animate-pop">
-            {active.length}
+          <div key={vm.activeOrders.length} className="font-display font-extrabold text-[38px] leading-none mt-1.5 text-brand-deep animate-pop">
+            {vm.activeOrders.length}
           </div>
         </div>
       </div>
@@ -103,45 +92,45 @@ export function Home() {
       <div className="px-5 pt-4">
         <button
           type="button"
-          onClick={() => setWarungOpen((v) => !v)}
-          aria-pressed={warungOpen}
+          onClick={vm.toggleWarungOpen}
+          aria-pressed={vm.warungOpen}
           className={cn(
             'w-full rounded-[22px] p-[22px] flex items-center gap-4 transition-transform active:scale-[.98]',
-            warungOpen ? 'bg-[linear-gradient(135deg,#E7FBF2,#D2F7E7)] shadow-[0_10px_24px_rgba(22,199,132,.16)]' : 'bg-white shadow-card',
+            vm.warungOpen ? 'bg-[linear-gradient(135deg,#E7FBF2,#D2F7E7)] shadow-[0_10px_24px_rgba(22,199,132,.16)]' : 'bg-white shadow-card',
           )}
         >
-          <div className={cn('flex-none w-[52px] h-[52px] rounded-2xl flex items-center justify-center', warungOpen ? 'bg-mint' : 'bg-[#F1E7DC]')}>
-            <Icon name="store" size={26} className={warungOpen ? 'text-white' : 'text-[#B8A99B]'} />
+          <div className={cn('flex-none w-[52px] h-[52px] rounded-2xl flex items-center justify-center', vm.warungOpen ? 'bg-mint' : 'bg-[#F1E7DC]')}>
+            <Icon name="store" size={26} className={vm.warungOpen ? 'text-white' : 'text-[#B8A99B]'} />
           </div>
           <div className="flex-1 text-left">
-            <div className={cn('font-display font-extrabold text-xl', warungOpen ? 'text-[#0E7A56]' : 'text-faint')}>
-              {warungOpen ? 'Warung Buka' : 'Warung Tutup'}
+            <div className={cn('font-display font-extrabold text-xl', vm.warungOpen ? 'text-[#0E7A56]' : 'text-faint')}>
+              {vm.warungOpen ? 'Warung Buka' : 'Warung Tutup'}
             </div>
-            <div className={cn('text-[13px]', warungOpen ? 'text-[#3FA980]' : 'text-[#B8A99B]')}>
-              {warungOpen ? 'Pelanggan bisa pesan sekarang' : 'Ketuk untuk mulai terima pesanan'}
+            <div className={cn('text-[13px]', vm.warungOpen ? 'text-[#3FA980]' : 'text-[#B8A99B]')}>
+              {vm.warungOpen ? 'Pelanggan bisa pesan sekarang' : 'Ketuk untuk mulai terima pesanan'}
             </div>
           </div>
-          <span className={cn('flex-none w-14 h-8 rounded-full relative', warungOpen ? 'bg-mint' : 'bg-[#DDD2C4]')}>
+          <span className={cn('flex-none w-14 h-8 rounded-full relative', vm.warungOpen ? 'bg-mint' : 'bg-[#DDD2C4]')}>
             <span
               className="absolute top-[3px] w-[26px] h-[26px] rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,.25)] transition-[left]"
-              style={{ left: warungOpen ? '27px' : '3px' }}
+              style={{ left: vm.warungOpen ? '27px' : '3px' }}
             />
           </span>
         </button>
       </div>
 
       {/* Habis banner */}
-      {habisCount > 0 && (
+      {vm.habisCount > 0 && (
         <div className="px-5 pt-3">
           <button
             type="button"
-            onClick={openStock}
+            onClick={vm.openStock}
             className="w-full bg-[#FFF1E9] border border-[rgba(196,64,47,.18)] rounded-2xl px-[15px] py-[13px] flex items-center gap-[11px] transition-transform active:scale-[.99]"
           >
             <span className="flex-none w-[34px] h-[34px] rounded-[11px] bg-[#FDE0DA] flex items-center justify-center">
               <Icon name="warning" size={18} className="text-brand-press" strokeWidth={2} />
             </span>
-            <span className="flex-1 text-left font-bold text-sm text-brand-press">{habisCount} menu sedang habis</span>
+            <span className="flex-1 text-left font-bold text-sm text-brand-press">{vm.habisCount} menu sedang habis</span>
             <span className="text-xs font-bold text-brand-press">Kelola ›</span>
           </button>
         </div>
@@ -156,7 +145,7 @@ export function Home() {
           </Link>
         </div>
         <div className="flex flex-col gap-2.5">
-          {active.slice(0, 3).map((o) => {
+          {vm.activeOrders.slice(0, 3).map((o) => {
             const label = STATUS_LABEL[o.status]!;
             const first = o.lines[0];
             const more = o.lines.length > 1 ? ` +${o.lines.length - 1} lagi` : '';

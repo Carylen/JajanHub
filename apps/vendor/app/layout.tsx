@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import type { ReactNode } from 'react';
 import { Providers } from './providers';
+import { AppShell } from '../components/AppShell';
 import './globals.css';
 
 const bricolage = Bricolage_Grotesque({
@@ -34,10 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="id" className={`${bricolage.variable} ${jakarta.variable}`}>
       <body className="bg-sand text-ink font-sans">
         <Providers>
-          {/* Vendor app is app-like: a centered column that reads well on phone & tablet. */}
-          <div className="mx-auto max-w-[480px] min-h-screen bg-cream relative overflow-x-hidden shadow-[0_0_70px_rgba(0,0,0,.1)]">
-            {children}
-          </div>
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>

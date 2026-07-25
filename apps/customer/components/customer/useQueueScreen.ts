@@ -1,0 +1,93 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useOrder, useQueueState, useCancelOrder, stageOf, type Order, type OrderStatus } from '@jajanhub/api';
+
+export interface QueueTone {
+  label: string;
+  bg: string;
+  color: string;
+  dot: string;
+}
+
+export interface QueueScreenView {
+  order: Order | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => void;
+  status: OrderStatus;
+  stage: number;
+  ahead: number;
+  eta: number;
+  tone: QueueTone;
+  isReady: boolean;
+  canCancel: boolean;
+  cannotCancel: boolean;
+  cancelOpen: boolean;
+  openCancel: () => void;
+  closeCancel: () => void;
+  confirmCancel: () => void;
+  cancelPending: boolean;
+  goPickup: () => void;
+}
+
+function tone(ahead: number): QueueTone {
+  if (ahead <= 6) return { label: 'Antrean lancar', bg: 'bg-mint-soft', color: 'text-mint-deep', dot: 'bg-mint' };
+  if (ahead <= 13) return { label: 'Agak ramai', bg: 'bg-[#FFF0E0]', color: 'text-[#B8791F]', dot: 'bg-[#F5A623]' };
+  return { label: 'Lagi padat', bg: 'bg-[#FFEBE9]', color: 'text-danger', dot: 'bg-[#F5566B]' };
+}
+
+/**
+ * Owns Queue screen data, the redirect-away side effects, and the cancel
+ * flow's state/mutation — shared by mobile (BottomSheet-based CancelSheet)
+ * and desktop (Modal-based CancelModal), which render different overlay
+ * shells around this same `cancelOpen`/`confirmCancel`/`cancelPending`.
+ */
+export function useQueueScreen(orderId: string): QueueScreenView {
+  const router = useRouter();
+  const { data: order, isLoading, isError, refetch } = useOrder(orderId);
+  const queue = useQueueState(orderId);
+  const cancelOrder = useCancelOrder();
+  const [cancelOpen, setCancelOpen] = useState(false);
+
+  const status: OrderStatus = queue?.status ?? order?.status ?? 'paid';
+  const stage = stageOf(status);
+
+  useEffect(() => {
+    if (status === 'awaiting_payment') router.replace(`/order/${orderId}/pay`);
+    if (status === 'cancelled' || status === 'refunding' || status === 'refunded') {
+      router.replace(`/order/${orderId}/refund`);
+    }
+  }, [status, orderId, router]);
+
+  const ahead = queue?.peopleAhead ?? order?.queueNumber ?? 0;
+  const eta = queue?.etaMin ?? 0;
+
+  return {
+    order,
+    isLoading,
+    isError,
+    refetch,
+    status,
+    stage,
+    ahead,
+    eta,
+    tone: tone(ahead),
+    isReady: stage === 2,
+    canCancel: stage === 0,
+    cannotCancel: stage === 1,
+    cancelOpen,
+    openCancel: () => setCancelOpen(true),
+    closeCancel: () => setCancelOpen(false),
+    confirmCancel: () => {
+      cancelOrder.mutate(orderId, {
+        onSuccess: () => {
+          setCancelOpen(false);
+          router.push(`/order/${orderId}/refund`);
+        },
+      });
+    },
+    cancelPending: cancelOrder.isPending,
+    goPickup: () => router.push(`/order/${orderId}/pickup`),
+  };
+}

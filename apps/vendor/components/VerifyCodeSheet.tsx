@@ -1,11 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { useVerifyPickupCode, type PickupRecord } from '@jajanhub/api';
 import { BottomSheet, Button, Icon, cn } from '@jajanhub/ui';
-
-type Result = { status: 'ok'; record: PickupRecord } | { status: 'fail'; tried: string } | null;
-
-const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'qr', '0', 'del'] as const;
+import { useVerifyFlow, VERIFY_KEYS } from './useVerifyFlow';
 
 interface VerifyCodeSheetProps {
   open: boolean;
@@ -14,38 +9,11 @@ interface VerifyCodeSheetProps {
 
 /** Pickup-code verification overlay: numeric keypad → match / not-found (BRIEF §5). */
 export function VerifyCodeSheet({ open, onClose }: VerifyCodeSheetProps) {
-  const [code, setCode] = useState('');
-  const [result, setResult] = useState<Result>(null);
-  const [shake, setShake] = useState(0);
-  const verify = useVerifyPickupCode();
+  const { code, result, shake, press, runVerify, reset, pending } = useVerifyFlow();
 
-  const reset = () => {
-    setCode('');
-    setResult(null);
-  };
   const handleClose = () => {
     reset();
     onClose();
-  };
-
-  const press = (key: (typeof KEYS)[number]) => {
-    if (key === 'del') return setCode((c) => c.slice(0, -1));
-    if (key === 'qr') return runVerify('6042');
-    setCode((c) => (c.length >= 4 ? c : c + key));
-  };
-
-  const runVerify = (value: string) => {
-    if (value.length < 4) return;
-    verify.mutate(value, {
-      onSuccess: (record) => {
-        if (record) setResult({ status: 'ok', record });
-        else {
-          setResult({ status: 'fail', tried: value });
-          setCode('');
-          setShake((s) => s + 1);
-        }
-      },
-    });
   };
 
   return (
@@ -83,7 +51,7 @@ export function VerifyCodeSheet({ open, onClose }: VerifyCodeSheetProps) {
             })}
           </div>
           <div className="grid grid-cols-3 gap-2.5 mt-[18px]">
-            {KEYS.map((k) => {
+            {VERIFY_KEYS.map((k) => {
               const isNum = k !== 'qr' && k !== 'del';
               return (
                 <button
@@ -103,8 +71,8 @@ export function VerifyCodeSheet({ open, onClose }: VerifyCodeSheetProps) {
               );
             })}
           </div>
-          <Button variant="mint" fullWidth className="mt-4 disabled:bg-[#D6C9BA] disabled:shadow-none" disabled={code.length !== 4} onClick={() => runVerify(code)}>
-            Verifikasi Kode
+          <Button variant="mint" fullWidth className="mt-4 disabled:bg-[#D6C9BA] disabled:shadow-none" disabled={code.length !== 4 || pending} onClick={() => runVerify(code)}>
+            {pending ? 'Memeriksa…' : 'Verifikasi Kode'}
           </Button>
         </div>
       )}

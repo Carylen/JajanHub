@@ -4,7 +4,9 @@ import { usePathname } from 'next/navigation';
 import { useVendorOrders } from '@jajanhub/api';
 import { Icon, cn, type IconName } from '@jajanhub/ui';
 
-const TABS: Array<{ href: string; label: string; icon: IconName }> = [
+/** Also the base of the desktop Sidebar's nav list (see Sidebar.tsx) — kept
+ * here since BottomNav owned it first. */
+export const NAV_TABS: Array<{ href: string; label: string; icon: IconName }> = [
   { href: '/beranda', label: 'Beranda', icon: 'home' },
   { href: '/orders', label: 'Pesanan', icon: 'list' },
   { href: '/analytics', label: 'Laporan', icon: 'chart' },
@@ -18,8 +20,8 @@ export function BottomNav() {
   const activeCount = (orders ?? []).filter((o) => o.status !== 'ditolak').length;
 
   return (
-    <nav className="fixed left-1/2 -translate-x-1/2 bottom-0 w-full max-w-[480px] bg-white/[.96] backdrop-blur-[12px] border-t border-line px-2 pt-[9px] pb-4 flex z-50 shadow-[0_-6px_24px_rgba(35,24,15,.06)]">
-      {TABS.map((tab) => {
+    <nav className="fixed left-1/2 -translate-x-1/2 bottom-0 w-full max-w-vendor md:max-w-tablet lg:hidden bg-white/[.96] backdrop-blur-[12px] border-t border-line px-2 pt-[9px] pb-4 flex z-50 shadow-[0_-6px_24px_rgba(35,24,15,.06)]">
+      {NAV_TABS.map((tab) => {
         const active = pathname === tab.href;
         const showBadge = tab.href === '/orders' && activeCount > 0;
         return (

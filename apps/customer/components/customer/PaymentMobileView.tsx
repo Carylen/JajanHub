@@ -1,32 +1,18 @@
-'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useOrder, useQueueState, useMarkPaid } from '@jajanhub/api';
 import { Money, QrCode, Spinner, Icon, formatCountdown } from '@jajanhub/ui';
 import { ScreenHeader } from '../ScreenHeader';
 import { LoadingState, ErrorState } from '../StateViews';
+import type { PaymentScreenView } from './usePaymentScreen';
 
-export function Payment({ orderId }: { orderId: string }) {
-  const router = useRouter();
-  const { data: order, isLoading, isError, refetch } = useOrder(orderId);
-  const queue = useQueueState(orderId);
-  const markPaid = useMarkPaid();
+/** Pure presentation — all data/effects live in usePaymentScreen(). */
+export function PaymentMobileView(vm: PaymentScreenView) {
+  if (vm.isLoading) return <LoadingState label="Membuka pembayaran…" />;
+  if (vm.isError || !vm.order) return <ErrorState onRetry={vm.refetch} />;
 
-  // Once payment is registered, move to the live queue.
-  useEffect(() => {
-    if (order && order.status !== 'awaiting_payment') {
-      router.replace(`/order/${orderId}`);
-    }
-  }, [order, orderId, router]);
-
-  if (isLoading) return <LoadingState label="Membuka pembayaran…" />;
-  if (isError || !order) return <ErrorState onRetry={() => refetch()} />;
-
-  const payLeft = queue?.payLeft ?? 299;
+  const { order } = vm;
 
   return (
     <div className="animate-screen-in min-h-screen pb-8">
-      <ScreenHeader title="Pembayaran" onBack={() => router.back()} />
+      <ScreenHeader title="Pembayaran" onBack={vm.goBack} />
 
       <div className="text-center px-5 pt-3.5">
         <div className="text-faint text-[13px]">Total tagihan</div>
@@ -54,7 +40,7 @@ export function Payment({ orderId }: { orderId: string }) {
         <span className="text-[13px] text-faint">Bayar sebelum</span>
         <span className="inline-flex items-center gap-1.5 bg-[#FFEBE9] text-[#FF3D57] font-extrabold text-sm px-3 py-1.5 rounded-full tabular-nums">
           <Icon name="clock" size={14} strokeWidth={2} className="text-[#FF3D57]" />
-          {formatCountdown(payLeft)}
+          {formatCountdown(vm.payLeft)}
         </span>
       </div>
 
@@ -75,11 +61,11 @@ export function Payment({ orderId }: { orderId: string }) {
       <div className="px-5 pt-4">
         <button
           type="button"
-          onClick={() => markPaid.mutate(orderId)}
-          disabled={markPaid.isPending}
+          onClick={vm.markPaid}
+          disabled={vm.markPaidPending}
           className="w-full border-[1.5px] border-sand text-muted rounded-2xl py-3.5 font-bold text-sm transition-transform active:scale-[.98] disabled:opacity-60"
         >
-          {markPaid.isPending ? 'Memproses…' : 'Simulasikan: sudah bayar'}
+          {vm.markPaidPending ? 'Memproses…' : 'Simulasikan: sudah bayar'}
         </button>
       </div>
       <div className="text-center text-[#B8A99B] text-[11px] mt-3.5">

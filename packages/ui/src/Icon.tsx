@@ -45,7 +45,9 @@ export type IconName =
   | 'qr'
   | 'arrow-up'
   | 'download'
-  | 'volume';
+  | 'volume'
+  | 'search'
+  | 'utensils';
 
 const PATHS: Record<IconName, JSX.Element> = {
   'chevron-left': <path d="M15 6l-6 6 6 6" />,
@@ -227,6 +229,19 @@ const PATHS: Record<IconName, JSX.Element> = {
     <>
       <path d="M4 9v6h4l6 4V5L8 9H4z" />
       <path d="M17 9a4 4 0 0 1 0 6" />
+    </>
+  ),
+  search: (
+    <>
+      <circle cx="11" cy="11" r="7" />
+      <path d="M20 20l-3.5-3.5" />
+    </>
+  ),
+  utensils: (
+    <>
+      <path d="M6 3v8a2 2 0 0 0 4 0V3" />
+      <path d="M8 11v10" />
+      <path d="M17 3c-1.5 0-3 2-3 5s1 4 1 4v9" />
     </>
   ),
 };

@@ -36,6 +36,8 @@ module.exports = {
       },
       maxWidth: {
         app: '420px',
+        tablet: '688px',
+        vendor: '480px',
       },
       keyframes: {
         screenIn: { from: { opacity: '0', transform: 'translateY(12px)' }, to: { opacity: '1', transform: 'none' } },
@@ -63,6 +65,18 @@ module.exports = {
           '40%': { transform: 'translateX(8px)' },
           '60%': { transform: 'translateX(-5px)' },
           '80%': { transform: 'translateX(5px)' },
+        },
+        modalIn: {
+          from: { opacity: '0', transform: 'scale(.94)' },
+          to: { opacity: '1', transform: 'scale(1)' },
+        },
+        confetti: {
+          '0%': { transform: 'translateY(0) rotate(0deg)', opacity: '1' },
+          '100%': { transform: 'translateY(120px) rotate(240deg)', opacity: '0' },
+        },
+        slideCard: {
+          from: { opacity: '0', transform: 'translateY(10px) scale(.98)' },
+          to: { opacity: '1', transform: 'none' },
         },
       },
       animation: {
