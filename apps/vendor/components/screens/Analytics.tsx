@@ -1,5 +1,7 @@
 'use client';
+import Link from 'next/link';
 import { Card, Icon } from '@jajanhub/ui';
+import { useVendorTier } from './useVendorTier';
 
 const HOURS = [
   { h: '10', pct: 30, hot: false },
@@ -20,6 +22,9 @@ const TOP_MENU = [
 ];
 
 export function Analytics() {
+  const { progress: tierProgress } = useVendorTier();
+  const isGold = tierProgress?.current.id === 'gold';
+
   return (
     <div className="animate-screen-in">
       <div className="px-[22px] pt-[22px] pb-1.5">
@@ -77,6 +82,52 @@ export function Analytics() {
           </div>
         </Card>
       </div>
+
+      {/* Tier-locked analytics */}
+      {tierProgress && (
+        <div className="px-5 pt-4">
+          <div className="relative bg-white rounded-[22px] p-5 shadow-card overflow-hidden">
+            <div className={isGold ? undefined : 'blur-[7px] opacity-60 pointer-events-none'}>
+              <div className="flex items-center justify-between mb-3.5">
+                <div className="font-display font-extrabold text-[17px]">Analitik Lanjutan</div>
+                <span className="text-[11px] font-extrabold text-[#BE922E] bg-[#FAF0D6] px-2.5 py-1 rounded-full">GOLD</span>
+              </div>
+              <div className="flex gap-3">
+                <div className="flex-1 bg-[#FAF6EF] rounded-[14px] p-[13px]">
+                  <div className="text-[11.5px] text-faint">Jam paling ramai</div>
+                  <div className="font-display font-extrabold text-[19px] mt-[3px]">12.00–13.00</div>
+                </div>
+                <div className="flex-1 bg-[#FAF6EF] rounded-[14px] p-[13px]">
+                  <div className="text-[11.5px] text-faint">Rata-rata belanja</div>
+                  <div className="font-display font-extrabold text-[19px] mt-[3px]">Rp29.500</div>
+                </div>
+              </div>
+              <div className="mt-3 bg-[#FAF6EF] rounded-[14px] p-[13px]">
+                <div className="text-[11.5px] text-faint mb-2">Pelanggan balik lagi (retensi 6 minggu)</div>
+                <div className="flex items-end gap-1.5 h-14">
+                  {[40, 62, 52, 80, 70, 95].map((h, i) => (
+                    <div key={i} className="flex-1 rounded-[5px]" style={{ height: `${h}%`, background: i % 3 === 2 ? '#CB9E34' : i % 2 ? '#E0BA55' : '#E8C765' }} />
+                  ))}
+                </div>
+              </div>
+            </div>
+            {!isGold && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 bg-[rgba(255,248,241,.55)] px-5 text-center">
+                <div className="w-[52px] h-[52px] rounded-2xl bg-[linear-gradient(135deg,#E8C765,#CB9E34)] flex items-center justify-center shadow-[0_10px_24px_rgba(203,158,52,.4)]">
+                  <Icon name="medal" size={26} className="text-white" />
+                </div>
+                <div className="font-display font-extrabold text-base">Buka otomatis saat naik ke Gold</div>
+                <div className="text-[12.5px] text-faint leading-[1.45] max-w-[262px]">
+                  Bukan langganan berbayar — cukup jaga performa warungmu sampai tier Gold, langsung kebuka
+                </div>
+                <Link href="/level" className="mt-0.5 bg-ink text-white font-extrabold text-[13px] px-[18px] py-2.5 rounded-[13px] transition-transform active:scale-95">
+                  Lihat syarat Gold
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Top menu */}
       <div className="px-5 pt-4">

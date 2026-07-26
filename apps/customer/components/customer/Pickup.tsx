@@ -1,31 +1,21 @@
 'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useOrder, useConfirmPickup } from '@jajanhub/api';
+import { useOrder } from '@jajanhub/api';
 import { Button, Card, Icon, QrCode } from '@jajanhub/ui';
 import { ScreenHeader } from '../ScreenHeader';
 import { BrandMark } from '../BrandMark';
 import { LoadingState, ErrorState } from '../StateViews';
-import { RatingModal } from './RatingModal';
-import { useCartStore } from '../../lib/cart-store';
+import { RatingSheet } from './RatingSheet';
+import { usePickupFlow } from './usePickupFlow';
 
 export function Pickup({ orderId }: { orderId: string }) {
-  const router = useRouter();
   const { data: order, isLoading, isError, refetch } = useOrder(orderId);
-  const confirmPickup = useConfirmPickup();
-  const clearCart = useCartStore((s) => s.clear);
-  const [rating, setRating] = useState(false);
+  const pf = usePickupFlow(order);
 
   if (isLoading) return <LoadingState label="Menyiapkan kode…" />;
   if (isError || !order) return <ErrorState onRetry={() => refetch()} />;
 
   const done = order.status === 'picked_up';
   const digits = (order.pickupCode || '0000').split('');
-
-  const finish = () => {
-    clearCart();
-    router.push(`/m/${order.merchantId}`);
-  };
 
   if (done) {
     return (
@@ -51,19 +41,19 @@ export function Pickup({ orderId }: { orderId: string }) {
             <div className="text-[11px] text-faint">menit tunggu</div>
           </div>
         </div>
-        <Button variant="primary" className="w-full max-w-[320px] mt-[30px]" onClick={() => setRating(true)}>
+        <Button variant="primary" className="w-full max-w-[320px] mt-[30px]" onClick={pf.openRating}>
           Beri Rating
         </Button>
-        <Button variant="ghost" className="text-faint pt-3.5" onClick={finish}>
+        <Button variant="ghost" className="text-faint pt-3.5" onClick={pf.finish}>
           Kembali ke beranda
         </Button>
 
-        <RatingModal
-          open={rating}
-          onClose={finish}
+        <RatingSheet
+          open={pf.ratingOpen}
+          onClose={pf.finish}
           merchantName={order.merchantName}
           orderCode={order.code}
-          onSubmit={finish}
+          onSubmit={pf.finish}
         />
       </div>
     );
@@ -132,9 +122,9 @@ export function Pickup({ orderId }: { orderId: string }) {
       </Card>
 
       <div className="fixed left-1/2 -translate-x-1/2 bottom-0 w-full max-w-app px-5 pt-4 pb-[22px] bg-[linear-gradient(to_top,#FFF1E4_72%,transparent)] z-20">
-        <Button variant="mint" fullWidth disabled={confirmPickup.isPending} onClick={() => confirmPickup.mutate(orderId)}>
+        <Button variant="mint" fullWidth disabled={pf.confirmPending} onClick={() => pf.confirm()}>
           <Icon name="check" size={19} className="text-white" strokeWidth={2.6} />
-          {confirmPickup.isPending ? 'Menyimpan…' : 'Konfirmasi Sudah Diambil'}
+          {pf.confirmPending ? 'Menyimpan…' : 'Konfirmasi Sudah Diambil'}
         </Button>
       </div>
     </div>

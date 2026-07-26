@@ -6,6 +6,10 @@
 export const PRICING = {
   serviceFee: 2000,
   priorityFee: 8000,
+  /** Fee for an order add-on — cheaper than a fresh order's priorityFee since it rides the same queue slot. */
+  addonFee: 2000,
+  /** Max add-ons a single order can carry (D3). */
+  maxAddonsPerOrder: 2,
 } as const;
 
 export const COPY = {

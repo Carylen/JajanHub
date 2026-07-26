@@ -5,6 +5,7 @@ import { useVendorOrders } from '@jajanhub/api';
 import { Icon, cn, type IconName } from '@jajanhub/ui';
 import { NAV_TABS } from './BottomNav';
 import { useVendorUi } from '../lib/ui-store';
+import { useVendorTier } from './screens/useVendorTier';
 
 /**
  * Desktop-only persistent nav, matching Antre/Antri Pedagang Desktop.dc.html's
@@ -22,6 +23,7 @@ const EXTRA_LINKS: Array<{ href: string; label: string; icon: IconName }> = [
 export function Sidebar() {
   const pathname = usePathname();
   const { data: orders } = useVendorOrders();
+  const { progress: tierProgress } = useVendorTier();
   const warungOpen = useVendorUi((s) => s.warungOpen);
   const toggleWarungOpen = useVendorUi((s) => s.toggleWarungOpen);
   const activeCount = (orders ?? []).filter((o) => o.status !== 'ditolak').length;
@@ -74,16 +76,27 @@ export function Sidebar() {
           </div>
         </button>
 
-        <div className="flex items-center gap-[11px] px-2 pt-4 border-t border-white/[.08]">
+        <Link
+          href="/level"
+          className="flex items-center gap-[11px] px-2 pt-4 border-t border-white/[.08] transition-opacity hover:opacity-90"
+        >
           <div className="flex-none w-10 h-10 rounded-xl bg-[linear-gradient(135deg,#FFB870,#FF7A1A)] flex items-center justify-center text-white font-display font-extrabold text-[15px]">
             PB
           </div>
           <div className="flex-1 min-w-0">
             <div className="font-bold text-sm leading-[1.1] truncate">Pak Budi</div>
-            <div className="text-xs text-[#B79C82]">Ayam Penyet My Bosz</div>
+            <div className="text-xs text-[#B79C82] truncate">Ayam Penyet My Bosz</div>
           </div>
-          <Icon name="check" size={13} strokeWidth={2.6} className="flex-none text-[#4FE0A8]" />
-        </div>
+          {tierProgress && (
+            <span
+              className="flex-none inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-1 rounded-full"
+              style={{ background: tierProgress.current.soft, color: tierProgress.current.accent }}
+            >
+              <Icon name="medal" size={11} />
+              {tierProgress.current.name}
+            </span>
+          )}
+        </Link>
       </div>
     </aside>
   );

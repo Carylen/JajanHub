@@ -1,8 +1,9 @@
-import Link from 'next/link';
-import { QrCode, cn } from '@jajanhub/ui';
+import { Icon, QrCode, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
 import { QueueSteps } from './QueueSteps';
 import { CancelModal } from './CancelModal';
+import { AddonModal } from './AddonModal';
+import { RatingModal } from './RatingModal';
 import type { QueueScreenView } from './useQueueScreen';
 
 /**
@@ -81,17 +82,54 @@ export function QueueDesktopView(vm: QueueScreenView) {
             </div>
           </div>
 
-          {/* Reference doesn't model a pickup-confirmation step (it treats
-              "show code" as the terminal state) — this app has one, so keep
-              it reachable. Falls back to the mobile Pickup view (D0 rule),
-              centered wider, since there's no desktop design for it yet. */}
+          {/* Reference's `queueReady` CTA ("Sudah diambil · kasih rating")
+              both confirms pickup and opens rating in one click — desktop
+              already shows the code inline (no need for mobile's separate
+              /pickup route), so it can do the same here. Mobile keeps its
+              explicit two-step confirm-then-rate flow (BRIEF's product
+              decision to keep a pickup-confirmation step at all); both share
+              `usePickupFlow` for the mutation + rating state. */}
           {vm.isReady && (
-            <Link
-              href={`/order/${order.id}/pickup`}
-              className="text-center text-mint-deep font-bold text-sm py-1"
+            <button
+              type="button"
+              onClick={() => vm.pickup.confirm(() => vm.pickup.openRating())}
+              disabled={vm.pickup.confirmPending || order.status === 'picked_up'}
+              className="rounded-2xl py-[15px] font-extrabold text-[15px] bg-mint text-white shadow-[0_10px_22px_rgba(22,199,132,.3)] flex items-center justify-center gap-2 transition-transform active:scale-[.98] disabled:opacity-70"
             >
-              Sudah diambil? Konfirmasi di sini →
-            </Link>
+              <Icon name="check" size={18} className="text-white" strokeWidth={2.6} />
+              {order.status === 'picked_up' ? 'Sudah dikonfirmasi' : vm.pickup.confirmPending ? 'Menyimpan…' : 'Sudah diambil · kasih rating'}
+            </button>
+          )}
+
+          {!vm.isReady && (
+            <div className="bg-white rounded-[22px] p-5 shadow-card">
+              {order.addons.length > 0 && (
+                <div className="flex items-center gap-[9px] bg-mint-soft rounded-[13px] px-[13px] py-[11px] mb-3.5">
+                  <span className="flex-none w-[26px] h-[26px] rounded-lg bg-mint flex items-center justify-center">
+                    <Icon name="check" size={15} className="text-white" strokeWidth={2.8} />
+                  </span>
+                  <div className="flex-1">
+                    <div className="font-extrabold text-[13px] text-mint-deep">{order.addons.length} tambahan sudah masuk</div>
+                    <div className="text-[11.5px] text-[#5AAE8C]">Diproses bareng pesanan utama</div>
+                  </div>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={vm.addon.openFlow}
+                disabled={!vm.addon.canOpen}
+                className={cn(
+                  'w-full rounded-2xl py-[15px] font-extrabold text-[15px] flex items-center justify-center gap-2 transition-transform active:scale-[.98]',
+                  vm.addon.canOpen ? 'bg-[#FFF3E7] text-brand-deep' : 'bg-[#EFE6DA] text-faint cursor-not-allowed',
+                )}
+              >
+                <Icon name="plus" size={18} />
+                Tambah Pesanan
+              </button>
+              {!vm.addon.canOpen && (
+                <div className="text-center text-xs text-faint mt-2.5">Maksimal 2 tambahan per antrean sudah tercapai</div>
+              )}
+            </div>
           )}
 
           {vm.canCancel && (
@@ -112,6 +150,14 @@ export function QueueDesktopView(vm: QueueScreenView) {
       </div>
 
       <CancelModal open={vm.cancelOpen} onClose={vm.closeCancel} onConfirm={vm.confirmCancel} pending={vm.cancelPending} />
+      <AddonModal vm={vm.addon} orderNo={`${order.queueLetter}${order.queueNumber}`} orderSeed={order.queueNumber * 13 + 7} />
+      <RatingModal
+        open={vm.pickup.ratingOpen}
+        onClose={vm.pickup.finish}
+        merchantName={order.merchantName}
+        orderCode={order.code}
+        onSubmit={vm.pickup.finish}
+      />
     </div>
   );
 }

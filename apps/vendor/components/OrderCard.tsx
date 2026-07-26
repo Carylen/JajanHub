@@ -83,9 +83,16 @@ export function OrderCard({ order, onAdvance, onReject }: OrderCardProps) {
           <span className="text-[9px] opacity-85 font-semibold">{rejected ? 'DITOLAK' : 'ANTRIAN'}</span>
         </div>
         <div className="flex-1 min-w-0">
-          <div className={cn('inline-flex items-center gap-1.5 font-bold text-xs px-[11px] py-1 rounded-full', rejected ? 'bg-[#FBEEE9] text-brand-press' : cfg!.chipClass)}>
-            {cfg?.cooking && <span className="w-[11px] h-[11px] rounded-full border-2 border-[rgba(228,86,10,.3)] border-t-brand-deep animate-spin" />}
-            {rejected ? 'Ditolak' : cfg!.chipText}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <div className={cn('inline-flex items-center gap-1.5 font-bold text-xs px-[11px] py-1 rounded-full', rejected ? 'bg-[#FBEEE9] text-brand-press' : cfg!.chipClass)}>
+              {cfg?.cooking && <span className="w-[11px] h-[11px] rounded-full border-2 border-[rgba(228,86,10,.3)] border-t-brand-deep animate-spin" />}
+              {rejected ? 'Ditolak' : cfg!.chipText}
+            </div>
+            {!!order.addonCount && (
+              <span className="inline-flex items-center gap-1 bg-mint-soft text-mint-deep font-extrabold text-[11px] px-2 py-1 rounded-full">
+                +{order.addonCount} tambahan
+              </span>
+            )}
           </div>
           <div className="text-[13px] text-faint mt-1.5">Menunggu {order.waitMins} menit</div>
         </div>

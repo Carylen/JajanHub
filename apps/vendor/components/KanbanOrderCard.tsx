@@ -36,9 +36,12 @@ export function KanbanOrderCard({ order, onAdvance, onReject }: KanbanOrderCardP
           <span className="font-display font-extrabold text-base">{num}</span>
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-[7px]">
+          <div className="flex items-center gap-[7px] flex-wrap">
             <Money amount={order.total} display className="text-[15px]" />
             {order.priority && <span className="bg-prio text-white text-[9px] font-extrabold px-[7px] py-[3px] rounded-full">PRIORITAS</span>}
+            {!!order.addonCount && (
+              <span className="bg-mint-soft text-mint-deep text-[9px] font-extrabold px-[7px] py-[3px] rounded-full">+{order.addonCount} tambahan</span>
+            )}
           </div>
           <div className="text-xs text-faint font-semibold mt-0.5">Masuk {order.waitMins} mnt lalu</div>
         </div>

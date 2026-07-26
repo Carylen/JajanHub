@@ -5,7 +5,7 @@
  * backend adopts Eden Treaty, replace the fetch calls with the Eden client
  * without touching any UI.
  */
-import type { JajanhubClient, Unsubscribe } from '../client';
+import type { AddonInput, JajanhubClient, Unsubscribe } from '../client';
 import type {
   CreateOrderInput,
   LoyalCustomer,
@@ -52,6 +52,8 @@ export function createHttpClient(baseUrl: string): JajanhubClient {
     markPaid: (id) => req<Order>(`/orders/${id}/paid`, { method: 'POST' }),
     cancelOrder: (id) => req<Order>(`/orders/${id}/cancel`, { method: 'POST' }),
     confirmPickup: (id) => req<Order>(`/orders/${id}/pickup`, { method: 'POST' }),
+    createAddon: (orderId: string, items: AddonInput) =>
+      req<Order>(`/orders/${orderId}/addons`, { method: 'POST', body: JSON.stringify({ items }) }),
 
     subscribeQueue(orderId, cb): Unsubscribe {
       const ws = new WebSocket(wsUrl(`/orders/${orderId}/queue`));
@@ -82,6 +84,8 @@ export function createHttpClient(baseUrl: string): JajanhubClient {
     getProfile: () => req<UserProfile>('/me'),
 
     getVendorSummary: () => req<VendorSummary>('/vendor/summary'),
+    advanceVendorTier: () => req<VendorSummary>('/vendor/tier/advance', { method: 'POST' }),
+    resetVendorTier: () => req<VendorSummary>('/vendor/tier/reset', { method: 'POST' }),
     getVendorOrders: () => req<VendorOrder[]>('/vendor/orders'),
     advanceVendorOrder: (id) => req<VendorOrder[]>(`/vendor/orders/${id}/advance`, { method: 'POST' }),
     rejectVendorOrder: (id, reason) =>

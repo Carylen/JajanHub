@@ -35,7 +35,7 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 <div style="display:flex;min-height:100vh;width:100%;background:#E7DCCE">
 
 <!-- ============ SIDEBAR ============ -->
-<aside style="flex:none;width:266px;background:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:24px 18px;box-shadow:2px 0 24px rgba(35,24,15,.05)">
+<aside style="flex:none;width:266px;background:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:24px 18px;box-shadow:2px 0 24px rgba(35,24,15,.05);overflow-y:auto">
   <div style="display:flex;align-items:center;gap:11px;padding:2px 6px 20px">
     <div style="flex:none;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#FFB870,#FF7A1A);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(255,122,26,.32)">
       <svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M4 20.5h16" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M6 20V10a6 6 0 0 1 12 0v10" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7V3.5M12 6.4V3M15 7V3.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
@@ -43,17 +43,30 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
     <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;letter-spacing:-.6px">Antri</div>
   </div>
 
-  <div style="background:linear-gradient(155deg,#FFB870,#FF7A1A 60%,#E4560A);border-radius:20px;padding:18px;color:#fff;position:relative;overflow:hidden">
-    <svg style="position:absolute;right:-20px;bottom:-24px;opacity:.16" width="130" height="130" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.2" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="12" r="5" stroke="#fff" stroke-width="1.2"/></svg>
+  <div style="background:linear-gradient(155deg,#FFB870,#FF7A1A 60%,#E4560A);border-radius:20px;padding:16px;color:#fff;position:relative;overflow:hidden">
+    <svg style="position:absolute;right:-20px;bottom:-24px;opacity:.16" width="120" height="120" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.2" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="12" r="5" stroke="#fff" stroke-width="1.2"/></svg>
     <div style="position:relative">
       <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.22);font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Terverifikasi</span>
-      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;line-height:1.15;margin-top:11px">Ayam Penyet<br>My Bosz</div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;line-height:1.15;margin-top:10px">{{ warungName }}</div>
       <div style="font-size:12.5px;opacity:.92;margin-top:5px;display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.9s infinite"></span>Buka · 10.00–22.00</div>
     </div>
   </div>
 
-  <nav style="display:flex;flex-direction:column;gap:3px;margin-top:20px">
-    <div style="font-size:11px;font-weight:800;color:#B0A192;letter-spacing:.5px;padding:0 12px 8px">KATEGORI</div>
+  <nav style="display:flex;flex-direction:column;gap:3px;margin-top:18px">
+    <div style="font-size:11px;font-weight:800;color:#B0A192;letter-spacing:.5px;padding:0 12px 8px">NAVIGASI</div>
+    <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="4">
+      <button onClick="{{ n.onClick }}" style="display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;border:none;text-align:left;padding:11px 13px;border-radius:13px;background:{{ n.bg }};color:{{ n.color }};font-weight:700;font-size:14.5px;transition:background .15s" style-hover="background:#FBF1E6">
+        <span style="flex:none;display:flex;color:{{ n.iconColor }}">{{ n.icon }}</span>
+        <span style="flex:1">{{ n.label }}</span>
+        <sc-if value="{{ n.badge }}"><span style="flex:none;font-size:10px;font-weight:800;color:#fff;background:#7A3BF5;padding:3px 8px;border-radius:999px">{{ n.badge }}</span></sc-if>
+      </button>
+    </sc-for>
+  </nav>
+
+  <sc-if value="{{ showCats }}" hint-placeholder-val="{{ true }}">
+  <div style="height:1px;background:#F1E7DC;margin:16px 6px 14px"></div>
+  <nav style="display:flex;flex-direction:column;gap:3px">
+    <div style="font-size:11px;font-weight:800;color:#B0A192;letter-spacing:.5px;padding:0 12px 8px">{{ catHeader }}</div>
     <sc-for list="{{ cats }}" as="c" hint-placeholder-count="4">
       <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;border:none;text-align:left;padding:11px 13px;border-radius:13px;background:{{ c.bg }};color:{{ c.color }};font-weight:700;font-size:14.5px;transition:background .15s" style-hover="background:#FBF1E6">
         <span style="flex:none;display:flex;color:{{ c.iconColor }}">{{ c.icon }}</span>
@@ -62,17 +75,18 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
       </button>
     </sc-for>
   </nav>
+  </sc-if>
 
-  <div style="margin-top:auto;background:#F4F0FF;border:1px solid #E4D8FF;border-radius:16px;padding:15px;display:flex;align-items:center;gap:12px">
+  <button onClick="{{ goPriority }}" style="margin-top:auto;cursor:pointer;text-align:left;border:1px solid #E4D8FF;background:#F4F0FF;border-radius:16px;padding:15px;display:flex;align-items:center;gap:12px" style-active="transform:scale(.99)" style-hover="background:#EEE7FF">
     <span style="flex:none;width:38px;height:38px;border-radius:12px;background:#7A3BF5;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.6-.7z" fill="#fff"/></svg></span>
     <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:13.5px;color:#5B2BC4">Antri Priority</div><div style="font-size:11.5px;color:#8B6FC9">Naik antrean tiap pesan</div></div>
-  </div>
+  </button>
 </aside>
 
 <!-- ============ MAIN ============ -->
 <main style="flex:1;min-width:0;display:flex;background:#F1E7DC">
 
-  <!-- catalog -->
+  <!-- ==== ORDER: catalog ==== -->
   <sc-if value="{{ isOrder }}" hint-placeholder-val="{{ true }}">
   <div style="flex:1;min-width:0;display:flex;flex-direction:column">
     <div style="position:relative;height:180px;background:linear-gradient(158deg,#FFB870,#FF7A1A 56%,#E4560A);overflow:hidden;flex:none">
@@ -156,14 +170,14 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 
       <button onClick="{{ togglePriority }}" style="width:100%;cursor:pointer;text-align:left;margin-top:20px;background:{{ prioBg }};border:2px solid {{ prioBorder }};border-radius:16px;padding:15px;display:flex;align-items:center;gap:13px" style-active="transform:scale(.99)">
         <span style="flex:none;width:40px;height:40px;border-radius:12px;background:{{ prioIconBg }};display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.6-.7z" fill="{{ prioIconColor }}"/></svg></span>
-        <div style="flex:1"><div style="font-weight:800;font-size:14px;color:{{ prioTitleColor }}">Prioritas antrean</div><div style="font-size:12px;color:#9A8A7C;margin-top:1px">Naik ke depan · +Rp8.000</div></div>
+        <div style="flex:1"><div style="font-weight:800;font-size:14px;color:{{ prioTitleColor }}">Prioritas antrean</div><div style="font-size:12px;color:#9A8A7C;margin-top:1px">Naik ke depan · +{{ prioFeeStr }}</div></div>
         <span style="flex:none;width:46px;height:26px;border-radius:999px;background:{{ prioTrack }};position:relative"><span style="position:absolute;top:3px;left:{{ prioKnob }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.25);transition:left .2s"></span></span>
       </button>
     </div>
 
     <div style="flex:none;padding:20px 24px;border-top:1px solid #F4ECE2;background:#FFFCF8">
       <div style="display:flex;justify-content:space-between;font-size:14px;color:#6B5D4F;margin-bottom:8px"><span>Subtotal</span><span style="font-weight:700">{{ subtotalStr }}</span></div>
-      <sc-if value="{{ priority }}"><div style="display:flex;justify-content:space-between;font-size:14px;color:#6B5D4F;margin-bottom:8px"><span>Biaya prioritas</span><span style="font-weight:700">Rp8.000</span></div></sc-if>
+      <sc-if value="{{ priority }}"><div style="display:flex;justify-content:space-between;font-size:14px;color:#6B5D4F;margin-bottom:8px"><span>Biaya prioritas</span><span style="font-weight:700">{{ prioFeeStr }}</span></div></sc-if>
       <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 16px"><span style="font-weight:700;font-size:15px">Total</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#23180F">{{ totalStr }}</span></div>
       <button onClick="{{ checkout }}" style="width:100%;cursor:pointer;border:none;border-radius:15px;padding:17px;font-weight:800;font-size:16px;background:linear-gradient(135deg,#FFB870,#FF7A1A);color:#fff;box-shadow:0 10px 22px rgba(255,122,26,.32);display:flex;align-items:center;justify-content:center;gap:9px" style-active="transform:scale(.98)" style-hover="filter:brightness(1.04)">Bayar dengan QRIS<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
@@ -171,12 +185,273 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
   </aside>
   </sc-if>
 
-  <!-- ============ QUEUE STATUS ============ -->
+  <!-- ==== DISCOVERY: Sekitar Sini ==== -->
+  <sc-if value="{{ isDiscovery }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;animation:screenIn .35s ease">
+    <div style="position:relative;height:170px;background:linear-gradient(158deg,#7FD0B4,#2FB98F 60%,#159C77);overflow:hidden;flex:none">
+      <div style="position:absolute;inset:0;background:radial-gradient(60% 80% at 82% 0%,rgba(255,255,255,.26),transparent)"></div>
+      <div style="position:relative;padding:30px 40px;color:#fff">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.22);font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;margin-bottom:10px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="#fff" stroke-width="2"/></svg>Kelurahan Sukamaju · radius 1 km</div>
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;letter-spacing:-.8px;line-height:1">Sekitar Sini</div>
+        <div style="font-size:15px;opacity:.95;margin-top:7px;max-width:520px;line-height:1.5">Gerobak lain yang lagi buka di dekatmu. Pesan dari mana aja, ambil pas siap.</div>
+      </div>
+    </div>
+
+    <div style="padding:22px 40px 8px;flex:none;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px">{{ discTitle }} <span style="color:#B0A192;font-weight:700;font-size:15px">· {{ discCount }} gerobak</span></div>
+      <div style="font-size:13px;color:#9A8A7C">Urutkan: <span style="font-weight:700;color:#23180F">Terdekat</span></div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:10px 40px 40px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px">
+        <sc-for list="{{ gerobak }}" as="g" hint-placeholder-count="6">
+          <div style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 5px 16px rgba(35,24,15,.05);display:flex;flex-direction:column">
+            <div style="height:112px;background:{{ g.grad }};position:relative;filter:{{ g.dim }}">
+              <span style="position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.92);color:#23180F;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.6-.7z" fill="#F5A623"/></svg>{{ g.rating }}</span>
+              <sc-if value="{{ g.mine }}"><span style="position:absolute;top:12px;right:12px;background:#7A3BF5;color:#fff;font-size:10px;font-weight:800;padding:5px 9px;border-radius:999px">Warung kamu</span></sc-if>
+              <span style="position:absolute;bottom:10px;left:12px;display:inline-flex;align-items:center;gap:5px;background:{{ g.statusBg }};color:{{ g.statusColor }};font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px"><span style="width:6px;height:6px;border-radius:50%;background:{{ g.statusDot }}"></span>{{ g.statusLabel }}</span>
+            </div>
+            <div style="padding:15px;display:flex;flex-direction:column;flex:1">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;line-height:1.2">{{ g.name }}</div>
+              <div style="font-size:12.5px;color:#9A8A7C;margin-top:4px">{{ g.typeLabel }} · {{ g.distStr }}</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px">
+                <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:{{ g.queueColor }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="8" r="3" stroke="currentColor" stroke-width="2"/><path d="M3 19c0-2.5 2.2-4 5-4s5 1.5 5 4M13 15.2c2.2.3 4 1.6 4 3.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>{{ g.queueStr }}</div>
+                <button onClick="{{ g.onClick }}" disabled="{{ g.disabled }}" style="cursor:{{ g.cursor }};border:none;background:{{ g.btnBg }};color:{{ g.btnColor }};font-weight:800;font-size:12.5px;padding:8px 13px;border-radius:11px" style-active="transform:scale(.95)">{{ g.btnLabel }}</button>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- map panel -->
+  <aside style="flex:none;width:366px;background:#fff;box-shadow:-2px 0 24px rgba(35,24,15,.05);display:flex;flex-direction:column;position:sticky;top:0;height:100vh">
+    <div style="padding:24px 24px 14px;border-bottom:1px solid #F4ECE2">
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Peta sekitar</div>
+      <div style="font-size:13px;color:#9A8A7C;margin-top:2px">{{ discCount }} gerobak dalam 1 km</div>
+    </div>
+    <div style="flex:1;position:relative;overflow:hidden;background:#EDE7DD">
+      <svg width="100%" height="100%" viewBox="0 0 366 500" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0">
+        <rect width="366" height="500" fill="#E7E0D4"/>
+        <rect x="0" y="0" width="366" height="500" fill="#EAE9DF"/>
+        <path d="M-20 120 H400 M-20 300 H400 M120 -20 V520 M250 -20 V520" stroke="#F6F2EA" stroke-width="26"/>
+        <path d="M-20 210 H400 M60 -20 V520 M320 -20 V520" stroke="#F6F2EA" stroke-width="16"/>
+        <path d="M-20 120 H400 M-20 300 H400 M120 -20 V520 M250 -20 V520" stroke="#DFD8CB" stroke-width="1.4" stroke-dasharray="7 8"/>
+        <rect x="20" y="150" width="70" height="40" rx="6" fill="#E3DCCF"/>
+        <rect x="270" y="230" width="72" height="46" rx="6" fill="#E3DCCF"/>
+        <rect x="150" y="340" width="70" height="44" rx="6" fill="#E3DCCF"/>
+        <path d="M0 430 Q120 400 366 440 L366 500 L0 500 Z" fill="#CDE8DA"/>
+      </svg>
+      <sc-for list="{{ pins }}" as="p" hint-placeholder-count="4">
+        <div style="position:absolute;left:{{ p.x }};top:{{ p.y }};transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center">
+          <div style="background:{{ p.color }};color:#fff;font-weight:800;font-size:11px;padding:4px 9px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 10px rgba(35,24,15,.2)">{{ p.label }}</div>
+          <div style="width:2px;height:9px;background:{{ p.color }}"></div>
+        </div>
+      </sc-for>
+      <div style="position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:#2F6BFF;border:3px solid #fff;box-shadow:0 0 0 6px rgba(47,107,255,.22),0 4px 10px rgba(0,0,0,.2)"></div>
+      <div style="position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:rgba(47,107,255,.35);animation:ringpulse 2s infinite"></div>
+    </div>
+    <div style="flex:none;padding:16px 24px 22px;border-top:1px solid #F4ECE2;background:#FFFCF8">
+      <div style="font-size:11px;font-weight:800;color:#B0A192;letter-spacing:.5px;margin-bottom:10px">PALING DEKAT</div>
+      <sc-for list="{{ nearest }}" as="n" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:11px;padding:7px 0">
+          <span style="flex:none;width:26px;height:26px;border-radius:8px;background:{{ n.color }};color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center">{{ n.idx }}</span>
+          <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.name }}</div></div>
+          <div style="flex:none;font-size:12.5px;color:#9A8A7C;font-weight:600">{{ n.dist }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </aside>
+  </sc-if>
+
+  <!-- ==== PRIORITY: Langganan ==== -->
+  <sc-if value="{{ isPriority }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;min-width:0;overflow-y:auto;padding:40px;display:flex;justify-content:center;animation:screenIn .35s ease">
+    <div style="width:100%;max-width:940px">
+      <div style="text-align:center;margin-bottom:6px">
+        <span style="display:inline-flex;align-items:center;gap:6px;background:#F4F0FF;color:#5B2BC4;font-size:12.5px;font-weight:800;padding:6px 13px;border-radius:999px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.6-.7z" fill="#7A3BF5"/></svg>Antri Priority</span>
+      </div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;letter-spacing:-.8px;text-align:center;line-height:1.1;margin-top:12px">Nggak pernah kelamaan<br>di antrean lagi</div>
+      <div style="text-align:center;color:#9A8A7C;font-size:15px;margin-top:10px;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.5">Otomatis naik antrean tiap kali pesan, tanpa bayar biaya prioritas lagi. Pilih paket yang pas buat kamu.</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:32px;align-items:stretch">
+        <sc-for list="{{ plans }}" as="p" hint-placeholder-count="2">
+          <button onClick="{{ p.onClick }}" style="cursor:pointer;text-align:left;position:relative;overflow:hidden;background:{{ p.bg }};border:2px solid {{ p.border }};border-radius:24px;padding:28px;display:flex;flex-direction:column;box-shadow:{{ p.shadow }}" style-active="transform:scale(.99)">
+            <sc-if value="{{ p.best }}"><span style="position:absolute;top:0;right:0;background:#7A3BF5;color:#fff;font-size:11px;font-weight:800;padding:6px 14px;border-radius:0 22px 0 14px">HEMAT 28%</span></sc-if>
+            <div style="font-weight:800;font-size:15px;color:{{ p.nameColor }}">{{ p.name }}</div>
+            <div style="display:flex;align-items:flex-end;gap:4px;margin-top:12px">
+              <span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;color:{{ p.priceColor }};line-height:1">{{ p.price }}</span>
+              <span style="font-size:14px;color:#9A8A7C;font-weight:600;margin-bottom:6px">/{{ p.per }}</span>
+            </div>
+            <div style="font-size:13px;color:{{ p.subColor }};margin-top:6px">{{ p.sub }}</div>
+            <div style="height:1px;background:{{ p.divider }};margin:20px 0"></div>
+            <div style="display:flex;flex-direction:column;gap:12px;flex:1">
+              <sc-for list="{{ p.feats }}" as="f" hint-placeholder-count="4">
+                <div style="display:flex;align-items:flex-start;gap:10px">
+                  <span style="flex:none;width:20px;height:20px;border-radius:50%;background:{{ f.dot }};display:flex;align-items:center;justify-content:center;margin-top:1px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span style="font-size:13.5px;color:#3A2A1C;font-weight:{{ f.weight }};line-height:1.4">{{ f.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:22px;width:100%;text-align:center;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:{{ p.ctaBg }};color:{{ p.ctaColor }};border:{{ p.ctaBorder }}">{{ p.cta }}</div>
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:22px;background:#fff;border-radius:20px;padding:22px 26px;box-shadow:0 5px 16px rgba(35,24,15,.05);display:flex;align-items:center;gap:16px">
+        <span style="flex:none;width:44px;height:44px;border-radius:13px;background:#EAF6EF;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#0E9F6E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#0E9F6E" stroke-width="2"/></svg></span>
+        <div style="flex:1"><div style="font-weight:800;font-size:14.5px">Bisa berhenti kapan aja</div><div style="font-size:13px;color:#9A8A7C;margin-top:2px">Nggak ada kontrak. Batalkan langganan langsung dari halaman Profil.</div></div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ==== PROFILE ==== -->
+  <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;min-width:0;overflow-y:auto;padding:40px;display:flex;justify-content:center;animation:screenIn .35s ease">
+    <div style="width:100%;max-width:960px">
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;letter-spacing:-.6px;margin-bottom:22px">Profil</div>
+      <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:22px;align-items:start">
+
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div style="background:#fff;border-radius:22px;padding:26px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+            <div style="display:flex;align-items:center;gap:16px">
+              <div style="flex:none;width:66px;height:66px;border-radius:20px;background:linear-gradient(135deg,#FFB870,#FF7A1A);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#fff;box-shadow:0 6px 16px rgba(255,122,26,.28)">R</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Raka Pratama</div>
+                <div style="display:inline-flex;align-items:center;gap:5px;background:#F4F0FF;color:#5B2BC4;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px;margin-top:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.6-.7z" fill="#7A3BF5"/></svg>Priority · aktif</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:2px;margin-top:20px">
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #F4ECE2">
+                <span style="flex:none;color:#B0A192"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5 5h4l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v4a1 1 0 0 1-1 1A16 16 0 0 1 4 6a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
+                <div style="flex:1"><div style="font-size:12px;color:#9A8A7C">Nomor HP</div><div style="font-weight:700;font-size:14.5px;margin-top:1px">0812-3344-5566</div></div>
+                <span style="color:#E4560A;font-weight:700;font-size:13px;cursor:pointer">Ubah</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #F4ECE2">
+                <span style="flex:none;color:#B0A192"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="2"/></svg></span>
+                <div style="flex:1"><div style="font-size:12px;color:#9A8A7C">Email</div><div style="font-weight:700;font-size:14.5px;margin-top:1px">raka.pratama@email.com</div></div>
+                <span style="color:#E4560A;font-weight:700;font-size:13px;cursor:pointer">Ubah</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #F4ECE2">
+                <span style="flex:none;color:#B0A192"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                <div style="flex:1"><div style="font-size:12px;color:#9A8A7C">Member sejak</div><div style="font-weight:700;font-size:14.5px;margin-top:1px">Maret 2025</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#fff;border-radius:22px;padding:26px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;margin-bottom:6px">Notifikasi</div>
+            <div style="font-size:13px;color:#9A8A7C;margin-bottom:14px">Atur kabar apa aja yang mau kamu terima.</div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ notifs }}" as="t" hint-placeholder-count="4">
+                <button onClick="{{ t.onClick }}" style="cursor:pointer;border:none;background:none;text-align:left;display:flex;align-items:center;gap:14px;padding:13px 0;border-top:1px solid #F4ECE2">
+                  <div style="flex:1"><div style="font-weight:700;font-size:14.5px">{{ t.title }}</div><div style="font-size:12.5px;color:#9A8A7C;margin-top:2px">{{ t.sub }}</div></div>
+                  <span style="flex:none;width:46px;height:26px;border-radius:999px;background:{{ t.track }};position:relative;transition:background .2s"><span style="position:absolute;top:3px;left:{{ t.knob }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.25);transition:left .2s"></span></span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;gap:14px">
+            <div style="flex:1;background:#23180F;border-radius:20px;padding:20px;color:#fff"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1">48</div><div style="font-size:12.5px;color:#C9B8A6;margin-top:4px">Total pesanan</div></div>
+            <div style="flex:1;background:linear-gradient(150deg,#FFB870,#FF7A1A);border-radius:20px;padding:20px;color:#fff"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;line-height:1">~9<span style="font-size:16px"> mnt</span></div><div style="font-size:12.5px;opacity:.92;margin-top:4px">Rata-rata nunggu</div></div>
+          </div>
+
+          <div style="background:#fff;border-radius:22px;padding:24px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+              <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px">Riwayat pesanan</div>
+              <span style="font-size:13px;color:#E4560A;font-weight:700;cursor:pointer">Lihat semua</span>
+            </div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ orders }}" as="o" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-top:1px solid #F4ECE2">
+                  <div style="flex:none;width:46px;height:46px;border-radius:13px;background:{{ o.grad }}"></div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-weight:700;font-size:14.5px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.warung }}</div>
+                    <div style="font-size:12.5px;color:#9A8A7C;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.items }} · {{ o.date }}</div>
+                  </div>
+                  <div style="flex:none;text-align:right">
+                    <div style="font-weight:800;font-size:14px">{{ o.total }}</div>
+                    <span style="display:inline-block;font-size:10.5px;font-weight:800;color:{{ o.statusColor }};background:{{ o.statusBg }};padding:2px 8px;border-radius:999px;margin-top:3px">{{ o.status }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ==== QUEUE STATUS ==== -->
   <sc-if value="{{ isQueue }}" hint-placeholder-val="{{ false }}">
   <div style="flex:1;min-width:0;overflow-y:auto;padding:40px;display:flex;justify-content:center;animation:screenIn .35s ease">
-    <div style="width:100%;max-width:920px;display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start">
 
-      <div style="grid-column:span 2;background:linear-gradient(150deg,#FFB870,#FF7A1A 60%,#E4560A);border-radius:26px;padding:34px;color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;gap:34px">
+    <!-- refund timeline -->
+    <sc-if value="{{ queueCancelled }}" hint-placeholder-val="{{ false }}">
+    <div style="width:100%;max-width:820px">
+      <div style="background:#fff;border-radius:26px;padding:34px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+        <div style="display:flex;align-items:center;gap:16px">
+          <span style="flex:none;width:56px;height:56px;border-radius:18px;background:#FBEEE9;display:flex;align-items:center;justify-content:center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4" stroke="#C4402F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div style="flex:1"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px">Refund sedang diproses</div><div style="font-size:14px;color:#9A8A7C;margin-top:3px">Antrean #{{ orderNo }} · dibatalkan · {{ totalStr }}</div></div>
+        </div>
+
+        <div style="margin:34px 0 10px;display:flex;align-items:flex-start">
+          <sc-for list="{{ refundSteps }}" as="r" hint-placeholder-count="3">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative">
+              <sc-if value="{{ r.hasLine }}"><div style="position:absolute;top:19px;left:50%;width:100%;height:3px;background:{{ r.lineColor }};border-radius:2px"></div></sc-if>
+              <div style="position:relative;z-index:1;width:38px;height:38px;border-radius:50%;background:{{ r.bg }};display:flex;align-items:center;justify-content:center;{{ r.ring }}">{{ r.icon }}</div>
+              <div style="font-weight:800;font-size:13.5px;color:{{ r.titleColor }};margin-top:12px;max-width:150px">{{ r.title }}</div>
+              <div style="font-size:12px;color:#9A8A7C;margin-top:3px;max-width:150px;line-height:1.4">{{ r.sub }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top:28px;background:#FBF6EF;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:13px">
+          <span style="flex:none;color:#E4560A"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+          <div style="flex:1;font-size:13.5px;color:#6B5D4F;line-height:1.5">Dana <b>{{ totalStr }}</b> dikembalikan ke metode pembayaran asal. Biasanya masuk dalam <b>1×24 jam</b>.</div>
+        </div>
+        <button onClick="{{ backToOrder }}" style="margin-top:22px;width:100%;cursor:pointer;border:none;border-radius:15px;padding:16px;font-weight:800;font-size:16px;background:#23180F;color:#fff" style-active="transform:scale(.99)">Pesan lagi</button>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- pickup ready hero -->
+    <sc-if value="{{ queueReady }}" hint-placeholder-val="{{ false }}">
+    <div style="width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;text-align:center">
+      <div style="width:112px;height:112px;border-radius:34px;background:#DFF7EC;display:flex;align-items:center;justify-content:center;animation:floaty 3s ease-in-out infinite;box-shadow:0 14px 30px rgba(22,199,132,.22)">
+        <svg width="58" height="58" viewBox="0 0 24 24" fill="none"><path d="M6 9h12l-1 10.5a1 1 0 0 1-1 .9H8a1 1 0 0 1-1-.9z" stroke="#0E9F6E" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 9l1.2-4.2A1.5 1.5 0 0 1 11.1 3.7h1.8a1.5 1.5 0 0 1 1.4 1.1L15.5 9" stroke="#0E9F6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 13.5l1.8 1.8L15 11.6" stroke="#16C784" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;letter-spacing:-.6px;margin-top:24px">Pesananmu siap diambil! 🎉</div>
+      <div style="font-size:15px;color:#9A8A7C;margin-top:8px;max-width:400px;line-height:1.5">Tunjukkan kode ini ke penjual di gerobak {{ warungName }}.</div>
+
+      <div style="margin-top:26px;background:#23180F;border-radius:28px;padding:30px 44px;color:#fff;width:100%;position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:radial-gradient(70% 90% at 50% 0%,rgba(255,122,26,.28),transparent)"></div>
+        <div style="position:relative">
+          <div style="font-size:13px;color:#C9B8A6;font-weight:600">Kode pengambilan</div>
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:68px;letter-spacing:10px;margin:6px 0 14px;animation:qnum .4s ease">{{ pickCode }}</div>
+          <div style="width:150px;height:150px;background:#fff;border-radius:18px;margin:0 auto;padding:12px">{{ qrSvg }}</div>
+          <div style="font-size:12.5px;color:#C9B8A6;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px">Antrean #{{ orderNo }} · sebutkan kode atau scan QR</div>
+        </div>
+      </div>
+
+      <sc-if value="{{ hasAddon }}"><div style="margin-top:16px;display:inline-flex;align-items:center;gap:8px;background:#EAF6EF;color:#0E9F6E;font-weight:800;font-size:13px;padding:9px 15px;border-radius:999px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#0E9F6E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ addonCount }} tambahan sudah termasuk</div></sc-if>
+
+      <button onClick="{{ openRating }}" style="margin-top:24px;width:100%;cursor:pointer;border:none;border-radius:15px;padding:17px;font-weight:800;font-size:16px;background:linear-gradient(135deg,#FFB870,#FF7A1A);color:#fff;box-shadow:0 10px 22px rgba(255,122,26,.32)" style-active="transform:scale(.98)" style-hover="filter:brightness(1.04)">Sudah diambil · kasih rating</button>
+    </div>
+    </sc-if>
+
+    <!-- in-progress grid -->
+    <sc-if value="{{ queueProgress }}" hint-placeholder-val="{{ true }}">
+    <div style="width:100%;max-width:920px;display:flex;flex-direction:column;gap:22px">
+
+      <div style="width:100%;background:linear-gradient(150deg,#FFB870,#FF7A1A 60%,#E4560A);border-radius:26px;padding:34px;color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;gap:34px">
         <div style="flex:none;text-align:center">
           <div style="font-size:14px;opacity:.9;font-weight:600">Nomor antreanmu</div>
           <div key="{{ orderNo }}" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:92px;line-height:.9;letter-spacing:-2px;animation:qnum .4s ease">{{ orderNo }}</div>
@@ -191,7 +466,8 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
         </div>
       </div>
 
-      <div style="background:#fff;border-radius:22px;padding:26px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+      <div style="display:flex;gap:22px;align-items:flex-start">
+      <div style="flex:1;min-width:0;background:#fff;border-radius:22px;padding:26px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
         <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;margin-bottom:20px">Status pesanan</div>
         <div style="display:flex;flex-direction:column;gap:0">
           <sc-for list="{{ stages }}" as="s" hint-placeholder-count="3">
@@ -206,16 +482,30 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
         </div>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:22px">
-        <div style="background:#23180F;border-radius:22px;padding:26px;color:#fff;text-align:center">
-          <div style="font-size:13px;color:#C9B8A6;font-weight:600">Tunjukkan ini saat ambil</div>
-          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:44px;letter-spacing:6px;margin:10px 0 16px">{{ pickCode }}</div>
-          <div style="width:132px;height:132px;background:#fff;border-radius:16px;margin:0 auto;padding:11px">{{ qrSvg }}</div>
-          <div style="font-size:12.5px;color:#C9B8A6;margin-top:14px;line-height:1.5">Sebutkan kode atau scan QR ini ke penjual pas nomormu dipanggil</div>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:16px">
+        <div style="background:#23180F;border-radius:22px;padding:24px;color:#fff;text-align:center">
+          <div style="font-size:13px;color:#C9B8A6;font-weight:600">Kode pengambilan</div>
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:40px;letter-spacing:6px;margin:8px 0 12px">{{ pickCode }}</div>
+          <div style="width:118px;height:118px;background:#fff;border-radius:16px;margin:0 auto;padding:10px">{{ qrSvg }}</div>
+          <div style="font-size:12px;color:#C9B8A6;margin-top:12px;line-height:1.5">Aktif otomatis pas pesananmu siap</div>
         </div>
+
+        <div style="background:#fff;border-radius:22px;padding:20px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+          <sc-if value="{{ hasAddon }}"><div style="display:flex;align-items:center;gap:9px;background:#EAF6EF;border-radius:13px;padding:11px 13px;margin-bottom:14px"><span style="flex:none;width:26px;height:26px;border-radius:8px;background:#16C784;display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div style="flex:1"><div style="font-weight:800;font-size:13px;color:#0E9F6E">{{ addonCount }} tambahan sudah masuk</div><div style="font-size:11.5px;color:#5AAE8C">Diproses bareng pesanan utama</div></div></div></sc-if>
+
+          <button onClick="{{ openAddon }}" disabled="{{ addonDisabled }}" style="width:100%;cursor:{{ addonCursor }};border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:{{ addonBtnBg }};color:{{ addonBtnColor }};display:flex;align-items:center;justify-content:center;gap:8px" style-active="transform:scale(.98)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Tambah Pesanan
+          </button>
+          <sc-if value="{{ addonMaxed }}"><div style="text-align:center;font-size:12px;color:#9A8A7C;margin-top:9px">Maksimal 2 tambahan per antrean sudah tercapai</div></sc-if>
+          <sc-if value="{{ addonHint }}"><div style="text-align:center;font-size:12px;color:#9A8A7C;margin-top:9px">Bisa nambah selama masih dimasak</div></sc-if>
+        </div>
+
         <button onClick="{{ openCancel }}" style="cursor:pointer;border:1px solid #F0D9D3;background:#fff;color:#C4402F;font-weight:700;font-size:14.5px;padding:15px;border-radius:15px" style-active="transform:scale(.98)" style-hover="background:#FBEEE9">Batalkan pesanan</button>
       </div>
+      </div>
     </div>
+    </sc-if>
+
   </div>
   </sc-if>
 
@@ -229,7 +519,7 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
     <div style="font-size:14px;color:#9A8A7C">Scan pakai aplikasi bank / e-wallet apa aja</div>
     <div style="width:210px;height:210px;background:#fff;border-radius:20px;margin:20px auto;padding:16px;box-shadow:0 8px 20px rgba(35,24,15,.08)">{{ payQrSvg }}</div>
     <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;color:#23180F">{{ totalStr }}</div>
-    <div style="font-size:13px;color:#9A8A7C;margin-top:2px">Ayam Penyet My Bosz</div>
+    <div style="font-size:13px;color:#9A8A7C;margin-top:2px">{{ warungName }}</div>
     <button onClick="{{ confirmPay }}" style="margin-top:22px;width:100%;cursor:pointer;border:none;border-radius:15px;padding:16px;font-weight:800;font-size:16px;background:#16C784;color:#fff;box-shadow:0 10px 22px rgba(22,199,132,.3)" style-active="transform:scale(.98)">Saya sudah bayar</button>
     <button onClick="{{ closePay }}" style="margin-top:10px;width:100%;cursor:pointer;border:none;background:none;color:#9A8A7C;font-weight:700;font-size:14px;padding:6px">Batal</button>
   </div>
@@ -260,17 +550,143 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
     <div style="text-align:center;animation:popin .3s ease">
       <div style="width:80px;height:80px;border-radius:50%;background:#DFF7EC;display:flex;align-items:center;justify-content:center;margin:4px auto 16px"><svg width="42" height="42" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#16C784" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">Pesanan dibatalkan</div>
-      <div style="font-size:14px;color:#9A8A7C;margin-top:6px;line-height:1.5">Dana {{ totalStr }} lagi diproses balik ke kamu. Biasanya masuk dalam 1×24 jam.</div>
-      <button onClick="{{ backToOrder }}" style="margin-top:22px;width:100%;cursor:pointer;border:none;border-radius:14px;padding:16px;font-weight:800;font-size:16px;background:#23180F;color:#fff" style-active="transform:scale(.98)">Pesan lagi</button>
+      <div style="font-size:14px;color:#9A8A7C;margin-top:6px;line-height:1.5">Dana {{ totalStr }} lagi diproses balik ke kamu. Cek status refund-nya di bawah.</div>
+      <button onClick="{{ viewRefund }}" style="margin-top:22px;width:100%;cursor:pointer;border:none;border-radius:14px;padding:16px;font-weight:800;font-size:16px;background:#23180F;color:#fff" style-active="transform:scale(.98)">Lihat status refund</button>
     </div>
     </sc-if>
   </div>
 </div>
 </sc-if>
 
+<!-- ============ RATING MODAL ============ -->
+<sc-if value="{{ ratingOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeRating }}" style="position:fixed;inset:0;z-index:60;background:rgba(35,24,15,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:30px;animation:fadeIn .2s ease">
+  <div onClick="{{ stop }}" style="background:#FFF8F1;border-radius:26px;padding:30px;width:440px;max-width:100%;box-shadow:0 30px 70px rgba(0,0,0,.35);animation:popin .3s ease">
+    <sc-if value="{{ ratingIdle }}" hint-placeholder-val="{{ true }}">
+    <div style="text-align:center">
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px">Gimana pesananmu?</div>
+      <div style="font-size:14px;color:#9A8A7C;margin-top:5px">{{ warungName }} · Antrean #{{ orderNo }}</div>
+      <div style="display:flex;justify-content:center;gap:10px;margin:22px 0 6px">
+        <sc-for list="{{ ratingStars }}" as="s" hint-placeholder-count="5">
+          <button onClick="{{ s.onClick }}" style="cursor:pointer;border:none;background:none;padding:2px" style-active="transform:scale(.88)" style-hover="transform:scale(1.12)">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.6 5.8L21 9.3l-4.7 4.4L17.5 20 12 16.8 6.5 20l1.2-6.3L3 9.3l6.4-.5z" fill="{{ s.fill }}" stroke="{{ s.stroke }}" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </button>
+        </sc-for>
+      </div>
+      <div style="font-weight:700;font-size:14px;color:#E4560A;height:20px">{{ ratingLabel }}</div>
+
+      <div style="text-align:left;margin-top:18px">
+        <div style="font-size:12.5px;font-weight:800;color:#B0A192;letter-spacing:.3px;margin-bottom:10px">APA YANG BAGUS?</div>
+        <div style="display:flex;flex-wrap:wrap;gap:9px">
+          <sc-for list="{{ ratingChips }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.onClick }}" style="cursor:pointer;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-weight:700;font-size:13.5px;padding:9px 14px;border-radius:999px" style-active="transform:scale(.95)">{{ c.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <button onClick="{{ submitRating }}" disabled="{{ ratingDisabled }}" style="margin-top:24px;width:100%;cursor:{{ ratingCursor }};border:none;border-radius:15px;padding:16px;font-weight:800;font-size:16px;background:{{ ratingBtnBg }};color:#fff" style-active="transform:scale(.98)">Kirim penilaian</button>
+    </div>
+    </sc-if>
+    <sc-if value="{{ ratingDone }}" hint-placeholder-val="{{ false }}">
+    <div style="text-align:center;animation:popin .3s ease">
+      <div style="width:80px;height:80px;border-radius:50%;background:#FFF3E7;display:flex;align-items:center;justify-content:center;margin:4px auto 16px"><svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.6 5.8L21 9.3l-4.7 4.4L17.5 20 12 16.8 6.5 20l1.2-6.3L3 9.3l6.4-.5z" fill="#FF7A1A"/></svg></div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">Makasih ratingnya! 🙏</div>
+      <div style="font-size:14px;color:#9A8A7C;margin-top:6px;line-height:1.5">Penilaianmu bantu penjual jadi lebih baik dan bantu tetangga pilih gerobak.</div>
+      <button onClick="{{ backToOrder }}" style="margin-top:22px;width:100%;cursor:pointer;border:none;border-radius:14px;padding:16px;font-weight:800;font-size:16px;background:#23180F;color:#fff" style-active="transform:scale(.98)">Kembali ke beranda</button>
+    </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ ADD-ON MODAL ============ -->
+<sc-if value="{{ addonOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeAddon }}" style="position:fixed;inset:0;z-index:60;background:rgba(35,24,15,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:30px;animation:fadeIn .2s ease">
+  <div onClick="{{ stop }}" style="background:#FFF8F1;border-radius:26px;width:640px;max-width:100%;max-height:88vh;box-shadow:0 30px 70px rgba(0,0,0,.35);animation:popin .3s ease;display:flex;flex-direction:column;overflow:hidden">
+
+    <!-- step: menu -->
+    <sc-if value="{{ addonStepMenu }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:none;padding:24px 28px 16px;border-bottom:1px solid #F4ECE2">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">Tambah Pesanan</div>
+          <div style="display:inline-flex;align-items:center;gap:6px;background:#FFF3E7;color:#E4560A;font-size:12.5px;font-weight:800;padding:5px 11px;border-radius:999px;margin-top:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 20V10a6 6 0 0 1 12 0v10" stroke="#E4560A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20.5h16" stroke="#E4560A" stroke-width="2" stroke-linecap="round"/></svg>Tambahan untuk Antrian #{{ orderNo }}</div>
+        </div>
+        <button onClick="{{ closeAddon }}" style="cursor:pointer;border:none;background:#F1E7DC;width:36px;height:36px;border-radius:11px;font-size:18px;color:#6B5D4F;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.92)">✕</button>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:18px 28px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <sc-for list="{{ addonMenu }}" as="m" hint-placeholder-count="6">
+          <div style="background:#fff;border-radius:16px;padding:13px;display:flex;align-items:center;gap:12px;box-shadow:0 3px 10px rgba(35,24,15,.04)">
+            <div style="flex:none;width:48px;height:48px;border-radius:12px;background:{{ m.grad }}"></div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:13.5px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.name }}</div>
+              <div style="font-size:13px;color:#E4560A;font-weight:800;margin-top:3px">{{ m.priceStr }}</div>
+            </div>
+            <sc-if value="{{ m.inCart }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:none;display:flex;align-items:center;gap:7px">
+              <button onClick="{{ m.dec }}" style="cursor:pointer;border:none;width:26px;height:26px;border-radius:8px;background:#F1E7DC;color:#23180F;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.9)">−</button>
+              <span style="font-weight:800;font-size:14px;min-width:14px;text-align:center">{{ m.qty }}</span>
+              <button onClick="{{ m.inc }}" style="cursor:pointer;border:none;width:26px;height:26px;border-radius:8px;background:#FF7A1A;color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.9)">+</button>
+            </div>
+            </sc-if>
+            <sc-if value="{{ m.notInCart }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ m.add }}" style="flex:none;cursor:pointer;border:none;width:30px;height:30px;border-radius:9px;background:#23180F;color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.9)" style-hover="background:#3A2A1C">+</button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="flex:none;padding:18px 28px;border-top:1px solid #F4ECE2;background:#FFFCF8;display:flex;align-items:center;gap:16px">
+      <div style="flex:1"><div style="font-size:12.5px;color:#9A8A7C">{{ addonQtyStr }}</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">{{ addonSubtotalStr }}</div></div>
+      <button onClick="{{ goAddonPay }}" disabled="{{ addonNextDisabled }}" style="cursor:{{ addonNextCursor }};border:none;border-radius:14px;padding:15px 26px;font-weight:800;font-size:15px;background:{{ addonNextBg }};color:#fff;display:flex;align-items:center;gap:8px" style-active="transform:scale(.98)">Lanjut bayar<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    </sc-if>
+
+    <!-- step: pay -->
+    <sc-if value="{{ addonStepPay }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:none;padding:20px 28px 14px;border-bottom:1px solid #F4ECE2;display:flex;align-items:center;gap:12px">
+      <button onClick="{{ addonBack }}" style="cursor:pointer;border:none;background:#F1E7DC;width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.92)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#6B5D4F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Bayar tambahan</div><div style="font-size:12.5px;color:#9A8A7C">Tambahan untuk Antrian #{{ orderNo }}</div></div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:20px 28px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center">
+      <div>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <sc-for list="{{ addonSummary }}" as="i" hint-placeholder-count="2">
+            <div style="display:flex;align-items:center;gap:11px">
+              <div style="flex:none;width:40px;height:40px;border-radius:11px;background:{{ i.grad }}"></div>
+              <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px;line-height:1.2">{{ i.name }}</div><div style="font-size:12px;color:#9A8A7C;margin-top:1px">×{{ i.qty }}</div></div>
+              <div style="font-weight:800;font-size:13.5px">{{ i.lineStr }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height:1px;background:#F1E7DC;margin:16px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:13.5px;color:#6B5D4F;margin-bottom:8px"><span>Subtotal tambahan</span><span style="font-weight:700">{{ addonSubtotalStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13.5px;color:#6B5D4F;margin-bottom:8px">
+          <span style="display:flex;align-items:center;gap:6px">Biaya tambahan <span style="background:#EAF6EF;color:#0E9F6E;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:999px">HEMAT</span></span>
+          <span style="display:flex;align-items:center;gap:7px"><span style="text-decoration:line-through;color:#B0A192;font-weight:600">{{ prioFeeStr }}</span><span style="font-weight:800;color:#0E9F6E">{{ addonFeeStr }}</span></span>
+        </div>
+        <div style="font-size:11.5px;color:#9A8A7C;line-height:1.4;margin-bottom:12px">Lebih murah dari biaya layanan normal karena digabung ke antrean yang sama.</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #F1E7DC;padding-top:12px"><span style="font-weight:700;font-size:14px">Total bayar</span><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px">{{ addonTotalStr }}</span></div>
+      </div>
+      <div style="text-align:center">
+        <div style="width:190px;height:190px;background:#fff;border-radius:20px;margin:0 auto;padding:15px;box-shadow:0 8px 20px rgba(35,24,15,.08)">{{ payQrSvg }}</div>
+        <div style="font-size:12.5px;color:#9A8A7C;margin-top:12px;line-height:1.4">Scan QRIS ini buat bayar<br>tambahannya</div>
+      </div>
+    </div>
+    <div style="flex:none;padding:18px 28px;border-top:1px solid #F4ECE2;background:#FFFCF8">
+      <button onClick="{{ confirmAddonPay }}" style="width:100%;cursor:pointer;border:none;border-radius:15px;padding:16px;font-weight:800;font-size:16px;background:#16C784;color:#fff;box-shadow:0 10px 22px rgba(22,199,132,.3)" style-active="transform:scale(.98)">Saya sudah bayar tambahan</button>
+    </div>
+    </sc-if>
+
+  </div>
+</div>
+</sc-if>
+
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:940}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:940},&quot;warungName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Ayam Penyet My Bosz&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Konten&quot;},&quot;priorityFee&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:8000,&quot;min&quot;:0,&quot;max&quot;:20000,&quot;step&quot;:1000,&quot;unit&quot;:&quot;Rp&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Biaya&quot;},&quot;addonFee&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:2000,&quot;min&quot;:0,&quot;max&quot;:10000,&quot;step&quot;:500,&quot;unit&quot;:&quot;Rp&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Biaya&quot;}}">
 const rp = n => 'Rp' + (n||0).toLocaleString('id-ID');
 const H = s => React.createElement('span',{dangerouslySetInnerHTML:{__html:s},style:{display:'flex'}});
 const GRADS = ['linear-gradient(135deg,#FFCE8F,#FF9A3D)','linear-gradient(135deg,#FFB7A0,#FF7A5C)','linear-gradient(135deg,#FFD98A,#F5A623)','linear-gradient(135deg,#FFC48F,#F97B3D)','linear-gradient(135deg,#FFD0A0,#FF8A4D)','linear-gradient(135deg,#F5C48A,#E8863D)'];
@@ -292,29 +708,81 @@ const CATS = [
   {v:'best', label:'Terlaris', icon:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.6-.7z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>'},
 ];
 const CAT_TITLE = {all:'Semua menu', food:'Makanan', drink:'Minuman', best:'Menu terlaris'};
+const ICON = {
+  store:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 9l1.4-4.5A1 1 0 0 1 6.4 4h11.2a1 1 0 0 1 1 .5L20 9M4 9h16M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9M9.5 20v-6h5v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  pin:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>',
+  crown:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 8l4 3.5L12 5l4 6.5L20 8l-1.6 10H5.6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>',
+  user:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  bowl:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M3 11h18a9 9 0 0 1-18 0z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 11c0-2 1-3 1-4M12 11c0-2 1-3 1-4M16 11c0-2 1-3 1-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  coffee:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M17 9h2a2 2 0 0 1 0 6h-2M8 3v2M11 3v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  cake:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 20h16v-6a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M4 15c1.5 1.5 2.5 1.5 4 0s2.5-1.5 4 0 2.5 1.5 4 0M12 8V5M9 8V6M15 8V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+};
+const DISC_CATS = [
+  {v:'all', label:'Semua gerobak', icon:CATS[0].icon},
+  {v:'ayam', label:'Ayam & Sate', icon:ICON.store},
+  {v:'bakso', label:'Bakso & Mie', icon:ICON.bowl},
+  {v:'kopi', label:'Kopi & Minuman', icon:ICON.coffee},
+  {v:'jajanan', label:'Jajanan Manis', icon:ICON.cake},
+];
+const DISC_TITLE = {all:'Semua gerobak', ayam:'Ayam & Sate', bakso:'Bakso & Mie', kopi:'Kopi & Minuman', jajanan:'Jajanan Manis'};
+const TYPE_LABEL = {ayam:'Ayam & Sate', bakso:'Bakso & Mie', kopi:'Kopi & Minuman', jajanan:'Jajanan'};
+const GEROBAK = [
+  {id:'g1', name:'Ayam Penyet My Bosz', type:'ayam', dist:0.2, rating:'4.9', queue:3, open:true, best:true, mine:true},
+  {id:'g2', name:'Bakso Urat Pak Kumis', type:'bakso', dist:0.3, rating:'4.8', queue:5, open:true, best:true},
+  {id:'g3', name:'Kopi Gerobak Senja', type:'kopi', dist:0.4, rating:'4.8', queue:4, open:true},
+  {id:'g4', name:'Sate Taichan Bang Jul', type:'ayam', dist:0.5, rating:'4.7', queue:8, open:true},
+  {id:'g5', name:'Es Campur Bu Nunung', type:'jajanan', dist:0.6, rating:'4.5', queue:1, open:true},
+  {id:'g6', name:'Mie Ayam Bakso Berkah', type:'bakso', dist:0.7, rating:'4.6', queue:2, open:true},
+  {id:'g7', name:'Martabak Manis Legit', type:'jajanan', dist:0.9, rating:'4.7', queue:6, open:true},
+  {id:'g8', name:'Nasi Goreng Kambing 88', type:'ayam', dist:1.1, rating:'4.6', queue:0, open:false},
+];
+const PINS = [
+  {x:'27%', y:'34%', label:'Bakso Pak Kumis', color:'#E4560A'},
+  {x:'70%', y:'28%', label:'Kopi Senja', color:'#7A3BF5'},
+  {x:'60%', y:'70%', label:'Martabak Legit', color:'#0E9F6E'},
+  {x:'34%', y:'62%', label:'Es Campur', color:'#2FB98F'},
+];
+const NEAREST = [
+  {name:'Ayam Penyet My Bosz', dist:'0.2 km', color:'#FF7A1A'},
+  {name:'Bakso Urat Pak Kumis', dist:'0.3 km', color:'#E4560A'},
+  {name:'Kopi Gerobak Senja', dist:'0.4 km', color:'#7A3BF5'},
+];
+const ORDERS = [
+  {warung:'Ayam Penyet My Bosz', items:'2 menu', total:'Rp44.000', date:'Hari ini', status:'Berlangsung', ok:true, active:true},
+  {warung:'Bakso Urat Pak Kumis', items:'1 menu', total:'Rp18.000', date:'Kemarin', status:'Selesai', ok:true},
+  {warung:'Kopi Gerobak Senja', items:'2 menu', total:'Rp32.000', date:'22 Jul', status:'Selesai', ok:true},
+  {warung:'Sate Taichan Bang Jul', items:'1 menu', total:'Rp25.000', date:'20 Jul', status:'Dibatalkan', ok:false},
+];
+const RATING_REASONS = ['Cepat disiapkan','Rasanya enak','Penjual ramah','Sesuai pesanan','Porsi pas','Tempat rapi'];
+const RATING_LABEL = ['','Kurang','Cukup','Lumayan','Bagus','Mantap!'];
 const CANCEL_REASONS = ['Salah pesan','Kelamaan nunggu','Berubah pikiran'];
 const QR = '<svg viewBox="0 0 100 100" width="100%" height="100%" shape-rendering="crispEdges"><rect width="100" height="100" fill="#fff"/><g fill="#23180F"><rect x="6" y="6" width="26" height="26"/><rect x="10" y="10" width="18" height="18" fill="#fff"/><rect x="14" y="14" width="10" height="10"/><rect x="68" y="6" width="26" height="26"/><rect x="72" y="10" width="18" height="18" fill="#fff"/><rect x="76" y="14" width="10" height="10"/><rect x="6" y="68" width="26" height="26"/><rect x="10" y="72" width="18" height="18" fill="#fff"/><rect x="14" y="76" width="10" height="10"/><rect x="40" y="8" width="6" height="6"/><rect x="52" y="8" width="6" height="6"/><rect x="40" y="20" width="6" height="6"/><rect x="48" y="16" width="6" height="6"/><rect x="60" y="40" width="6" height="6"/><rect x="8" y="40" width="6" height="6"/><rect x="20" y="40" width="6" height="6"/><rect x="32" y="46" width="6" height="6"/><rect x="44" y="40" width="6" height="6"/><rect x="52" y="52" width="6" height="6"/><rect x="40" y="60" width="6" height="6"/><rect x="68" y="60" width="6" height="6"/><rect x="80" y="52" width="6" height="6"/><rect x="88" y="44" width="6" height="6"/><rect x="60" y="72" width="6" height="6"/><rect x="72" y="80" width="6" height="6"/><rect x="84" y="72" width="6" height="6"/><rect x="48" y="84" width="6" height="6"/><rect x="60" y="88" width="6" height="6"/><rect x="40" y="48" width="6" height="6"/><rect x="88" y="84" width="6" height="6"/></g></svg>';
 
 class Component extends DCLogic {
   state = {
-    screen:'order', cat:'all', query:'', cart:{}, priority:false,
-    payOpen:false, cancelOpen:false, cancelReason:'', cancelResult:null,
-    queueStage:1, peopleAhead:3, etaMin:12, orderNo:'A-24', pickCode:'4729',
+    screen:'order', cat:'all', discCat:'all', query:'', cart:{}, priority:false,
+    payOpen:false, cancelOpen:false, cancelReason:'', cancelResult:null, cancelled:false,
+    ratingOpen:false, ratingResult:null, stars:0, ratingSel:[],
+    addonOpen:false, addonStep:'menu', addonCart:{}, addonCount:0,
+    notif:{called:true, promo:false, newMenu:true, email:false},
+    queueStage:1, peopleAhead:3, etaMin:12, orderNo:'27', pickCode:'4729',
   };
   gradFor(id){ const i=MENU.findIndex(m=>m.id===id); const m=MENU[i]; return m&&m.cat==='drink'?MINT:GRADS[i%GRADS.length]; }
-  setCat(c){ this.setState({cat:c, query:''}); }
+  go(screen){ this.setState({screen}); try{window.scrollTo(0,0);}catch(e){} }
+  setCat(c){ this.setState({screen:'order', cat:c, query:''}); try{window.scrollTo(0,0);}catch(e){} }
+  setDiscCat(c){ this.setState({discCat:c}); }
   onSearch(e){ this.setState({query:e.target.value}); }
   add(id){ this.setState(st=>({cart:{...st.cart,[id]:(st.cart[id]||0)+1}})); }
-  inc(id){ this.add(id); }
   dec(id){ this.setState(st=>{ const c={...st.cart}; const n=(c[id]||0)-1; if(n<=0) delete c[id]; else c[id]=n; return {cart:c}; }); }
   togglePriority(){ this.setState(s=>({priority:!s.priority})); }
+  toggleNotif(k){ this.setState(s=>({notif:{...s.notif,[k]:!s.notif[k]}})); }
   checkout(){ this.setState({payOpen:true}); }
   closePay(){ this.setState({payOpen:false}); }
-  confirmPay(){ this.setState({payOpen:false, screen:'queue', queueStage:1, peopleAhead:3, etaMin:12});
+  confirmPay(){ this.setState({payOpen:false, screen:'queue', queueStage:1, peopleAhead:3, etaMin:12, cancelled:false, addonCount:0, ratingResult:null});
     try{window.scrollTo(0,0);}catch(e){} this.startQueue(); }
   startQueue(){ this.clearQueue();
     this._qt = setInterval(()=>{ this.setState(st=>{
-      if(st.screen!=='queue') return {};
+      if(st.screen!=='queue'||st.cancelled) return {};
       let {queueStage,peopleAhead,etaMin}=st;
       if(peopleAhead>0){ peopleAhead-=1; etaMin=Math.max(1,etaMin-3); if(peopleAhead<=1 && queueStage<2) queueStage=2; }
       else if(queueStage<3){ queueStage=3; }
@@ -324,81 +792,217 @@ class Component extends DCLogic {
   openCancel(){ this.setState({cancelOpen:true, cancelReason:'', cancelResult:null}); }
   closeCancel(){ this.setState({cancelOpen:false}); }
   confirmCancel(){ if(!this.state.cancelReason) return; this.clearQueue(); this.setState({cancelResult:'done'}); }
-  backToOrder(){ this.setState({cancelOpen:false, screen:'order', cart:{}, priority:false, cancelResult:null}); }
+  viewRefund(){ this.setState({cancelOpen:false, cancelled:true}); try{window.scrollTo(0,0);}catch(e){} }
+  backToOrder(){ this.clearQueue(); this.setState({cancelOpen:false, ratingOpen:false, screen:'order', cart:{}, priority:false, cancelResult:null, cancelled:false, ratingResult:null, addonCount:0, stars:0, ratingSel:[]}); try{window.scrollTo(0,0);}catch(e){} }
+  // rating
+  openRating(){ this.setState({ratingOpen:true, ratingResult:null, stars:0, ratingSel:[]}); }
+  closeRating(){ this.setState({ratingOpen:false}); }
+  setStars(n){ this.setState({stars:n}); }
+  toggleReason(v){ this.setState(s=>({ratingSel: s.ratingSel.includes(v)? s.ratingSel.filter(x=>x!==v) : [...s.ratingSel, v]})); }
+  submitRating(){ if(!this.state.stars) return; this.setState({ratingResult:'done'}); }
+  // add-on
+  openAddon(){ if(this.state.addonCount>=2) return; this.setState({addonOpen:true, addonStep:'menu', addonCart:{}}); }
+  closeAddon(){ this.setState({addonOpen:false}); }
+  addonAdd(id){ this.setState(st=>({addonCart:{...st.addonCart,[id]:(st.addonCart[id]||0)+1}})); }
+  addonDec(id){ this.setState(st=>{ const c={...st.addonCart}; const n=(c[id]||0)-1; if(n<=0) delete c[id]; else c[id]=n; return {addonCart:c}; }); }
+  goAddonPay(){ if(!Object.keys(this.state.addonCart).length) return; this.setState({addonStep:'pay'}); }
+  addonBack(){ this.setState({addonStep:'menu'}); }
+  confirmAddonPay(){ this.setState(s=>({addonOpen:false, addonStep:'menu', addonCart:{}, addonCount:s.addonCount+1})); }
+
   renderVals(){
     const S=this.state;
+    const warungName = this.props.warungName ?? 'Ayam Penyet My Bosz';
+    const prioFee = this.props.priorityFee ?? 8000;
+    const addFee = this.props.addonFee ?? 2000;
+
+    // nav
+    const activeNav = S.screen==='queue'?'order':S.screen;
+    const NAV=[
+      {v:'order', label:'Pesan di sini', icon:ICON.store},
+      {v:'discovery', label:'Sekitar Sini', icon:ICON.pin, badge:'8'},
+      {v:'priority', label:'Langganan Prioritas', icon:ICON.crown},
+      {v:'profile', label:'Profil', icon:ICON.user},
+    ];
+    const navItems = NAV.map(n=>{ const on=activeNav===n.v; return {
+      label:n.label, icon:H(n.icon), badge:n.badge||'', onClick:()=>this.go(n.v),
+      bg:on?'#FFF3E7':'transparent', color:on?'#E4560A':'#5D4E40', iconColor:on?'#E4560A':'#B0A192' }; });
+
+    // sidebar categories (context-aware)
+    let cats=[], catHeader='', showCats=false;
+    if(S.screen==='discovery'){
+      showCats=true; catHeader='KATEGORI GEROBAK';
+      const gc = v => v==='all'?GEROBAK.length:GEROBAK.filter(g=>g.type===v).length;
+      cats = DISC_CATS.map(c=>{ const on=S.discCat===c.v; return {
+        label:c.label, icon:H(c.icon), count:String(gc(c.v)), onClick:()=>this.setDiscCat(c.v),
+        bg:on?'#EAF6EF':'transparent', color:on?'#0E9F6E':'#5D4E40', iconColor:on?'#0E9F6E':'#B0A192', countColor:on?'#0E9F6E':'#C4B29B' }; });
+    } else if(S.screen==='order'||S.screen==='queue'){
+      showCats=true; catHeader='MENU WARUNG INI';
+      const cc = c => c==='all'?MENU.length : c==='best'?MENU.filter(m=>m.best).length : MENU.filter(m=>m.cat===c).length;
+      cats = CATS.map(c=>{ const on=S.cat===c.v && !S.query && S.screen==='order'; return {
+        label:c.label, icon:H(c.icon), count:String(cc(c.v)), onClick:()=>this.setCat(c.v),
+        bg:on?'#FFF3E7':'transparent', color:on?'#E4560A':'#5D4E40', iconColor:on?'#E4560A':'#B0A192', countColor:on?'#E4560A':'#C4B29B' }; });
+    }
+
+    // order catalog
     const filtered = MENU.filter(m=>{
       if(S.query){ return (m.name+' '+m.desc).toLowerCase().includes(S.query.toLowerCase()); }
       if(S.cat==='all') return true;
       if(S.cat==='best') return m.best;
       return m.cat===S.cat; });
     const menu = filtered.map(m=>{ const qty=S.cart[m.id]||0; return {
-      ...m, priceStr:rp(m.price), grad:this.gradFor(m.id), qty,
-      inCart:qty>0, notInCart:qty===0,
-      add:()=>this.add(m.id), inc:()=>this.inc(m.id), dec:()=>this.dec(m.id) }; });
+      ...m, priceStr:rp(m.price), grad:this.gradFor(m.id), qty, inCart:qty>0, notInCart:qty===0,
+      add:()=>this.add(m.id), inc:()=>this.add(m.id), dec:()=>this.dec(m.id) }; });
 
     const cartIds = Object.keys(S.cart).filter(id=>S.cart[id]>0);
     const cartItems = cartIds.map(id=>{ const m=MENU.find(x=>x.id===id); const qty=S.cart[id]; return {
-      name:m.name, qty, grad:this.gradFor(id), lineStr:rp(m.price*qty),
-      inc:()=>this.inc(id), dec:()=>this.dec(id) }; });
+      name:m.name, qty, grad:this.gradFor(id), lineStr:rp(m.price*qty), inc:()=>this.add(id), dec:()=>this.dec(id) }; });
     const totalQty = cartIds.reduce((a,id)=>a+S.cart[id],0);
     const subtotal = cartIds.reduce((a,id)=>{ const m=MENU.find(x=>x.id===id); return a+m.price*S.cart[id]; },0);
-    const total = subtotal + (S.priority?8000:0);
+    const total = subtotal + (S.priority?prioFee:0);
 
-    // queue stages
+    // discovery
+    const gerobak = GEROBAK.filter(g=>S.discCat==='all'||g.type===S.discCat).map((g,i)=>({
+      name:g.name, typeLabel:TYPE_LABEL[g.type], distStr:g.dist+' km', rating:g.rating,
+      grad: g.type==='kopi'?MINT:GRADS[i%GRADS.length], dim:g.open?'none':'grayscale(.55) opacity(.85)',
+      mine:g.mine, best:g.best,
+      queueStr: g.open?(g.queue+' antre'):'Belum buka', queueColor:g.open?'#6B5D4F':'#B0A192',
+      statusLabel:g.open?'Buka':'Tutup', statusColor:g.open?'#0E9F6E':'#9A8A7C', statusBg:g.open?'rgba(234,246,239,.95)':'rgba(241,231,220,.95)', statusDot:g.open?'#16C784':'#C4B29B',
+      disabled:!g.open, cursor:g.open?'pointer':'not-allowed',
+      btnLabel:g.mine?'Menu':(g.open?'Lihat menu':'Tutup'), btnBg:g.open?'#23180F':'#EFE6DA', btnColor:g.open?'#fff':'#B0A192',
+      onClick:()=> g.open?this.go('order'):null }));
+    const pins = PINS.map(p=>({x:p.x,y:p.y,label:p.label,color:p.color}));
+    const nearest = NEAREST.map((n,i)=>({idx:String(i+1), name:n.name, dist:n.dist, color:n.color}));
+
+    // priority plans
+    const featBul = [
+      {label:'Auto naik antrean tiap pesan', dot:'#7A3BF5', weight:700},
+      {label:'Gratis biaya prioritas '+rp(prioFee), dot:'#7A3BF5', weight:400},
+      {label:'Badge prioritas di antrean', dot:'#7A3BF5', weight:400},
+      {label:'Notifikasi lebih awal', dot:'#7A3BF5', weight:400},
+    ];
+    const featThn = [
+      {label:'Semua benefit paket bulanan', dot:'#7A3BF5', weight:700},
+      {label:'Hemat 2 bulan (bayar 10, dapat 12)', dot:'#0E9F6E', weight:700},
+      {label:'Early access menu baru sekitar', dot:'#7A3BF5', weight:400},
+      {label:'Dukungan pelanggan prioritas', dot:'#7A3BF5', weight:400},
+    ];
+    const plans = [
+      {name:'Bulanan', price:'Rp29rb', per:'bln', sub:'Ditagih tiap bulan', best:false, feats:featBul,
+       bg:'#fff', border:'#F1E7DC', shadow:'0 5px 16px rgba(35,24,15,.05)', nameColor:'#9A8A7C', priceColor:'#23180F', subColor:'#9A8A7C', divider:'#F4ECE2',
+       cta:'Pilih Bulanan', ctaBg:'#F1E7DC', ctaColor:'#23180F', ctaBorder:'none', onClick:()=>{}},
+      {name:'Tahunan', price:'Rp249rb', per:'thn', sub:'≈ Rp20.750 / bulan', best:true, feats:featThn,
+       bg:'linear-gradient(160deg,#F7F2FF,#fff 55%)', border:'#C9B0FF', shadow:'0 14px 34px rgba(122,59,245,.16)', nameColor:'#5B2BC4', priceColor:'#5B2BC4', subColor:'#7A3BF5', divider:'#EBE1FF',
+       cta:'Pilih Tahunan · Hemat', ctaBg:'linear-gradient(135deg,#9B6BFF,#7A3BF5)', ctaColor:'#fff', ctaBorder:'none', onClick:()=>{}},
+    ];
+
+    // profile
+    const NDEF=[
+      {k:'called', title:'Antrean dipanggil', sub:'Kabar pas nomormu siap diambil'},
+      {k:'promo', title:'Promo & diskon', sub:'Penawaran dari gerobak favorit'},
+      {k:'newMenu', title:'Menu baru sekitar', sub:'Gerobak baru buka di dekatmu'},
+      {k:'email', title:'Ringkasan via email', sub:'Rekap pesanan tiap minggu'},
+    ];
+    const notifs = NDEF.map(n=>{ const on=S.notif[n.k]; return {
+      title:n.title, sub:n.sub, onClick:()=>this.toggleNotif(n.k),
+      track:on?'#16C784':'#DDD2C4', knob:on?'23px':'3px' }; });
+    const orders = ORDERS.map(o=>({
+      warung:o.warung, items:o.items, total:o.total, date:o.date, status:o.status,
+      grad: o.ok? (o.active?'linear-gradient(135deg,#FFB870,#FF7A1A)':GRADS[o.warung.length%GRADS.length]) : '#EFE6DA',
+      statusColor:o.active?'#E4560A':(o.ok?'#0E9F6E':'#C4402F'), statusBg:o.active?'#FFF3E7':(o.ok?'#EAF6EF':'#FBEEE9') }));
+
+    // queue
     const stageDef=[
       {n:1, title:'Pesanan diterima', sub:'Penjual sudah lihat pesananmu'},
       {n:2, title:'Lagi dimasak', sub:'Makananmu lagi disiapkan'},
       {n:3, title:'Siap diambil', sub:'Tunjukkan kode ke penjual'},
     ];
     const CHK='<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    const stages = stageDef.map((s,i)=>{ const done=S.queueStage>s.n, active=S.queueStage===s.n;
-      const on=done||active;
+    const stages = stageDef.map((s,i)=>{ const done=S.queueStage>s.n, active=S.queueStage===s.n; const on=done||active;
       return { title:s.title, sub:s.sub, hasLine:i<stageDef.length-1,
-        bg: done?'#16C784':active?'#FF7A1A':'#EFE6DA',
-        ring: active?'animation:ringpulse 1.8s infinite;':'',
+        bg: done?'#16C784':active?'#FF7A1A':'#EFE6DA', ring: active?'animation:ringpulse 1.8s infinite;':'',
         icon: done?H(CHK):active?React.createElement('span',{style:{width:11,height:11,borderRadius:'50%',background:'#fff',animation:'pulse 1.4s infinite'}}):React.createElement('span',{style:{width:9,height:9,borderRadius:'50%',background:'#C9B8A6'}}),
-        titleColor: on?'#23180F':'#B0A192',
-        lineColor: done?'#16C784':'#EFE6DA' }; });
-    const queueHeadline = S.queueStage>=3?'Pesananmu siap! 🎉':(S.peopleAhead<=0?'Bentar lagi giliranmu':'Pesananmu lagi diproses');
-    const queueSub = S.queueStage>=3?'Langsung ambil ke gerobak dan tunjukkan kode di bawah.':'Santai aja, kami kabarin pas nomormu dipanggil. Nggak perlu berdiri antre.';
+        titleColor: on?'#23180F':'#B0A192', lineColor: done?'#16C784':'#EFE6DA' }; });
+    const queueHeadline = S.peopleAhead<=0?'Bentar lagi giliranmu':'Pesananmu lagi diproses';
+    const queueSub = 'Santai aja, kami kabarin pas nomormu dipanggil. Nggak perlu berdiri antre.';
 
-    const cancelReasons = CANCEL_REASONS.map(v=>{ const sel=S.cancelReason===v; return {
-      v, sel, border:sel?'#C4402F':'#F1E7DC', bg:sel?'#FBEEE9':'#fff',
-      onClick:()=>this.setState({cancelReason:v}) }; });
+    // refund horizontal timeline
+    const refDef=[
+      {title:'Pembatalan diterima', sub:'Pesanan #'+S.orderNo+' dibatalkan'},
+      {title:'Dana diproses', sub:'Refund dikirim ke bank/e-wallet'},
+      {title:'Refund selesai', sub:'Estimasi ≤ 1×24 jam'},
+    ];
+    const CLOCK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><path d="M12 8v4l3 2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const refundSteps = refDef.map((r,i)=>{ const done=i<1, active=i===1;
+      return { title:r.title, sub:r.sub, hasLine:i<refDef.length-1,
+        bg: done?'#16C784':active?'#C4402F':'#EFE6DA', ring: active?'animation:ringpulse 1.8s infinite;':'',
+        icon: done?H(CHK):active?H(CLOCK):React.createElement('span',{style:{width:9,height:9,borderRadius:'50%',background:'#C9B8A6'}}),
+        titleColor: (done||active)?'#23180F':'#B0A192', lineColor: done?'#16C784':'#EFE6DA' }; });
 
-    const catCount = c => c==='all'?MENU.length : c==='best'?MENU.filter(m=>m.best).length : MENU.filter(m=>m.cat===c).length;
-    const cats = CATS.map(c=>{ const on=S.cat===c.v && !S.query; return {
-      label:c.label, icon:H(c.icon), count:String(catCount(c.v)), onClick:()=>this.setCat(c.v),
-      bg: on?'#FFF3E7':'transparent', color: on?'#E4560A':'#5D4E40',
-      iconColor: on?'#E4560A':'#B0A192', countColor: on?'#E4560A':'#C4B29B' }; });
+    // add-on
+    const addonMenu = MENU.map(m=>{ const qty=S.addonCart[m.id]||0; return {
+      name:m.name, priceStr:rp(m.price), grad:this.gradFor(m.id), qty, inCart:qty>0, notInCart:qty===0,
+      add:()=>this.addonAdd(m.id), inc:()=>this.addonAdd(m.id), dec:()=>this.addonDec(m.id) }; });
+    const aIds = Object.keys(S.addonCart).filter(id=>S.addonCart[id]>0);
+    const addonQty = aIds.reduce((a,id)=>a+S.addonCart[id],0);
+    const addonSubtotal = aIds.reduce((a,id)=>{ const m=MENU.find(x=>x.id===id); return a+m.price*S.addonCart[id]; },0);
+    const addonSummary = aIds.map(id=>{ const m=MENU.find(x=>x.id===id); return { name:m.name, qty:S.addonCart[id], grad:this.gradFor(id), lineStr:rp(m.price*S.addonCart[id]) }; });
+    const addonTotal = addonSubtotal + addFee;
+    const hasItems = aIds.length>0;
 
     return {
-      isOrder:S.screen==='order', isQueue:S.screen==='queue',
-      cats, catTitle: S.query?('Hasil "'+S.query+'"'):CAT_TITLE[S.cat], filteredCount:String(filtered.length),
+      warungName, prioFeeStr:rp(prioFee),
+      isOrder:S.screen==='order', isQueue:S.screen==='queue', isDiscovery:S.screen==='discovery', isPriority:S.screen==='priority', isProfile:S.screen==='profile',
+      navItems, cats, catHeader, showCats, goPriority:()=>this.go('priority'),
+      // order
+      catTitle: S.query?('Hasil "'+S.query+'"'):CAT_TITLE[S.cat], filteredCount:String(filtered.length),
       menu, query:S.query, onSearch:(e)=>this.onSearch(e), queueNow:'3',
-      // cart
       cartItems, cartEmpty:cartItems.length===0, cartHasItems:cartItems.length>0,
       cartCountStr: totalQty>0?(totalQty+' item dipilih'):'Belum ada item',
       subtotalStr:rp(subtotal), totalStr:rp(total),
       priority:S.priority, togglePriority:()=>this.togglePriority(),
       prioBg:S.priority?'#F4F0FF':'#FBF6EF', prioBorder:S.priority?'#C9B0FF':'#F1E7DC',
       prioIconBg:S.priority?'#7A3BF5':'#E4D8FF', prioIconColor:S.priority?'#fff':'#7A3BF5',
-      prioTitleColor:S.priority?'#5B2BC4':'#23180F',
-      prioTrack:S.priority?'#7A3BF5':'#DDD2C4', prioKnob:S.priority?'23px':'3px',
+      prioTitleColor:S.priority?'#5B2BC4':'#23180F', prioTrack:S.priority?'#7A3BF5':'#DDD2C4', prioKnob:S.priority?'23px':'3px',
       checkout:()=>this.checkout(),
+      // discovery
+      discTitle:DISC_TITLE[S.discCat], discCount:String(gerobak.length), gerobak, pins, nearest,
+      // priority
+      plans,
+      // profile
+      notifs, orders,
       // pay
       payOpen:S.payOpen, closePay:()=>this.closePay(), confirmPay:()=>this.confirmPay(),
       stop:(e)=>e.stopPropagation(), payQrSvg:H(QR), qrSvg:H(QR),
       // queue
       orderNo:S.orderNo, peopleAhead:String(S.peopleAhead), etaMin:String(S.etaMin),
       stages, queueHeadline, queueSub, pickCode:S.pickCode, openCancel:()=>this.openCancel(),
+      queueCancelled:S.cancelled, queueReady:!S.cancelled && S.queueStage>=3, queueProgress:!S.cancelled && S.queueStage<3,
+      refundSteps,
+      // add-on button
+      hasAddon:S.addonCount>0, addonCount:String(S.addonCount),
+      addonDisabled:S.addonCount>=2, addonCursor:S.addonCount>=2?'not-allowed':'pointer',
+      addonBtnBg:S.addonCount>=2?'#EFE6DA':'#FFF3E7', addonBtnColor:S.addonCount>=2?'#B0A192':'#E4560A',
+      addonMaxed:S.addonCount>=2, addonHint:S.addonCount<2,
+      openAddon:()=>this.openAddon(),
+      // add-on modal
+      addonOpen:S.addonOpen, closeAddon:()=>this.closeAddon(), addonStepMenu:S.addonStep==='menu', addonStepPay:S.addonStep==='pay',
+      addonMenu, addonSummary, addonQtyStr: addonQty>0?(addonQty+' item tambahan'):'Belum ada tambahan',
+      addonSubtotalStr:rp(addonSubtotal), addonFeeStr:rp(addFee), addonTotalStr:rp(addonTotal),
+      goAddonPay:()=>this.goAddonPay(), addonBack:()=>this.addonBack(), confirmAddonPay:()=>this.confirmAddonPay(),
+      addonNextDisabled:!hasItems, addonNextCursor:hasItems?'pointer':'not-allowed', addonNextBg:hasItems?'#FF7A1A':'#E4C6A8',
       // cancel
-      cancelOpen:S.cancelOpen, closeCancel:()=>this.closeCancel(), cancelReasons,
+      cancelOpen:S.cancelOpen, closeCancel:()=>this.closeCancel(),
+      cancelReasons: CANCEL_REASONS.map(v=>{ const sel=S.cancelReason===v; return { v, sel, border:sel?'#C4402F':'#F1E7DC', bg:sel?'#FBEEE9':'#fff', onClick:()=>this.setState({cancelReason:v}) }; }),
       cancelIdle:S.cancelResult!=='done', cancelDone:S.cancelResult==='done',
-      confirmCancel:()=>this.confirmCancel(), backToOrder:()=>this.backToOrder(),
-      cancelDisabled:!S.cancelReason, cancelCursor:S.cancelReason?'pointer':'not-allowed',
-      cancelBtnBg:S.cancelReason?'#C4402F':'#E0B5AD',
+      confirmCancel:()=>this.confirmCancel(), viewRefund:()=>this.viewRefund(), backToOrder:()=>this.backToOrder(),
+      cancelDisabled:!S.cancelReason, cancelCursor:S.cancelReason?'pointer':'not-allowed', cancelBtnBg:S.cancelReason?'#C4402F':'#E0B5AD',
+      // rating
+      ratingOpen:S.ratingOpen, closeRating:()=>this.closeRating(), openRating:()=>this.openRating(),
+      ratingIdle:S.ratingResult!=='done', ratingDone:S.ratingResult==='done',
+      ratingStars:[1,2,3,4,5].map(n=>({ onClick:()=>this.setStars(n), fill:n<=S.stars?'#FF7A1A':'#F1E7DC', stroke:n<=S.stars?'#FF7A1A':'#DDD2C4' })),
+      ratingLabel: RATING_LABEL[S.stars]||'',
+      ratingChips: RATING_REASONS.map(v=>{ const sel=S.ratingSel.includes(v); return { label:v, onClick:()=>this.toggleReason(v), border:sel?'#FF7A1A':'#F1E7DC', bg:sel?'#FFF3E7':'#fff', color:sel?'#E4560A':'#6B5D4F' }; }),
+      submitRating:()=>this.submitRating(), ratingDisabled:S.stars===0, ratingCursor:S.stars?'pointer':'not-allowed', ratingBtnBg:S.stars?'#FF7A1A':'#E4C6A8',
     };
   }
 }

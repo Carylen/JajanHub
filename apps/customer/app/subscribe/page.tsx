@@ -1,5 +1,9 @@
+'use client';
+import { useBreakpoint } from '@jajanhub/ui';
 import { Subscription } from '../../components/customer/Subscription';
+import { PriorityDesktopView } from '../../components/customer/PriorityDesktopView';
 
 export default function SubscribePage() {
-  return <Subscription />;
+  const bp = useBreakpoint();
+  return bp === 'desktop' ? <PriorityDesktopView /> : <Subscription />;
 }

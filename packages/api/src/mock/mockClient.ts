@@ -4,11 +4,14 @@
  * `setInterval` dummies — but hidden behind the client interface so swapping to
  * the http client requires no UI changes.
  */
-import type { JajanhubClient, Unsubscribe } from '../client';
+import type { AddonInput, JajanhubClient, Unsubscribe } from '../client';
+import { canAddOrder } from '../addon';
 import { PRICING } from '../config';
+import { nextTierId } from '../tiers';
 import type {
   CreateOrderInput,
   Order,
+  OrderAddon,
   OrderLine,
   OrderStatus,
   QueueState,
@@ -63,6 +66,7 @@ const VENDOR_NEXT: Record<VendorOrderStatus, VendorOrderStatus | 'done'> = {
 // Module-level mutable vendor state (mirrors the design's local component state).
 let vendorOrders: VendorOrder[] = VENDOR_ORDERS.map((o) => ({ ...o }));
 let vendorMenu: VendorMenuItem[] = VENDOR_MENU.map((m) => ({ ...m }));
+let vendorSummary = { ...VENDOR_SUMMARY };
 
 export function createMockClient(): JajanhubClient {
   return {
@@ -102,6 +106,7 @@ export function createMockClient(): JajanhubClient {
         pickupCode: String(4000 + Math.floor(Math.random() * 5999)),
         status: 'awaiting_payment',
         createdAt: new Date().toISOString(),
+        addons: [],
       };
       return orderStore.put(order);
     },
@@ -115,6 +120,30 @@ export function createMockClient(): JajanhubClient {
 
     async markPaid(id) {
       const next = orderStore.update(id, { status: 'paid' });
+      if (!next) throw new Error('Pesanan tidak ditemukan');
+      return next;
+    },
+
+    async createAddon(orderId: string, items: AddonInput) {
+      await delay(300);
+      const order = orderStore.get(orderId);
+      if (!order) throw new Error('Pesanan tidak ditemukan');
+      if (!canAddOrder(order)) throw new Error('Pesanan ini sudah tidak bisa ditambah lagi');
+      const warung = WARUNGS[order.merchantId] ?? WARUNGS[DEFAULT_MERCHANT_ID];
+      if (!warung) throw new Error('Warung tidak ditemukan');
+      const lines = buildLines(warung, items);
+      if (lines.length === 0) throw new Error('Belum ada item tambahan dipilih');
+      const subtotal = lines.reduce((a, l) => a + l.qty * l.price, 0);
+      const addon: OrderAddon = {
+        id: `${orderId}-addon-${order.addons.length + 1}`,
+        parentOrderId: orderId,
+        lines,
+        subtotal,
+        feeAmount: PRICING.addonFee,
+        total: subtotal + PRICING.addonFee,
+        createdAt: new Date().toISOString(),
+      };
+      const next = orderStore.update(orderId, { addons: [...order.addons, addon] });
       if (!next) throw new Error('Pesanan tidak ditemukan');
       return next;
     },
@@ -249,7 +278,17 @@ export function createMockClient(): JajanhubClient {
 
     async getVendorSummary() {
       await delay(150);
-      return VENDOR_SUMMARY;
+      return { ...vendorSummary };
+    },
+    async advanceVendorTier() {
+      await delay(150);
+      vendorSummary = { ...vendorSummary, tier: nextTierId(vendorSummary.tier), tierOrdersThisWindow: 0 };
+      return { ...vendorSummary };
+    },
+    async resetVendorTier() {
+      await delay(100);
+      vendorSummary = { ...vendorSummary, tier: 'bronze', tierOrdersThisWindow: 6 };
+      return { ...vendorSummary };
     },
     async getVendorOrders() {
       await delay(200);

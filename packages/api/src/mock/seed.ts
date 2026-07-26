@@ -110,13 +110,15 @@ export const VENDOR_SUMMARY: VendorSummary = {
   revenueDeltaPct: 18,
   ordersToday: 42,
   avgServeLabel: '4 mnt 30 dtk',
+  tier: 'bronze',
+  tierOrdersThisWindow: 6,
 };
 
 export const VENDOR_ORDERS: VendorOrder[] = [
   { id: '5', no: 'A-26', waitMins: 1, lines: [{ name: 'Ayam Penyet Original', qty: 1 }, { name: 'Es Teh Jumbo', qty: 2 }], total: 36000, priority: true, status: 'baru' },
   { id: '1', no: 'A-24', waitMins: 2, lines: [{ name: 'Ayam Penyet Sambal Ijo', qty: 1 }, { name: 'Es Teh Jumbo', qty: 1 }], total: 30000, priority: true, status: 'baru' },
   { id: '2', no: 'A-25', waitMins: 4, lines: [{ name: 'Nasi Goreng Spesial', qty: 2 }], total: 38000, priority: false, status: 'baru' },
-  { id: '3', no: 'A-23', waitMins: 6, lines: [{ name: 'Lele Penyet', qty: 1 }, { name: 'Tahu Tempe Penyet', qty: 1 }, { name: 'Es Jeruk Peras', qty: 1 }], total: 37000, priority: false, status: 'masak' },
+  { id: '3', no: 'A-23', waitMins: 6, lines: [{ name: 'Lele Penyet', qty: 1 }, { name: 'Tahu Tempe Penyet', qty: 1 }, { name: 'Es Jeruk Peras', qty: 1 }], total: 37000, priority: false, status: 'masak', addonCount: 1 },
   { id: '4', no: 'A-22', waitMins: 9, lines: [{ name: 'Seblak Ceker Pedas', qty: 1 }], total: 15000, priority: false, status: 'siap' },
 ];
 

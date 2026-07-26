@@ -1,13 +1,16 @@
 'use client';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePayouts, useTxns, COPY } from '@jajanhub/api';
 import { IconButton, Icon, Money, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
+import { useVendorTier } from './useVendorTier';
 
 export function Settlement() {
   const router = useRouter();
   const payouts = usePayouts();
   const txns = useTxns();
+  const { progress: tierProgress } = useVendorTier();
 
   if (payouts.isLoading || txns.isLoading) return <LoadingState />;
   if (payouts.isError || txns.isError || !payouts.data || !txns.data) {
@@ -49,6 +52,31 @@ export function Settlement() {
           </button>
         </div>
       </div>
+
+      {/* Tier indicator */}
+      {tierProgress && (
+        <div className="px-5 pt-4">
+          <Link
+            href="/level"
+            className="w-full flex items-center gap-3 rounded-2xl px-[15px] py-3.5 transition-transform active:scale-[.99]"
+            style={{ background: tierProgress.current.soft, border: `1px solid ${tierProgress.current.accent}33` }}
+          >
+            <span
+              className="flex-none w-10 h-10 rounded-xl flex items-center justify-center text-white"
+              style={{ background: tierProgress.current.gradient }}
+            >
+              <Icon name="medal" size={19} />
+            </span>
+            <div className="flex-1">
+              <div className="font-bold text-[13.5px] leading-[1.35]">
+                Sebagai {tierProgress.current.name}, dana kamu cair {tierProgress.current.payoutFrequencyLabel}
+              </div>
+              <div className="text-[11.5px] text-faint mt-0.5">Naik tier buat pencairan lebih cepat</div>
+            </div>
+            <Icon name="chevron-right" size={16} style={{ color: tierProgress.current.accent }} />
+          </Link>
+        </div>
+      )}
 
       {/* Today breakdown */}
       <Section title="RINCIAN HARI INI">

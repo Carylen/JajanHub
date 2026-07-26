@@ -74,6 +74,11 @@ module.exports = {
           '0%': { transform: 'translateY(0) rotate(0deg)', opacity: '1' },
           '100%': { transform: 'translateY(120px) rotate(240deg)', opacity: '0' },
         },
+        confettiFall: {
+          '0%': { transform: 'translateY(-30px) rotate(0deg)', opacity: '0' },
+          '12%': { opacity: '1' },
+          '100%': { transform: 'translateY(440px) rotate(430deg)', opacity: '0' },
+        },
         slideCard: {
           from: { opacity: '0', transform: 'translateY(10px) scale(.98)' },
           to: { opacity: '1', transform: 'none' },

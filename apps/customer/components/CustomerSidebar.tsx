@@ -1,33 +1,42 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useWarung, type Warung } from '@jajanhub/api';
-import { Icon } from '@jajanhub/ui';
+import { useWarung, useStalls, DEFAULT_MERCHANT_ID, type Warung } from '@jajanhub/api';
+import { Icon, cn, type IconName } from '@jajanhub/ui';
 import { BrandMark } from './BrandMark';
 
 /**
  * Desktop-only persistent navigation, matching `Antre/Antri Desktop.dc.html`'s
- * `<aside>` (266px) with one deliberate deviation from that raw reference,
- * per the brief's explicit product decision: the reference's sidebar is
- * *just* a merchant-page category filter list. The brief instead wants real
- * site-wide navigation (Profile/Subscription/Discovery) always present, with
- * the reference's merchant card kept as contextual content layered on top.
+ * `<aside>` (266px). The reference's sidebar nav (`NAV`: Pesan di sini/Sekitar
+ * Sini/Langganan Prioritas/Profil, active-highlighted, badge on Sekitar Sini)
+ * is real site-wide navigation here too — same intent as the reference's
+ * single-`screen` state switch, just expressed as routes instead of a local
+ * `go(screen)` setState, per the brief's explicit product decision to keep
+ * every mobile screen reachable at desktop.
  *
- * The reference's category filters are NOT reproduced here — they're owned
- * by `useMerchantScreen()`'s local filter state, which this global,
- * route-agnostic sidebar has no access to without prop-drilling from every
- * page. They render instead at the top of `MerchantDesktopView`'s catalog
- * column, functionally equivalent ("filter kategori untuk konteks menu")
- * without the cross-tree coupling a shared context would need for a single
- * use site.
+ * The reference's category filters (below its NAV, context-aware per screen)
+ * are NOT reproduced here — they're owned by each screen's own local filter
+ * state (`MerchantDesktopView`'s cat buttons, `DiscoveryDesktopView`'s, …),
+ * which this global, route-agnostic sidebar has no access to without
+ * prop-drilling from every page. Rendering them inside each content column
+ * instead is functionally equivalent ("filter kategori untuk konteks layar")
+ * without the cross-tree coupling a shared context would need for one site.
  */
 export function CustomerSidebar() {
   const pathname = usePathname();
   const merchantId = pathname.match(/^\/m\/([^/]+)/)?.[1];
   const { data: warung } = useWarung(merchantId ?? '');
+  const { data: stalls } = useStalls();
+
+  const NAV: Array<{ href: string; icon: IconName; label: string; badge?: string; match: (p: string) => boolean }> = [
+    { href: `/m/${merchantId ?? DEFAULT_MERCHANT_ID}`, icon: 'store', label: 'Pesan di sini', match: (p) => p.startsWith('/m/') },
+    { href: '/near', icon: 'map-pin', label: 'Sekitar Sini', badge: stalls ? String(stalls.length) : undefined, match: (p) => p.startsWith('/near') },
+    { href: '/subscribe', icon: 'bolt', label: 'Langganan Prioritas', match: (p) => p.startsWith('/subscribe') },
+    { href: '/profile', icon: 'users', label: 'Profil', match: (p) => p.startsWith('/profile') },
+  ];
 
   return (
-    <aside className="hidden lg:flex flex-none w-[266px] min-h-screen bg-white flex-col sticky top-0 h-screen px-[18px] py-6 shadow-[2px_0_24px_rgba(35,24,15,.05)]">
+    <aside className="hidden lg:flex flex-none w-[266px] min-h-screen bg-white flex-col sticky top-0 h-screen px-[18px] py-6 shadow-[2px_0_24px_rgba(35,24,15,.05)] overflow-y-auto">
       <Link href="/near" className="flex items-center gap-[11px] px-1.5 pb-5">
         <div className="w-[42px] h-[42px] rounded-[13px] bg-[linear-gradient(135deg,#FFB870,#FF7A1A)] flex items-center justify-center flex-none shadow-[0_6px_16px_rgba(255,122,26,.32)]">
           <BrandMark size={23} />
@@ -38,9 +47,28 @@ export function CustomerSidebar() {
       {merchantId && warung && <MerchantCard warung={warung} />}
 
       <nav className="flex flex-col gap-[3px] mt-5">
-        <SidebarLink href="/near" icon="map-pin" label="Sekitar Sini" />
-        <SidebarLink href="/subscribe" icon="bolt" label="JajanHub Plus" />
-        <SidebarLink href="/profile" icon="users" label="Profil" />
+        <div className="text-[11px] font-extrabold text-faint tracking-[.5px] px-3 pb-2">NAVIGASI</div>
+        {NAV.map((n) => {
+          const active = n.match(pathname);
+          return (
+            <Link
+              key={n.href}
+              href={n.href}
+              className={cn(
+                'flex items-center gap-3 px-3 py-[11px] rounded-[13px] text-[14.5px] font-bold transition-colors',
+                active ? 'bg-[#FFF3E7] text-brand-deep' : 'text-muted hover:bg-[#FBF1E6] hover:text-ink',
+              )}
+            >
+              <Icon name={n.icon} size={19} className={active ? 'text-brand-deep' : 'text-faint'} />
+              <span className="flex-1">{n.label}</span>
+              {n.badge && (
+                <span className="flex-none text-[10px] font-extrabold text-white bg-prio px-2 py-[3px] rounded-full">
+                  {n.badge}
+                </span>
+              )}
+            </Link>
+          );
+        })}
       </nav>
 
       <Link
@@ -72,25 +100,5 @@ function MerchantCard({ warung }: { warung: Warung }) {
         {warung.isOpen ? 'Buka' : 'Tutup'} · {warung.openFrom}–{warung.openTo}
       </div>
     </div>
-  );
-}
-
-function SidebarLink({
-  href,
-  icon,
-  label,
-}: {
-  href: string;
-  icon: Parameters<typeof Icon>[0]['name'];
-  label: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center gap-3 px-3 py-[11px] rounded-[13px] text-[14.5px] font-bold text-muted hover:bg-[#FBF1E6] hover:text-ink transition-colors"
-    >
-      <Icon name={icon} size={19} />
-      {label}
-    </Link>
   );
 }

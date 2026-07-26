@@ -47,7 +47,9 @@ export type IconName =
   | 'download'
   | 'volume'
   | 'search'
-  | 'utensils';
+  | 'utensils'
+  | 'medal'
+  | 'percent';
 
 const PATHS: Record<IconName, JSX.Element> = {
   'chevron-left': <path d="M15 6l-6 6 6 6" />,
@@ -242,6 +244,20 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M6 3v8a2 2 0 0 0 4 0V3" />
       <path d="M8 11v10" />
       <path d="M17 3c-1.5 0-3 2-3 5s1 4 1 4v9" />
+    </>
+  ),
+  medal: (
+    <>
+      <circle cx="12" cy="14.5" r="5.6" />
+      <path d="M12 12.6l.9 1.9 2 .3-1.5 1.4.4 2L12 17.2l-1.8.9.4-2-1.5-1.4 2-.3z" fill="currentColor" stroke="none" />
+      <path d="M8.5 9L6 3.2M15.5 9L18 3.2M9.4 2.6h5.2" />
+    </>
+  ),
+  percent: (
+    <>
+      <circle cx="7" cy="7" r="2.4" />
+      <circle cx="17" cy="17" r="2.4" />
+      <path d="M18 6L6 18" />
     </>
   ),
 };

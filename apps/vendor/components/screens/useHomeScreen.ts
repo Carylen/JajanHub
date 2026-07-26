@@ -1,6 +1,7 @@
 'use client';
 import { useVendorSummary, useVendorOrders, useVendorMenu, type VendorOrder, type VendorMenuItem, type VendorSummary } from '@jajanhub/api';
 import { useVendorUi } from '../../lib/ui-store';
+import { useVendorTier, type VendorTierView } from './useVendorTier';
 
 export interface HomeScreenView {
   summary: VendorSummary | undefined;
@@ -13,6 +14,7 @@ export interface HomeScreenView {
   warungOpen: boolean;
   toggleWarungOpen: () => void;
   openStock: () => void;
+  tier: VendorTierView;
 }
 
 export function useHomeScreen(): HomeScreenView {
@@ -22,6 +24,7 @@ export function useHomeScreen(): HomeScreenView {
   const warungOpen = useVendorUi((s) => s.warungOpen);
   const toggleWarungOpen = useVendorUi((s) => s.toggleWarungOpen);
   const openStock = useVendorUi((s) => s.openStockSheet);
+  const tier = useVendorTier();
 
   return {
     summary: summary.data,
@@ -34,5 +37,6 @@ export function useHomeScreen(): HomeScreenView {
     warungOpen,
     toggleWarungOpen,
     openStock,
+    tier,
   };
 }

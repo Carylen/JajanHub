@@ -26,6 +26,8 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes popin{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
 @keyframes shakex{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes confettiFall{0%{transform:translateY(-30px) rotate(0);opacity:0}12%{opacity:1}100%{transform:translateY(440px) rotate(430deg);opacity:0}}
+@keyframes growbar{from{width:0}to{width:var(--w)}}
 </style>
 </helmet>
 <div style="max-width:480px;margin:0 auto;min-height:100vh;background:#FFF8F1;position:relative;overflow-x:hidden;box-shadow:0 0 70px rgba(0,0,0,.1);padding-bottom:96px">
@@ -45,6 +47,30 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
       <div style="display:flex;align-items:center;justify-content:space-between"><div style="color:#C9B8A6;font-size:14px;font-weight:600">Pendapatan hari ini</div><span style="display:inline-flex;align-items:center;gap:4px;color:#C9B8A6;font-size:12px;font-weight:700">Pencairan <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#C9B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
       <div style="font-family:'Bricolage Grotesque';font-weight:800;color:#fff;font-size:46px;letter-spacing:-1.5px;line-height:1;margin-top:6px">Rp1.240.000</div>
       <div style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:rgba(22,199,132,.18);color:#4FE0A8;font-weight:700;font-size:13px;padding:6px 12px;border-radius:999px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 15l7-7 7 7" stroke="#4FE0A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>18% dari kemarin</div>
+    </button>
+  </div>
+
+  <div style="padding:14px 20px 0">
+    <button onClick="{{ goLevel }}" style="width:100%;text-align:left;cursor:pointer;background:#fff;border:1.5px solid {{ tierSoft }};border-radius:24px;padding:18px;box-shadow:0 6px 18px rgba(35,24,15,.06);position:relative;overflow:hidden" style-active="transform:scale(.99)">
+      <div style="position:absolute;right:-34px;top:-34px;width:120px;height:120px;border-radius:50%;background:{{ tierSoft }};opacity:.7"></div>
+      <div style="position:relative;display:flex;align-items:center;gap:14px">
+        <div style="flex:none;width:52px;height:52px;border-radius:16px;background:{{ tierGrad }};display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 16px rgba(35,24,15,.16)">{{ tierMedal }}</div>
+        <div style="flex:1;min-width:0"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:20px;line-height:1.05;color:#23180F">Level {{ tierName }}</div><div style="font-size:12.5px;color:#9A8A7C;margin-top:2px">{{ tierTag }}</div></div>
+        <span style="flex:none;display:inline-flex;align-items:center;gap:3px;color:{{ tierAccent }};font-size:12px;font-weight:700">Detail <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="{{ tierAccent }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <sc-if value="{{ notMax }}" hint-placeholder-val="{{ true }}">
+      <div style="position:relative;margin-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:12.5px;color:#6B5D50;font-weight:600">Menuju Level <b style="color:{{ tierAccent }}">{{ progLabel }}</b></span><span style="font-size:12.5px;font-weight:800;color:{{ tierAccent }}">{{ progHave }}/{{ progNeed }}</span></div>
+        <div style="height:10px;border-radius:999px;background:#F1E7DC;overflow:hidden"><div style="width:{{ progPctStr }};height:100%;border-radius:999px;background:{{ tierGrad }};transition:width .5s ease"></div></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:11px;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#6B5D50"><span style="width:6px;height:6px;border-radius:50%;background:{{ tierAccent }}"></span>{{ progHave }}/{{ progNeed }} {{ progUnit }}</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#0E9F6E;font-weight:700"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#16C784" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Respon rata-rata {{ progRespVal }}</span>
+        </div>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isMaxLevel }}" hint-placeholder-val="{{ false }}">
+      <div style="position:relative;margin-top:14px;background:{{ tierSoft }};border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6 21l1.2-6.6L2.4 9.7l6.6-.9z" fill="{{ tierAccent }}"/></svg><span style="font-size:13px;font-weight:700;color:{{ tierAccent }}">Kamu sudah di tier tertinggi. Mantap, Pak Budi!</span></div>
+      </sc-if>
     </button>
   </div>
 
@@ -231,6 +257,27 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end"><div style="width:100%;height:92%;background:linear-gradient(#FF9A3D,#FF7A1A);border-radius:7px 7px 4px 4px"></div><span style="font-size:11px;color:#E4560A;font-weight:800">19</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end"><div style="width:100%;height:44%;background:#FFC48A;border-radius:7px 7px 4px 4px"></div><span style="font-size:11px;color:#9A8A7C">21</span></div>
       </div>
+    </div>
+  </div>
+
+  <div style="padding:16px 20px 0">
+    <div style="position:relative;background:#fff;border-radius:22px;padding:20px;box-shadow:0 5px 16px rgba(35,24,15,.05);overflow:hidden">
+      <div style="filter:{{ analyticsBlur }};opacity:{{ analyticsOp }};pointer-events:{{ analyticsPE }}">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px">Analitik Lanjutan</div><span style="font-size:11px;font-weight:800;color:#BE922E;background:#FAF0D6;padding:4px 10px;border-radius:999px">GOLD</span></div>
+        <div style="display:flex;gap:12px">
+          <div style="flex:1;background:#FAF6EF;border-radius:14px;padding:13px"><div style="font-size:11.5px;color:#9A8A7C">Jam paling ramai</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;margin-top:3px">12.00–13.00</div></div>
+          <div style="flex:1;background:#FAF6EF;border-radius:14px;padding:13px"><div style="font-size:11.5px;color:#9A8A7C">Rata-rata belanja</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;margin-top:3px">Rp29.500</div></div>
+        </div>
+        <div style="margin-top:12px;background:#FAF6EF;border-radius:14px;padding:13px"><div style="font-size:11.5px;color:#9A8A7C;margin-bottom:8px">Pelanggan balik lagi (retensi 6 minggu)</div><div style="display:flex;align-items:flex-end;gap:6px;height:56px"><div style="flex:1;height:40%;background:#E8C765;border-radius:5px"></div><div style="flex:1;height:62%;background:#E0BA55;border-radius:5px"></div><div style="flex:1;height:52%;background:#E8C765;border-radius:5px"></div><div style="flex:1;height:80%;background:#CB9E34;border-radius:5px"></div><div style="flex:1;height:70%;background:#E0BA55;border-radius:5px"></div><div style="flex:1;height:95%;background:#CB9E34;border-radius:5px"></div></div></div>
+      </div>
+      <sc-if value="{{ analyticsLocked }}" hint-placeholder-val="{{ true }}">
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(255,248,241,.55);padding:20px;text-align:center">
+        <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#E8C765,#CB9E34);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(203,158,52,.4)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2.5" stroke="#fff" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#23180F">Buka otomatis saat naik ke Gold</div>
+        <div style="font-size:12.5px;color:#9A8A7C;line-height:1.45;max-width:262px">Bukan langganan berbayar — cukup jaga performa warungmu sampai tier Gold, langsung kebuka</div>
+        <button onClick="{{ goLevel }}" style="margin-top:2px;cursor:pointer;background:#23180F;color:#fff;border:none;font-weight:800;font-size:13px;padding:10px 18px;border-radius:13px" style-active="transform:scale(.96)">Lihat syarat Gold</button>
+      </div>
+      </sc-if>
     </div>
   </div>
 
@@ -454,6 +501,14 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
     </div>
   </div>
 
+  <div style="padding:16px 20px 0">
+    <button onClick="{{ goLevel }}" style="width:100%;text-align:left;cursor:pointer;background:{{ tierSoft }};border:1px solid {{ tierBorderSoft }};border-radius:18px;padding:14px 15px;display:flex;align-items:center;gap:12px" style-active="transform:scale(.99)">
+      <span style="flex:none;width:40px;height:40px;border-radius:12px;background:{{ tierGrad }};display:flex;align-items:center;justify-content:center;color:#fff">{{ tierMedalSm }}</span>
+      <div style="flex:1"><div style="font-weight:700;font-size:13.5px;color:#23180F;line-height:1.35">{{ settlementTierText }}</div><div style="font-size:11.5px;color:#9A8A7C;margin-top:2px">Naik tier buat pencairan lebih cepat</div></div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="{{ tierAccent }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
   <div style="padding:18px 20px 0">
     <div style="font-size:12px;font-weight:700;color:#9A8A7C;letter-spacing:.4px;padding:0 4px 10px">RINCIAN HARI INI</div>
     <div style="background:#fff;border-radius:22px;padding:18px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
@@ -491,6 +546,62 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
     </div>
     <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-top:14px;color:#9A8A7C;font-size:12px"><span style="width:10px;height:10px;border-radius:3px;background:#FBEEE9;border:1px solid rgba(196,64,47,.3)"></span>Baris merah = pesanan yang di-refund</div>
   </div>
+</div>
+</sc-if>
+
+<!-- ================= LEVEL PEDAGANG ================= -->
+<sc-if value="{{ isLevel }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .32s ease;padding-bottom:44px">
+  <div style="position:relative;background:{{ tierGrad }};padding:20px 22px 52px;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(72% 60% at 86% 0%,rgba(255,255,255,.26),transparent)"></div>
+    <svg style="position:absolute;right:-24px;bottom:-32px;opacity:.16" width="160" height="160" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6 21l1.2-6.6L2.4 9.7l6.6-.9z" fill="#fff"/></svg>
+    <div style="position:relative;display:flex;align-items:center;gap:12px">
+      <button onClick="{{ goHome }}" style="flex:none;width:40px;height:40px;border-radius:13px;border:none;background:rgba(255,255,255,.2);cursor:pointer;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.9)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div style="color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:20px">Level Pedagang</div>
+    </div>
+    <div style="position:relative;margin-top:16px;color:#fff">
+      <div style="font-size:13px;opacity:.85;font-weight:600">Tier kamu sekarang</div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;letter-spacing:-.5px;line-height:1;margin-top:4px;display:flex;align-items:center;gap:10px">{{ tierMedalHdr }} {{ tierName }}</div>
+    </div>
+  </div>
+  <div style="padding:14px 20px 2px"><div style="font-size:12px;font-weight:700;color:#9A8A7C;letter-spacing:.4px">BANDINGKAN TIER · geser →</div></div>
+  <div style="display:flex;gap:14px;overflow-x:auto;padding:10px 20px 8px;scroll-snap-type:x mandatory">
+    <sc-for list="{{ tierCards }}" as="t" hint-placeholder-count="3">
+      <div style="scroll-snap-align:center;flex:none;width:252px;background:#fff;border-radius:24px;padding:18px;border:{{ t.border }};box-shadow:{{ t.shadow }};opacity:{{ t.opacity }}">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="flex:none;width:46px;height:46px;border-radius:14px;background:{{ t.grad }};display:flex;align-items:center;justify-content:center;color:#fff">{{ t.medal }}</div>
+          <div style="flex:1;min-width:0"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px">{{ t.name }}</div><div style="font-size:11.5px;color:#9A8A7C">{{ t.tag }}</div></div>
+        </div>
+        <div style="margin-top:12px;display:inline-flex;align-items:center;gap:5px;background:{{ t.statusBg }};color:{{ t.statusColor }};font-size:11px;font-weight:800;padding:5px 11px;border-radius:999px">{{ t.statusLabel }}</div>
+        <div style="height:1px;background:#F4ECE2;margin:14px 0"></div>
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <sc-for list="{{ t.benefits }}" as="b" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:11px">
+              <span style="flex:none;width:32px;height:32px;border-radius:10px;background:{{ b.iconBg }};color:{{ b.iconColor }};display:flex;align-items:center;justify-content:center">{{ b.icon }}</span>
+              <span style="flex:1;font-size:12px;color:#6B5D50;line-height:1.25">{{ b.label }}</span>
+              <span style="flex:none;font-size:12.5px;font-weight:800;color:#23180F;text-align:right;max-width:92px">{{ b.val }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <sc-if value="{{ canLevelUp }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:12px 20px 0">
+    <div style="background:#fff;border-radius:20px;padding:16px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
+      <div style="font-weight:700;font-size:14px">Sedikit lagi menuju Level <span style="color:{{ tierAccent }}">{{ nextTierName }}</span></div>
+      <div style="font-size:12.5px;color:#9A8A7C;margin-top:3px;line-height:1.45">{{ progText }}</div>
+      <div style="height:10px;border-radius:999px;background:#F1E7DC;overflow:hidden;margin-top:12px"><div style="width:{{ progPctStr }};height:100%;border-radius:999px;background:{{ tierGrad }}"></div></div>
+      <button onClick="{{ levelUp }}" style="margin-top:14px;width:100%;cursor:pointer;background:{{ tierGrad }};color:#fff;border:none;border-radius:15px;padding:14px;font-weight:800;font-size:14px;box-shadow:0 10px 24px rgba(35,24,15,.16)" style-active="transform:scale(.98)">Pratinjau naik ke {{ nextTierName }}</button>
+      <div style="font-size:11px;color:#B8A99B;text-align:center;margin-top:8px">Simulasi buat lihat perayaan & benefit tier berikutnya</div>
+    </div>
+  </div>
+  </sc-if>
+  <sc-if value="{{ isMaxLevel }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:12px 20px 0">
+    <button onClick="{{ resetLevel }}" style="width:100%;cursor:pointer;background:none;border:1.5px solid #EDE3D6;color:#9A8A7C;border-radius:15px;padding:13px;font-weight:700;font-size:13px" style-active="transform:scale(.98)">Atur ulang demo ke Silver</button>
+  </div>
+  </sc-if>
 </div>
 </sc-if>
 
@@ -619,6 +730,26 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 </div>
 </sc-if>
 
+<!-- ================= MODAL: NAIK LEVEL ================= -->
+<sc-if value="{{ levelUpOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:50%;transform:translateX(-50%);top:0;bottom:0;width:100%;max-width:480px;z-index:70;background:rgba(23,15,8,.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .25s ease">
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+    <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0"><span style="position:absolute;top:-24px;left:{{ c.left }};width:{{ c.size }};height:{{ c.size }};background:{{ c.bg }};border-radius:{{ c.round }};animation:confettiFall {{ c.dur }} ease-in {{ c.delay }} infinite"></span></sc-for>
+  </div>
+  <div style="position:relative;width:100%;max-width:340px;background:#fff;border-radius:28px;padding:28px 24px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.34);animation:popin .5s cubic-bezier(.22,1.4,.4,1)">
+    <div style="width:88px;height:88px;margin:0 auto;border-radius:28px;background:{{ celebGrad }};display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 14px 30px {{ celebGlow }}">{{ celebMedalBig }}</div>
+    <div style="font-size:12.5px;color:#9A8A7C;font-weight:800;margin-top:16px;letter-spacing:.5px">SELAMAT, KAMU NAIK LEVEL!</div>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;margin-top:4px;color:{{ celebAccent }}">Level {{ celebName }}</div>
+    <div style="font-size:13px;color:#6B5D50;margin-top:6px;line-height:1.45">{{ celebTag }} · warungmu makin dipercaya pelanggan</div>
+    <div style="margin-top:18px;background:{{ celebSoft }};border-radius:18px;padding:14px 15px;text-align:left;display:flex;flex-direction:column;gap:11px">
+      <sc-for list="{{ celebBenefits }}" as="b" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:10px"><span style="flex:none;width:28px;height:28px;border-radius:9px;background:#fff;color:{{ celebAccent }};display:flex;align-items:center;justify-content:center">{{ b.icon }}</span><span style="flex:1;font-size:12.5px;color:#6B5D50">{{ b.label }}</span><span style="font-size:12.5px;font-weight:800;color:#23180F">{{ b.val }}</span></div></sc-for>
+    </div>
+    <button onClick="{{ levelUpGoBenefit }}" style="margin-top:20px;width:100%;cursor:pointer;background:{{ celebGrad }};color:#fff;border:none;border-radius:16px;padding:15px;font-weight:800;font-size:15px;box-shadow:0 12px 26px {{ celebGlow }}" style-active="transform:scale(.98)">Lihat benefit baru</button>
+    <button onClick="{{ closeLevelUp }}" style="margin-top:8px;width:100%;cursor:pointer;background:none;border:none;color:#9A8A7C;font-weight:700;font-size:13px;padding:8px" style-active="transform:scale(.98)">Nanti aja</button>
+  </div>
+</div>
+</sc-if>
+
 <!-- ================= BOTTOM NAV ================= -->
 <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
 <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:480px;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid #F1E7DC;padding:9px 8px 16px;display:flex;z-index:50;box-shadow:0 -6px 24px rgba(35,24,15,.06)">
@@ -715,9 +846,35 @@ const REJECT_REASONS = [
   {v:'Tutup dulu', icon:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 9l1-4h14l1 4M4 9h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" stroke="#E4560A" stroke-width="2" stroke-linejoin="round"/><path d="M8 20v-5h8v5" stroke="#E4560A" stroke-width="2"/></svg>'},
 ];
 
+const MEDAL = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="14.5" r="5.6" stroke="currentColor" stroke-width="2"/><path d="M12 12.6l.9 1.9 2 .3-1.5 1.4.4 2L12 17.2l-1.8.9.4-2-1.5-1.4 2-.3z" fill="currentColor"/><path d="M8.5 9L6 3.2M15.5 9L18 3.2M9.4 2.6h5.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const MEDAL_BIG = '<svg width="46" height="46" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="14.5" r="5.6" stroke="currentColor" stroke-width="2"/><path d="M12 12.6l.9 1.9 2 .3-1.5 1.4.4 2L12 17.2l-1.8.9.4-2-1.5-1.4 2-.3z" fill="currentColor"/><path d="M8.5 9L6 3.2M15.5 9L18 3.2M9.4 2.6h5.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const TIER_ICONS = {
+  cash:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2.5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.4" stroke="currentColor" stroke-width="2"/></svg>',
+  pin:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 21s6.5-5.8 6.5-10.5a6.5 6.5 0 1 0-13 0C5.5 15.2 12 21 12 21z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10.2" r="2.3" stroke="currentColor" stroke-width="2"/></svg>',
+  split:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="7" cy="7" r="2.4" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="17" r="2.4" stroke="currentColor" stroke-width="2"/><path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  chart:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 20V11M12 20V4M19 20v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+};
+const TIERS = [
+  { id:'bronze', name:'Bronze', tag:'Pedagang Baru', accent:'#A9714B', soft:'#F3E7DB', grad:'linear-gradient(135deg,#C89268,#9A6640)',
+    benefits:[ {icon:'cash',label:'Kecepatan pencairan',val:'1× / hari'},{icon:'pin',label:'Posisi di Discovery',val:'Standar'},{icon:'split',label:'Bagi hasil fee prioritas',val:'0%'},{icon:'chart',label:'Akses analytics',val:'Dasar'} ] },
+  { id:'silver', name:'Silver', tag:'Langganan Ramai', accent:'#7E8798', soft:'#ECEEF2', grad:'linear-gradient(135deg,#B9C1CE,#868FA1)',
+    benefits:[ {icon:'cash',label:'Kecepatan pencairan',val:'2× / hari'},{icon:'pin',label:'Posisi di Discovery',val:'Diprioritaskan'},{icon:'split',label:'Bagi hasil fee prioritas',val:'15%'},{icon:'chart',label:'Akses analytics',val:'+ Tren mingguan'} ] },
+  { id:'gold', name:'Gold', tag:'Andalan Kawasan', accent:'#BE922E', soft:'#FAF0D6', grad:'linear-gradient(135deg,#E8C765,#CB9E34)',
+    benefits:[ {icon:'cash',label:'Kecepatan pencairan',val:'Real-time'},{icon:'pin',label:'Posisi di Discovery',val:'Teratas + badge'},{icon:'split',label:'Bagi hasil fee prioritas',val:'30%'},{icon:'chart',label:'Akses analytics',val:'Lengkap'} ] },
+];
+const PROG = {
+  bronze:{ label:'Silver', have:18, need:20, unit:'pesanan minggu ini', respVal:'4 mnt' },
+  silver:{ label:'Gold', have:23, need:30, unit:'pesanan minggu ini', respVal:'3 mnt' },
+};
+const PAYOUT_FREQ = { bronze:'1× sehari, tiap pagi', silver:'2× sehari', gold:'real-time, tiap transaksi masuk' };
+const CONFETTI = Array.from({length:18},(_,i)=>({
+  left:(4+i*5.3)+'%', bg:['#FF7A1A','#16C784','#E8C765','#B9C1CE','#FFB870','#7A3BF5'][i%6],
+  delay:((i%6)*0.14)+'s', dur:(1.9+(i%4)*0.4)+'s', size:(6+(i%3)*3)+'px', round:(i%2?'50%':'2px'),
+}));
+
 class Component extends DCLogic {
   state = {
-    tab:'home', warungOpen:true, orderTab:'now',
+    tab:'home', warungOpen:true, orderTab:'now', level:'silver', levelUpOpen:false,
     notifOrder:true, soundVibe:true, autoPrint:false, autoPayout:true,
     stock:{ seblak:false, lele:false, esjeruk:false },
     quota:{ '11.00':6, '11.30':6, '12.00':6, '12.30':6, '13.00':6 },
@@ -733,6 +890,7 @@ class Component extends DCLogic {
     ],
   };
   go(t){ this.setState({tab:t}); try{window.scrollTo(0,0);}catch(e){} }
+  levelUp(){ const order=['bronze','silver','gold']; const i=order.indexOf(this.state.level); const next=order[Math.min(order.length-1,i+1)]; this.setState({level:next, levelUpOpen:true}); }
   advance(id){ this.setState(st=>{ let orders=st.orders.map(o=>{ if(o.id!==id) return o;
       const nx = o.status==='baru'?'masak':o.status==='masak'?'siap':'done'; return {...o,status:nx}; });
     orders = orders.filter(o=>o.status!=='done'); return {orders}; }); }
@@ -850,7 +1008,45 @@ class Component extends DCLogic {
     const activeCount = S.orders.filter(o=>o.status!=='ditolak').length;
     const mkTab = k => ({ onClick:()=>this.go(k), color:(S.tab===k?'#FF7A1A':'#B8A99B') });
 
+    const lvl = S.level;
+    const li = {bronze:0,silver:1,gold:2}[lvl];
+    const curTier = TIERS[li];
+    const nextTier = TIERS[li+1] || null;
+    const prog = PROG[lvl] || null;
+    const isMax = lvl==='gold';
+    const progPct = prog ? Math.min(100,Math.round(prog.have/prog.need*100)) : 100;
+    const tierCards = TIERS.map((t,i)=>({
+      name:t.name, tag:t.tag, grad:t.grad, medal:H(MEDAL),
+      opacity: i===li?'1':'.5',
+      border: i===li?('2.5px solid '+t.accent):'1.5px solid #EDE3D6',
+      shadow: i===li?('0 14px 30px '+t.accent+'40'):'0 5px 16px rgba(35,24,15,.05)',
+      statusLabel: i<li?'Sudah terlewati':(i===li?'Tier kamu sekarang':'Belum terbuka'),
+      statusBg: i===li?t.soft:'#F4ECE2', statusColor: i===li?t.accent:'#9A8A7C',
+      benefits: t.benefits.map(b=>({ label:b.label, val:b.val, icon:H(TIER_ICONS[b.icon]), iconColor:t.accent, iconBg:t.soft })),
+    }));
+    const celeb = curTier;
+    const progText = prog ? (prog.have+'/'+prog.need+' '+prog.unit+' · Respon rata-rata '+prog.respVal) : '';
+
     return {
+      isLevel:S.tab==='level',
+      tierName:curTier.name, tierTag:curTier.tag, tierGrad:curTier.grad, tierAccent:curTier.accent, tierSoft:curTier.soft,
+      tierBorderSoft:curTier.accent+'33',
+      tierMedal:H(MEDAL), tierMedalHdr:H(MEDAL), tierMedalSm:H(MEDAL),
+      isMaxLevel:isMax, notMax:!isMax, canLevelUp:!isMax,
+      progLabel: prog?prog.label:'', progHave: prog?String(prog.have):'', progNeed: prog?String(prog.need):'',
+      progUnit: prog?prog.unit:'', progPctStr: progPct+'%', progRespVal: prog?prog.respVal:'', progText,
+      nextTierName: nextTier?nextTier.name:'',
+      tierCards,
+      goLevel:()=>this.go('level'), levelUp:()=>this.levelUp(),
+      levelUpOpen:S.levelUpOpen, closeLevelUp:()=>this.setState({levelUpOpen:false}),
+      levelUpGoBenefit:()=>{ this.setState({levelUpOpen:false}); this.go('level'); },
+      resetLevel:()=>this.setState({level:'silver'}),
+      celebName:celeb.name, celebTag:celeb.tag, celebGrad:celeb.grad, celebAccent:celeb.accent, celebSoft:celeb.soft,
+      celebGlow:celeb.accent+'66', celebMedalBig:H(MEDAL_BIG),
+      celebBenefits: celeb.benefits.map(b=>({ label:b.label, val:b.val, icon:H(TIER_ICONS[b.icon]) })),
+      confetti:CONFETTI,
+      settlementTierText:'Sebagai '+curTier.name+', dana kamu cair '+PAYOUT_FREQ[lvl],
+      analyticsLocked:!isMax, analyticsBlur: isMax?'none':'blur(7px)', analyticsOp: isMax?'1':'.6', analyticsPE: isMax?'auto':'none',
       isHome:S.tab==='home', isOrders:S.tab==='orders', isReport:S.tab==='report', isLoyal:S.tab==='loyal', isMenu:S.tab==='menu', isSettings:S.tab==='settings',
       isSettlement:S.tab==='settlement', isSettleEmpty:S.tab==='settleEmpty',
       showNav: ['home','orders','report','loyal','menu'].includes(S.tab),

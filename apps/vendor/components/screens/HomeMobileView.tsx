@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Card, Icon, Money, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
+import { TierCard } from '../TierCard';
 import type { HomeScreenView } from './useHomeScreen';
 
 const STATUS_LABEL: Record<string, { text: string; color: string }> = {
@@ -57,6 +58,13 @@ export function HomeMobileView(vm: HomeScreenView) {
           </div>
         </Link>
       </div>
+
+      {/* Tier status */}
+      {vm.tier.progress && (
+        <div className="px-5 pt-3.5">
+          <TierCard progress={vm.tier.progress} merchantName={s.merchantName} />
+        </div>
+      )}
 
       {/* Stats */}
       <div className="px-5 pt-3.5 flex gap-3">

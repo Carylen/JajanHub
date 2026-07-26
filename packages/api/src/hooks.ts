@@ -12,6 +12,7 @@ import {
 } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { getClient } from './getClient';
+import type { AddonInput } from './client';
 import type {
   CreateOrderInput,
   LoyalCustomer,
@@ -92,6 +93,14 @@ export function useConfirmPickup(): UseMutationResult<Order, Error, string> {
   });
 }
 
+export function useCreateAddon(): UseMutationResult<Order, Error, { orderId: string; items: AddonInput }> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, items }) => getClient().createAddon(orderId, items),
+    onSuccess: (order) => qc.setQueryData(queryKeys.order(order.id), order),
+  });
+}
+
 export function useStalls(): UseQueryResult<Stall[]> {
   return useQuery({ queryKey: queryKeys.stalls, queryFn: () => getClient().getStalls() });
 }
@@ -107,6 +116,20 @@ export function useProfile(): UseQueryResult<UserProfile> {
 
 export function useVendorSummary(): UseQueryResult<VendorSummary> {
   return useQuery({ queryKey: queryKeys.vendorSummary, queryFn: () => getClient().getVendorSummary() });
+}
+export function useAdvanceVendorTier(): UseMutationResult<VendorSummary, Error, void> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => getClient().advanceVendorTier(),
+    onSuccess: (summary) => qc.setQueryData(queryKeys.vendorSummary, summary),
+  });
+}
+export function useResetVendorTier(): UseMutationResult<VendorSummary, Error, void> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => getClient().resetVendorTier(),
+    onSuccess: (summary) => qc.setQueryData(queryKeys.vendorSummary, summary),
+  });
 }
 export function useVendorOrders(): UseQueryResult<VendorOrder[]> {
   return useQuery({ queryKey: queryKeys.vendorOrders, queryFn: () => getClient().getVendorOrders() });

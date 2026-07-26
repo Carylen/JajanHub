@@ -23,6 +23,9 @@ import type {
   Warung,
 } from './types';
 
+/** Map of menu item id -> quantity, same shape `CreateOrderInput.cart` uses. */
+export type AddonInput = Record<string, number>;
+
 /** Call to stop receiving realtime callbacks. */
 export type Unsubscribe = () => void;
 
@@ -35,6 +38,8 @@ export interface JajanhubClient {
   confirmPickup(id: string): Promise<Order>;
   /** Simulate the "payment received" webhook (mock only; no-op-ish in http). */
   markPaid(id: string): Promise<Order>;
+  /** Add items to a live order (D3). Rejects if `canAddOrder(order)` is false. */
+  createAddon(orderId: string, items: AddonInput): Promise<Order>;
 
   /** Push live queue snapshots until unsubscribed. Fires once immediately. */
   subscribeQueue(orderId: string, cb: (state: QueueState) => void): Unsubscribe;
@@ -48,6 +53,10 @@ export interface JajanhubClient {
 
   /* vendor */
   getVendorSummary(): Promise<VendorSummary>;
+  /** Demo-only (D4): advance to the next tier and reset the progress window. Real tier progression would be server-computed from order history. */
+  advanceVendorTier(): Promise<VendorSummary>;
+  /** Demo-only (D4): reset the tier demo back to bronze. */
+  resetVendorTier(): Promise<VendorSummary>;
   getVendorOrders(): Promise<VendorOrder[]>;
   /** Move an order to its next stage (baru→masak→siap→done/removed). */
   advanceVendorOrder(id: string): Promise<VendorOrder[]>;

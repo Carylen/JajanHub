@@ -91,6 +91,23 @@ export interface Order {
   pickupCode: string;
   status: OrderStatus;
   createdAt: string;
+  /** Extra items added to a live order (max 2, see `canAddOrder`). */
+  addons: OrderAddon[];
+}
+
+/**
+ * A follow-up order attached to an already-paid parent order — cheaper fee
+ * than a fresh order since it rides the same queue slot. Max 2 per order,
+ * enforced in `createAddon` (not just the UI) so mobile/desktop/vendor agree.
+ */
+export interface OrderAddon {
+  id: string;
+  parentOrderId: string;
+  lines: OrderLine[];
+  subtotal: number;
+  feeAmount: number;
+  total: number;
+  createdAt: string;
 }
 
 /** Realtime snapshot pushed by `subscribeQueue`. */
@@ -174,6 +191,8 @@ export interface VendorOrder {
   priority: boolean;
   status: VendorOrderStatus;
   rejectReason?: string;
+  /** Count of D3 add-ons riding this order — shown as a badge, never a separate kanban card. */
+  addonCount?: number;
 }
 
 /** A scheduled ("nanti") pre-order shown grouped by pickup slot. */
@@ -233,6 +252,9 @@ export interface RejectReason {
   label: string;
 }
 
+/** baru gabung → hampir naik → naik, based on completed orders / response time / reject rate / rating (D4). */
+export type VendorTier = 'bronze' | 'silver' | 'gold';
+
 /** Home dashboard summary numbers. */
 export interface VendorSummary {
   merchantName: string;
@@ -242,4 +264,7 @@ export interface VendorSummary {
   revenueDeltaPct: number;
   ordersToday: number;
   avgServeLabel: string;
+  tier: VendorTier;
+  /** Completed orders counted toward the next tier's requirement window (see `packages/api/tiers.ts`). */
+  tierOrdersThisWindow: number;
 }

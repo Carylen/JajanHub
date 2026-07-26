@@ -3,6 +3,8 @@ export * from './client';
 export * from './config';
 export * from './getClient';
 export * from './hooks';
+export * from './addon';
+export * from './tiers';
 export { stageOf } from './mock/mockClient';
 export {
   MENU,

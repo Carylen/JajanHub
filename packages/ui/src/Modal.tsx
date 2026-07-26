@@ -21,10 +21,6 @@ export interface ModalProps {
  * scale+fade `modalIn` entrance instead of a bottom slide, and no
  * drag-to-dismiss (that's a mobile-sheet-only affordance).
  *
- * Not to be confused with `RatingModal` (apps/customer) — that's a
- * pre-existing `BottomSheet` wrapper despite its name, unrelated to this
- * primitive.
- *
  * The backdrop is a plain `fixed inset-0` — it relies on an ancestor
  * (AppShell's content wrapper) establishing a CSS containing block for
  * `position: fixed` descendants (any `transform` does this per spec), so the

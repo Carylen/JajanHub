@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useOrder, useQueueState, useCancelOrder, stageOf, type Order, type OrderStatus } from '@jajanhub/api';
+import { useAddonFlow, type AddonFlowView } from './useAddonFlow';
+import { usePickupFlow, type PickupFlowView } from './usePickupFlow';
 
 export interface QueueTone {
   label: string;
@@ -29,6 +31,8 @@ export interface QueueScreenView {
   confirmCancel: () => void;
   cancelPending: boolean;
   goPickup: () => void;
+  addon: AddonFlowView;
+  pickup: PickupFlowView;
 }
 
 function tone(ahead: number): QueueTone {
@@ -49,6 +53,8 @@ export function useQueueScreen(orderId: string): QueueScreenView {
   const queue = useQueueState(orderId);
   const cancelOrder = useCancelOrder();
   const [cancelOpen, setCancelOpen] = useState(false);
+  const addon = useAddonFlow(order);
+  const pickup = usePickupFlow(order);
 
   const status: OrderStatus = queue?.status ?? order?.status ?? 'paid';
   const stage = stageOf(status);
@@ -89,5 +95,7 @@ export function useQueueScreen(orderId: string): QueueScreenView {
     },
     cancelPending: cancelOrder.isPending,
     goPickup: () => router.push(`/order/${orderId}/pickup`),
+    addon,
+    pickup,
   };
 }
