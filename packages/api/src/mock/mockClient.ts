@@ -9,6 +9,7 @@ import { canAddOrder } from '../addon';
 import { PRICING } from '../config';
 import { nextTierId } from '../tiers';
 import type {
+  AuthSession,
   CreateOrderInput,
   Order,
   OrderAddon,
@@ -38,8 +39,19 @@ import {
   WARUNGS,
 } from './seed';
 import { orderStore } from './store';
+import { authStore } from './authStore';
 
 const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+const DEMO_OTP = '123456';
+const ACTIVE_ORDER_STATUSES: OrderStatus[] = ['awaiting_payment', 'paid', 'cooking', 'ready', 'refunding'];
+
+/** "0812-3456-7890" -> "0812-••••-890" (design's `maskedPhone`). */
+function maskPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length < 9) return phone;
+  return `0${digits.slice(0, 3)}-••••-${digits.slice(-3)}`;
+}
 
 let queueSeq = 26;
 
@@ -273,7 +285,32 @@ export function createMockClient(): JajanhubClient {
     },
     async getProfile() {
       await delay(150);
+      const session = authStore.get();
+      if (session?.loggedIn) return { ...PROFILE, phone: maskPhone(session.phone) };
       return PROFILE;
+    },
+    async getActiveOrders() {
+      await delay(200);
+      return orderStore.list().filter((o) => ACTIVE_ORDER_STATUSES.includes(o.status));
+    },
+
+    async sendOtp() {
+      await delay(400);
+    },
+    async verifyOtp(phone, code) {
+      await delay(500);
+      if (code !== DEMO_OTP) throw new Error('Kode belum cocok');
+      const session: AuthSession = { phone, loggedIn: true };
+      authStore.set(session);
+      return session;
+    },
+    async logout() {
+      await delay(100);
+      authStore.clear();
+    },
+    async getSession() {
+      await delay(80);
+      return authStore.get() ?? { phone: '', loggedIn: false };
     },
 
     async getVendorSummary() {

@@ -7,6 +7,7 @@
  */
 import type { AddonInput, JajanhubClient, Unsubscribe } from '../client';
 import type {
+  AuthSession,
   CreateOrderInput,
   LoyalCustomer,
   Order,
@@ -82,6 +83,13 @@ export function createHttpClient(baseUrl: string): JajanhubClient {
     getPlans: () => req<SubscriptionPlan[]>('/plans'),
     getBenefits: () => req<SubscriptionBenefit[]>('/benefits'),
     getProfile: () => req<UserProfile>('/me'),
+    getActiveOrders: () => req<Order[]>('/orders/active'),
+
+    sendOtp: (phone) => req<void>('/auth/otp', { method: 'POST', body: JSON.stringify({ phone }) }),
+    verifyOtp: (phone, code) =>
+      req<AuthSession>('/auth/verify', { method: 'POST', body: JSON.stringify({ phone, code }) }),
+    logout: () => req<void>('/auth/logout', { method: 'POST' }),
+    getSession: () => req<AuthSession>('/me/session'),
 
     getVendorSummary: () => req<VendorSummary>('/vendor/summary'),
     advanceVendorTier: () => req<VendorSummary>('/vendor/tier/advance', { method: 'POST' }),

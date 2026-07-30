@@ -43,6 +43,10 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
     <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;letter-spacing:-.6px">Antri</div>
   </div>
 
+  <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+  <button onClick="{{ backHome }}" style="display:flex;align-items:center;gap:8px;width:100%;cursor:pointer;border:none;background:#F1E7DC;color:#6B5D4F;border-radius:12px;padding:11px 13px;font-weight:800;font-size:13px;margin-bottom:12px" style-active="transform:scale(.98)" style-hover="background:#EDE0D0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Semua Gerobak</button>
+  </sc-if>
+
   <div style="background:linear-gradient(155deg,#FFB870,#FF7A1A 60%,#E4560A);border-radius:20px;padding:16px;color:#fff;position:relative;overflow:hidden">
     <svg style="position:absolute;right:-20px;bottom:-24px;opacity:.16" width="120" height="120" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.2" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="12" r="5" stroke="#fff" stroke-width="1.2"/></svg>
     <div style="position:relative">
@@ -326,7 +330,7 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
             <div style="display:flex;flex-direction:column;gap:2px;margin-top:20px">
               <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #F4ECE2">
                 <span style="flex:none;color:#B0A192"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5 5h4l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v4a1 1 0 0 1-1 1A16 16 0 0 1 4 6a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
-                <div style="flex:1"><div style="font-size:12px;color:#9A8A7C">Nomor HP</div><div style="font-weight:700;font-size:14.5px;margin-top:1px">0812-3344-5566</div></div>
+                <div style="flex:1"><div style="font-size:12px;color:#9A8A7C">Nomor HP</div><div style="font-weight:700;font-size:14.5px;margin-top:1px">{{ maskedPhone }}</div></div>
                 <span style="color:#E4560A;font-weight:700;font-size:13px;cursor:pointer">Ubah</span>
               </div>
               <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #F4ECE2">
@@ -339,6 +343,7 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
                 <div style="flex:1"><div style="font-size:12px;color:#9A8A7C">Member sejak</div><div style="font-weight:700;font-size:14.5px;margin-top:1px">Maret 2025</div></div>
               </div>
             </div>
+            <button onClick="{{ openLogout }}" style="margin-top:20px;width:100%;cursor:pointer;background:#FBEEE9;color:#C4402F;border:none;border-radius:14px;padding:14px;font-weight:800;font-size:14.5px;display:flex;align-items:center;justify-content:center;gap:8px" style-active="transform:scale(.99)" style-hover="background:#F7E2DB"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 8l-4 4 4 4M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Keluar</button>
           </div>
 
           <div style="background:#fff;border-radius:22px;padding:26px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
@@ -385,6 +390,46 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
         </div>
 
       </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ==== PESANAN AKTIF ==== -->
+  <sc-if value="{{ isActive }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;min-width:0;overflow-y:auto;padding:40px;display:flex;justify-content:center;animation:screenIn .35s ease">
+    <div style="width:100%;max-width:1000px">
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:30px;letter-spacing:-.6px">Pesanan Aktif</div>
+      <div style="font-size:14px;color:#9A8A7C;margin-top:4px">{{ activeSubtitle }}</div>
+
+      <sc-if value="{{ hasActiveOrders }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px">
+        <sc-for list="{{ activeOrders }}" as="a" hint-placeholder-count="2">
+          <button onClick="{{ a.onClick }}" style="text-align:left;cursor:pointer;background:#fff;border:none;border-radius:22px;padding:24px;box-shadow:0 6px 16px rgba(35,24,15,.05);display:flex;flex-direction:column;gap:16px" style-active="transform:scale(.99)" style-hover="box-shadow:0 12px 28px rgba(35,24,15,.1)">
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="flex:none;width:56px;height:56px;border-radius:16px;background:{{ a.grad }};display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:inset 0 -12px 20px rgba(0,0,0,.1)"><span style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;line-height:1">{{ a.num }}</span><span style="font-size:9px;font-weight:700;opacity:.9">antre</span></div>
+              <div style="flex:1;min-width:0"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.vendor }}</div><div style="font-size:13px;color:#9A8A7C;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.items }}</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="display:inline-flex;align-items:center;gap:6px;background:{{ a.toneBg }};color:{{ a.toneColor }};font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:{{ a.toneDot }};animation:pulse 1.8s infinite"></span>{{ a.status }}</span>
+              <span style="font-size:13px;color:#6B5D4F;font-weight:700">{{ a.eta }}</span>
+              <span style="font-size:13px;color:#B0A192">· {{ a.ahead }}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #F4ECE2;padding-top:16px">
+              <div><div style="font-size:12px;color:#9A8A7C">Total</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px">{{ a.total }}</div></div>
+              <span style="display:inline-flex;align-items:center;gap:6px;color:#E4560A;font-weight:800;font-size:14px">Lihat antrean<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#E4560A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ noActiveOrders }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:40px;background:#fff;border-radius:24px;padding:60px 30px;box-shadow:0 6px 16px rgba(35,24,15,.05);display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center">
+        <div style="width:88px;height:88px;border-radius:26px;background:#FBF1E6;display:flex;align-items:center;justify-content:center"><svg width="42" height="42" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" stroke="#E4A96B" stroke-width="2" stroke-linejoin="round"/></svg></div>
+        <div style="font-weight:700;font-size:16px;color:#9A8A7C;max-width:320px;line-height:1.5">Belum ada pesanan berjalan. Pilih gerobak di Beranda buat mulai pesan.</div>
+        <button onClick="{{ backHome }}" style="cursor:pointer;background:#FF7A1A;color:#fff;border:none;border-radius:15px;padding:15px 26px;font-weight:800;font-size:15px;box-shadow:0 10px 22px rgba(255,122,26,.3)" style-active="transform:scale(.98)">Ke Beranda</button>
+      </div>
+      </sc-if>
     </div>
   </div>
   </sc-if>
@@ -684,6 +729,92 @@ input{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 </div>
 </sc-if>
 
+<!-- ============ CROSS-VENDOR MODAL ============ -->
+<sc-if value="{{ crossOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeCross }}" style="position:fixed;inset:0;z-index:60;background:rgba(35,24,15,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:30px;animation:fadeIn .2s ease">
+  <div onClick="{{ stop }}" style="background:#FFF8F1;border-radius:26px;padding:30px;width:470px;max-width:100%;box-shadow:0 30px 70px rgba(0,0,0,.35);animation:popin .3s ease">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="flex:none;width:48px;height:48px;border-radius:14px;background:#FFF3E7;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M6 8h12l-1 12H7z" stroke="#E4560A" stroke-width="2" stroke-linejoin="round"/><path d="M9 8a3 3 0 0 1 6 0" stroke="#E4560A" stroke-width="2"/></svg></span>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;line-height:1.15">Pindah ke gerobak lain?</div>
+    </div>
+    <div style="font-size:14.5px;color:#6B5D4F;margin-top:14px;line-height:1.55">Kamu masih punya keranjang aktif di <b style="color:#23180F">{{ activeVendorName }}</b>. Pesan dari <b style="color:#23180F">{{ pendingVendor }}</b> akan jadi <b style="color:#23180F">pesanan terpisah</b> — keranjang yang sekarang dikosongkan dulu ya.</div>
+    <div style="display:flex;gap:10px;margin-top:24px">
+      <button onClick="{{ closeCross }}" style="flex:1;cursor:pointer;border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:#F1E7DC;color:#23180F" style-active="transform:scale(.98)">Batal</button>
+      <button onClick="{{ confirmCross }}" style="flex:1.5;cursor:pointer;border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:#23180F;color:#fff" style-active="transform:scale(.98)" style-hover="background:#3A2A1C">Buat pesanan terpisah</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ LOGIN / OTP MODAL ============ -->
+<sc-if value="{{ authOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeAuth }}" style="position:fixed;inset:0;z-index:65;background:rgba(35,24,15,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:30px;animation:fadeIn .2s ease">
+  <div onClick="{{ stop }}" style="background:#FFF8F1;border-radius:26px;padding:32px;width:460px;max-width:100%;box-shadow:0 30px 70px rgba(0,0,0,.35);animation:popin .3s ease;position:relative;overflow:hidden">
+    <sc-if value="{{ authNotOk }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+      <div style="display:flex;gap:8px;align-items:center"><span style="width:26px;height:6px;border-radius:999px;background:#FF7A1A"></span><span style="width:26px;height:6px;border-radius:999px;background:{{ dot2Bg }};transition:background .25s"></span></div>
+      <button onClick="{{ closeAuth }}" style="cursor:pointer;border:none;background:#F1E7DC;width:34px;height:34px;border-radius:11px;font-size:17px;color:#6B5D4F;display:flex;align-items:center;justify-content:center" style-active="transform:scale(.92)">✕</button>
+    </div>
+
+    <sc-if value="{{ authPhoneStep }}" hint-placeholder-val="{{ true }}">
+    <div style="width:60px;height:60px;border-radius:18px;background:#DFF7EC;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(22,199,132,.18)"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.6-1.2A9 9 0 1 0 12 3z" stroke="#16C784" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 9.5c0 3 2.9 5.9 5.9 5.9l1.3-1.3-2-1.1-1 1a5.5 5.5 0 0 1-2.9-2.9l1-1-1.1-2z" fill="#16C784"/></svg></div>
+    <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:25px;margin:18px 0 8px;letter-spacing:-.5px;line-height:1.15">Masuk atau daftar pakai nomor HP</h1>
+    <p style="color:#9A8A7C;font-size:14px;margin:0;line-height:1.5">Nggak pakai password. Kami kirim kode verifikasi lewat WhatsApp.</p>
+    <div style="display:flex;gap:10px;margin-top:24px">
+      <div style="flex:none;display:flex;align-items:center;gap:7px;background:#F1E7DC;border-radius:14px;padding:0 15px;font-weight:800;font-size:16px;color:#23180F"><span style="font-size:16px">🇮🇩</span>+62</div>
+      <input value="{{ phone }}" onInput="{{ setPhone }}" inputmode="numeric" placeholder="812-3456-7890" style="flex:1;min-width:0;border:2px solid #EDE3D6;border-radius:14px;padding:14px 16px;font-family:'Plus Jakarta Sans';font-weight:700;font-size:16px;color:#23180F;background:#fff;outline:none" style-focus="border-color:#FF7A1A">
+    </div>
+    <sc-if value="{{ hasAuthErr }}"><div style="display:flex;align-items:center;gap:7px;margin-top:12px;color:#C4402F;font-size:13px;font-weight:600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#C4402F" stroke-width="2"/><path d="M12 7.5v5M12 16h.01" stroke="#C4402F" stroke-width="2" stroke-linecap="round"/></svg>{{ authErr }}</div></sc-if>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:14px;color:#0E9F6E;font-size:12.5px;font-weight:600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.6-1.2A9 9 0 1 0 12 3z" stroke="#16C784" stroke-width="2" stroke-linejoin="round"/></svg>Kode dikonfirmasi lewat WhatsApp ke nomor ini</div>
+    <button onClick="{{ sendOtp }}" style="margin-top:26px;width:100%;cursor:pointer;background:linear-gradient(135deg,#FFB870,#FF7A1A);color:#fff;border:none;border-radius:15px;padding:16px;font-weight:800;font-size:16px;box-shadow:0 10px 22px rgba(255,122,26,.32);display:flex;align-items:center;justify-content:center;gap:9px" style-active="transform:scale(.98)" style-hover="filter:brightness(1.04)">Kirim Kode OTP <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </sc-if>
+
+    <sc-if value="{{ authOtpStep }}" hint-placeholder-val="{{ false }}">
+    <h1 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:25px;margin:0 0 8px;letter-spacing:-.5px;line-height:1.15">Masukkan kode</h1>
+    <p style="color:#9A8A7C;font-size:14px;margin:0;line-height:1.5">Kode 6 digit dikirim via WhatsApp ke <b style="color:#23180F">+62 {{ phoneDisplay }}</b> · <span onClick="{{ editNumber }}" style="color:#E4560A;font-weight:700;cursor:pointer">Ubah nomor</span></p>
+    <div style="display:flex;gap:10px;margin-top:24px;justify-content:space-between">
+      <sc-for list="{{ otpBoxes }}" as="d" hint-placeholder-count="6">
+        <input value="{{ d.val }}" onInput="{{ d.onInput }}" onKeyDown="{{ d.onKeyDown }}" ref="{{ d.ref }}" inputmode="numeric" maxlength="1" style="width:100%;height:60px;border:2px solid {{ otpBorder }};border-radius:14px;text-align:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#23180F;background:#fff;outline:none" style-focus="border-color:#FF7A1A">
+      </sc-for>
+    </div>
+    <sc-if value="{{ hasAuthErr }}"><div style="display:flex;align-items:center;gap:7px;margin-top:14px;color:#C4402F;font-size:13px;font-weight:600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#C4402F" stroke-width="2"/><path d="M12 7.5v5M12 16h.01" stroke="#C4402F" stroke-width="2" stroke-linecap="round"/></svg>{{ authErr }}</div></sc-if>
+    <div style="text-align:center;margin-top:20px">
+      <sc-if value="{{ canResend }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resendOtp }}" style="cursor:pointer;background:none;border:none;color:#E4560A;font-weight:800;font-size:14px" style-active="transform:scale(.96)">Kirim Ulang Kode</button></sc-if>
+      <sc-if value="{{ showCountdown }}" hint-placeholder-val="{{ true }}"><div style="color:#9A8A7C;font-size:13px;font-weight:600">{{ resendText }}</div></sc-if>
+    </div>
+    <button onClick="{{ verifyOtp }}" style="margin-top:20px;width:100%;cursor:pointer;background:linear-gradient(135deg,#FFB870,#FF7A1A);color:#fff;border:none;border-radius:15px;padding:16px;font-weight:800;font-size:16px;box-shadow:0 10px 22px rgba(255,122,26,.32)" style-active="transform:scale(.98)" style-hover="filter:brightness(1.04)">Verifikasi</button>
+    <div style="text-align:center;color:#B8A99B;font-size:11.5px;margin-top:14px">Kode demo: <b style="color:#9A8A7C">123456</b></div>
+    </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ authOk }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:26px 0;animation:popin .3s ease">
+      <div style="position:relative;width:100px;height:100px;display:flex;align-items:center;justify-content:center">
+        <span style="position:absolute;inset:0;border-radius:50%;background:rgba(22,199,132,.16);animation:ripple 2s infinite"></span>
+        <div style="width:84px;height:84px;border-radius:28px;background:linear-gradient(135deg,#34E0A8,#16C784);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 34px rgba(22,199,132,.4)"><svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;letter-spacing:-.4px">Nomor terverifikasi!</div>
+      <div style="color:#9A8A7C;font-size:14px">Sebentar, lagi nyiapin akunmu…</div>
+    </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ LOGOUT MODAL ============ -->
+<sc-if value="{{ logoutOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeLogout }}" style="position:fixed;inset:0;z-index:65;background:rgba(35,24,15,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:30px;animation:fadeIn .2s ease">
+  <div onClick="{{ stop }}" style="background:#FFF8F1;border-radius:26px;padding:30px;width:420px;max-width:100%;box-shadow:0 30px 70px rgba(0,0,0,.35);animation:popin .3s ease">
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px">Keluar dari akun?</div>
+    <div style="font-size:14px;color:#9A8A7C;margin-top:6px;line-height:1.5">Kamu perlu verifikasi nomor HP lagi buat masuk. Pesanan aktif tetap aman.</div>
+    <div style="display:flex;gap:10px;margin-top:24px">
+      <button onClick="{{ closeLogout }}" style="flex:1;cursor:pointer;border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:#F1E7DC;color:#23180F" style-active="transform:scale(.98)">Batal</button>
+      <button onClick="{{ confirmLogout }}" style="flex:1;cursor:pointer;border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:#C4402F;color:#fff" style-active="transform:scale(.98)">Ya, keluar</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:940},&quot;warungName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Ayam Penyet My Bosz&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Konten&quot;},&quot;priorityFee&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:8000,&quot;min&quot;:0,&quot;max&quot;:20000,&quot;step&quot;:1000,&quot;unit&quot;:&quot;Rp&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Biaya&quot;},&quot;addonFee&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:2000,&quot;min&quot;:0,&quot;max&quot;:10000,&quot;step&quot;:500,&quot;unit&quot;:&quot;Rp&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Biaya&quot;}}">
@@ -716,6 +847,8 @@ const ICON = {
   bowl:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M3 11h18a9 9 0 0 1-18 0z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 11c0-2 1-3 1-4M12 11c0-2 1-3 1-4M16 11c0-2 1-3 1-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
   coffee:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M17 9h2a2 2 0 0 1 0 6h-2M8 3v2M11 3v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
   cake:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 20h16v-6a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M4 15c1.5 1.5 2.5 1.5 4 0s2.5-1.5 4 0 2.5 1.5 4 0M12 8V5M9 8V6M15 8V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  home:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7M6 10v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  receipt:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 8h6M9 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
 };
 const DISC_CATS = [
   {v:'all', label:'Semua gerobak', icon:CATS[0].icon},
@@ -747,6 +880,10 @@ const NEAREST = [
   {name:'Bakso Urat Pak Kumis', dist:'0.3 km', color:'#E4560A'},
   {name:'Kopi Gerobak Senja', dist:'0.4 km', color:'#7A3BF5'},
 ];
+const ACTIVE_ORDERS = [
+  {vendor:'Ayam Penyet My Bosz', type:'ayam', num:'27', code:'4729', status:'Lagi dimasak', tone:'cook', eta:'~6 mnt', ahead:'2 di depan', items:'Ayam Penyet Sambal Ijo, Es Teh Jumbo', total:'Rp44.000'},
+  {vendor:'Sate Taichan Bang Jul', type:'ayam', num:'14', code:'8121', status:'Dalam antrean', tone:'wait', eta:'~13 mnt', ahead:'6 di depan', items:'Sate Taichan 20 tusuk', total:'Rp25.000'},
+];
 const ORDERS = [
   {warung:'Ayam Penyet My Bosz', items:'2 menu', total:'Rp44.000', date:'Hari ini', status:'Berlangsung', ok:true, active:true},
   {warung:'Bakso Urat Pak Kumis', items:'1 menu', total:'Rp18.000', date:'Kemarin', status:'Selesai', ok:true},
@@ -760,7 +897,8 @@ const QR = '<svg viewBox="0 0 100 100" width="100%" height="100%" shape-renderin
 
 class Component extends DCLogic {
   state = {
-    screen:'order', cat:'all', discCat:'all', query:'', cart:{}, priority:false,
+    screen:'discovery', cat:'all', discCat:'all', query:'', cart:{}, priority:false,
+    loggedIn:false, authOpen:false, authStep:'phone', phone:'', otp:['','','','','',''], authErr:'', attempts:3, resendLeft:45, authOk:false, pendingDest:'', crossOpen:false, pendingVendor:'', activeVendor:'Ayam Penyet My Bosz', logoutOpen:false,
     payOpen:false, cancelOpen:false, cancelReason:'', cancelResult:null, cancelled:false,
     ratingOpen:false, ratingResult:null, stars:0, ratingSel:[],
     addonOpen:false, addonStep:'menu', addonCart:{}, addonCount:0,
@@ -776,7 +914,21 @@ class Component extends DCLogic {
   dec(id){ this.setState(st=>{ const c={...st.cart}; const n=(c[id]||0)-1; if(n<=0) delete c[id]; else c[id]=n; return {cart:c}; }); }
   togglePriority(){ this.setState(s=>({priority:!s.priority})); }
   toggleNotif(k){ this.setState(s=>({notif:{...s.notif,[k]:!s.notif[k]}})); }
-  checkout(){ this.setState({payOpen:true}); }
+  checkout(){ if(this.state.loggedIn) this.setState({payOpen:true}); else this.openAuth('__pay'); }
+  openAuth(dest){ this.setState({authOpen:true, authStep:'phone', phone:'', otp:['','','','','',''], authErr:'', attempts:3, authOk:false, pendingDest:dest}); }
+  closeAuth(){ if(this._rt){clearInterval(this._rt);this._rt=null;} this.setState({authOpen:false}); }
+  gated(dest){ if(this.state.loggedIn) this.go(dest); else this.openAuth(dest); }
+  setPhone(v){ this.setState({phone:v.replace(/[^0-9-]/g,''), authErr:''}); }
+  sendOtp(){ const d=(this.state.phone||'').replace(/\D/g,''); if(d.length<9){ this.setState({authErr:'Nomornya kurang lengkap nih, coba cek lagi'}); return; } this.setState({authStep:'otp', authErr:'', otp:['','','','','','']}); this.startResend(); setTimeout(()=>{ const el=this._otpRefs&&this._otpRefs[0]; if(el&&el.focus) el.focus(); },70); }
+  startResend(){ if(this._rt) clearInterval(this._rt); this.setState({resendLeft:45}); this._rt=setInterval(()=>{ this.setState(s=>{ if(s.resendLeft<=1){ clearInterval(this._rt); this._rt=null; return {resendLeft:0}; } return {resendLeft:s.resendLeft-1}; }); },1000); }
+  resendOtp(){ if(this.state.resendLeft>0) return; this.setState({otp:['','','','','',''], authErr:''}); this.startResend(); const el=this._otpRefs&&this._otpRefs[0]; if(el&&el.focus) el.focus(); }
+  editNumber(){ if(this._rt){clearInterval(this._rt);this._rt=null;} this.setState({authStep:'phone', authErr:'', otp:['','','','','','']}); }
+  setOtp(i,val){ const ch=(val||'').replace(/\D/g,'').slice(-1); this.setState(s=>{ const o=s.otp.slice(); o[i]=ch; return {otp:o, authErr:''}; }, ()=>{ if(ch && i<5){ const el=this._otpRefs[i+1]; if(el&&el.focus) el.focus(); } if(this.state.otp.every(x=>x!=='')) this.verifyOtp(); }); }
+  otpKey(i,e){ if(e.key==='Backspace' && !this.state.otp[i] && i>0){ const el=this._otpRefs[i-1]; if(el&&el.focus) el.focus(); } }
+  verifyOtp(){ const code=this.state.otp.join(''); if(code.length<6) return; if(code==='123456'){ if(this._rt){clearInterval(this._rt);this._rt=null;} this.setState({authOk:true}); setTimeout(()=>this.finishAuth(),950); } else { this.setState(s=>{ const left=s.attempts-1; if(left<=0) return {authErr:'Percobaan habis. Coba kirim ulang kodenya ya.', attempts:3, otp:['','','','','','']}; return {authErr:'Kode belum cocok. Sisa '+left+' percobaan.', attempts:left, otp:['','','','','','']}; }, ()=>{ const el=this._otpRefs[0]; if(el&&el.focus) el.focus(); }); } }
+  finishAuth(){ const dest=this.state.pendingDest; this.setState({loggedIn:true, authOk:false, authOpen:false}); if(dest==='__pay') this.setState({payOpen:true}); else if(dest) this.go(dest); }
+  pickGerobak(g){ if(!g.open) return; const count=Object.keys(this.state.cart).filter(id=>this.state.cart[id]>0).length; if(g.name!==this.state.activeVendor){ if(count>0){ this.setState({crossOpen:true, pendingVendor:g.name}); return; } this.setState({activeVendor:g.name, cart:{}, priority:false}); } this.go('order'); }
+  confirmCross(){ this.setState({crossOpen:false, cart:{}, priority:false, activeVendor:this.state.pendingVendor}); this.go('order'); }
   closePay(){ this.setState({payOpen:false}); }
   confirmPay(){ this.setState({payOpen:false, screen:'queue', queueStage:1, peopleAhead:3, etaMin:12, cancelled:false, addonCount:0, ratingResult:null});
     try{window.scrollTo(0,0);}catch(e){} this.startQueue(); }
@@ -788,7 +940,7 @@ class Component extends DCLogic {
       else if(queueStage<3){ queueStage=3; }
       return {queueStage,peopleAhead,etaMin}; }); }, 2600); }
   clearQueue(){ if(this._qt){ clearInterval(this._qt); this._qt=null; } }
-  componentWillUnmount(){ this.clearQueue(); }
+  componentWillUnmount(){ this.clearQueue(); if(this._rt){clearInterval(this._rt);this._rt=null;} }
   openCancel(){ this.setState({cancelOpen:true, cancelReason:'', cancelResult:null}); }
   closeCancel(){ this.setState({cancelOpen:false}); }
   confirmCancel(){ if(!this.state.cancelReason) return; this.clearQueue(); this.setState({cancelResult:'done'}); }
@@ -811,20 +963,26 @@ class Component extends DCLogic {
 
   renderVals(){
     const S=this.state;
-    const warungName = this.props.warungName ?? 'Ayam Penyet My Bosz';
+    const warungName = S.activeVendor || (this.props.warungName ?? 'Ayam Penyet My Bosz');
     const prioFee = this.props.priorityFee ?? 8000;
     const addFee = this.props.addonFee ?? 2000;
+    const otpBoxes=S.otp.map((v,i)=>({ val:v, onInput:(e)=>this.setOtp(i,e.target.value), onKeyDown:(e)=>this.otpKey(i,e), ref:(el)=>{ if(!this._otpRefs) this._otpRefs=[]; this._otpRefs[i]=el; } }));
+    const rl=S.resendLeft;
+    const maskedPhone=(()=>{ const d=(S.phone||'').replace(/\D/g,''); return d.length>=9 ? '0'+d.slice(0,3)+'-••••-'+d.slice(-3) : '0812-••••-566'; })();
+    const activeOrders=ACTIVE_ORDERS.map((a,i)=>{ const tone=a.tone==='cook'?{bg:'#FFF3E7',color:'#E4560A',dot:'#F5A623'}:{bg:'#EAF6EF',color:'#0E9F6E',dot:'#16C784'};
+      return {...a, grad: a.type==='kopi'?MINT:GRADS[i%GRADS.length], toneBg:tone.bg, toneColor:tone.color, toneDot:tone.dot, onClick:()=>{ this.setState({activeVendor:a.vendor, orderNo:a.num, pickCode:a.code}); this.go('queue'); } }; });
 
     // nav
-    const activeNav = S.screen==='queue'?'order':S.screen;
+    const activeCount = ACTIVE_ORDERS.length;
+    const activeNav = (S.screen==='queue'||S.screen==='order')?'':S.screen;
     const NAV=[
-      {v:'order', label:'Pesan di sini', icon:ICON.store},
-      {v:'discovery', label:'Sekitar Sini', icon:ICON.pin, badge:'8'},
+      {v:'discovery', label:'Beranda', icon:ICON.home},
+      {v:'active', label:'Pesanan Aktif', icon:ICON.receipt, badge:String(activeCount)},
       {v:'priority', label:'Langganan Prioritas', icon:ICON.crown},
       {v:'profile', label:'Profil', icon:ICON.user},
     ];
     const navItems = NAV.map(n=>{ const on=activeNav===n.v; return {
-      label:n.label, icon:H(n.icon), badge:n.badge||'', onClick:()=>this.go(n.v),
+      label:n.label, icon:H(n.icon), badge:n.badge||'', onClick:()=> n.v==='discovery'?this.go('discovery'):this.gated(n.v),
       bg:on?'#FFF3E7':'transparent', color:on?'#E4560A':'#5D4E40', iconColor:on?'#E4560A':'#B0A192' }; });
 
     // sidebar categories (context-aware)
@@ -869,7 +1027,7 @@ class Component extends DCLogic {
       statusLabel:g.open?'Buka':'Tutup', statusColor:g.open?'#0E9F6E':'#9A8A7C', statusBg:g.open?'rgba(234,246,239,.95)':'rgba(241,231,220,.95)', statusDot:g.open?'#16C784':'#C4B29B',
       disabled:!g.open, cursor:g.open?'pointer':'not-allowed',
       btnLabel:g.mine?'Menu':(g.open?'Lihat menu':'Tutup'), btnBg:g.open?'#23180F':'#EFE6DA', btnColor:g.open?'#fff':'#B0A192',
-      onClick:()=> g.open?this.go('order'):null }));
+      onClick:()=> this.pickGerobak(g) }));
     const pins = PINS.map(p=>({x:p.x,y:p.y,label:p.label,color:p.color}));
     const nearest = NEAREST.map((n,i)=>({idx:String(i+1), name:n.name, dist:n.dist, color:n.color}));
 
@@ -952,7 +1110,21 @@ class Component extends DCLogic {
     return {
       warungName, prioFeeStr:rp(prioFee),
       isOrder:S.screen==='order', isQueue:S.screen==='queue', isDiscovery:S.screen==='discovery', isPriority:S.screen==='priority', isProfile:S.screen==='profile',
-      navItems, cats, catHeader, showCats, goPriority:()=>this.go('priority'),
+      isActive:S.screen==='active', activeOrders, hasActiveOrders:activeOrders.length>0, noActiveOrders:activeOrders.length===0, activeSubtitle:activeOrders.length+' pesanan lagi berjalan di gerobak berbeda',
+      showBack:(S.screen==='order'||S.screen==='queue'), backHome:()=>this.go('discovery'),
+      authOpen:S.authOpen, authNotOk:!S.authOk, authOk:S.authOk, closeAuth:()=>this.closeAuth(),
+      authPhoneStep:S.authStep==='phone', authOtpStep:S.authStep==='otp',
+      phone:S.phone, phoneDisplay:S.phone||'812-3456-7890', setPhone:(e)=>this.setPhone(e.target.value),
+      otpBoxes, otpBorder:S.authErr?'#F0D9D3':'#EDE3D6', authErr:S.authErr, hasAuthErr:!!S.authErr,
+      sendOtp:()=>this.sendOtp(), verifyOtp:()=>this.verifyOtp(), editNumber:()=>this.editNumber(),
+      resendOtp:()=>this.resendOtp(), resendText:'Kirim ulang dalam 00:'+String(rl).padStart(2,'0'), canResend:rl===0, showCountdown:rl>0,
+      dot2Bg:S.authStep==='otp'?'#FF7A1A':'#EDE3D6',
+      crossOpen:S.crossOpen, pendingVendor:S.pendingVendor, activeVendorName:S.activeVendor,
+      closeCross:()=>this.setState({crossOpen:false}), confirmCross:()=>this.confirmCross(),
+      logoutOpen:S.logoutOpen, openLogout:()=>this.setState({logoutOpen:true}), closeLogout:()=>this.setState({logoutOpen:false}),
+      confirmLogout:()=>{ this.setState({logoutOpen:false, loggedIn:false}); this.go('discovery'); },
+      maskedPhone,
+      navItems, cats, catHeader, showCats, goPriority:()=>this.gated('priority'),
       // order
       catTitle: S.query?('Hasil "'+S.query+'"'):CAT_TITLE[S.cat], filteredCount:String(filtered.length),
       menu, query:S.query, onSearch:(e)=>this.onSearch(e), queueNow:'3',

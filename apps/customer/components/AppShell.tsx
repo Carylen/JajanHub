@@ -1,5 +1,11 @@
+'use client';
 import type { ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
+import { cn } from '@jajanhub/ui';
 import { CustomerSidebar } from './CustomerSidebar';
+import { MobileTabBar } from './MobileTabBar';
+
+const TAB_BAR_ROUTES = new Set(['/', '/orders', '/profile']);
 
 /**
  * Adaptive chrome, replacing the old hardcoded `max-w-app` wrapper in
@@ -28,13 +34,20 @@ import { CustomerSidebar } from './CustomerSidebar';
  * that fallback IS the mobile view, just centered in more room).
  */
 export function AppShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const showTabBar = TAB_BAR_ROUTES.has(pathname);
+
   return (
     <div className="lg:flex">
       <CustomerSidebar />
       <div
-        className="mx-auto max-w-app md:max-w-tablet lg:mx-0 lg:max-w-none lg:min-w-0 lg:flex-1 min-h-screen bg-cream lg:bg-[#F1E7DC] relative overflow-x-hidden shadow-[0_0_70px_rgba(0,0,0,.1)] lg:shadow-none [transform:translateZ(0)]"
+        className={cn(
+          'mx-auto max-w-app md:max-w-tablet lg:mx-0 lg:max-w-none lg:min-w-0 lg:flex-1 min-h-screen bg-cream lg:bg-[#F1E7DC] relative overflow-x-hidden shadow-[0_0_70px_rgba(0,0,0,.1)] lg:shadow-none [transform:translateZ(0)]',
+          showTabBar && 'pb-20 lg:pb-0',
+        )}
       >
         {children}
+        {showTabBar && <MobileTabBar />}
       </div>
     </div>
   );

@@ -1,10 +1,11 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import type { Stall } from '@jajanhub/api';
+import { tierDefinition, type Stall } from '@jajanhub/api';
 import { Icon, cn } from '@jajanhub/ui';
 import { FOOD_GRADIENTS, DRINK_GRADIENT } from '../../lib/visuals';
 import { FoodGlyph } from './FoodGlyph';
+import { useVendorSelect } from './useVendorSelect';
+import { SwitchVendorModal } from './SwitchVendorModal';
 
 const FILTERS = [
   { value: 'all', label: 'Semua gerobak', icon: 'grid4' as const },
@@ -24,6 +25,12 @@ function pinColor(stall: Stall) {
   return stall.queue <= 5 ? '#16C784' : '#FF9A3D';
 }
 
+function tierBadge(stall: Stall) {
+  if (stall.tier !== 'gold' && stall.tier !== 'silver') return null;
+  const def = tierDefinition(stall.tier);
+  return { label: def.name, bg: def.soft, color: def.accent };
+}
+
 /**
  * Desktop "Sekitar Sini" screen — matches Antre/Antri Desktop.dc.html's
  * `isDiscovery` state: catalog grid left + sticky map panel right (366px).
@@ -32,13 +39,14 @@ function pinColor(stall: Stall) {
  * (grid instead of list, map always visible instead of a toggle).
  */
 export function DiscoveryDesktopView({ stalls }: { stalls: Stall[] }) {
-  const router = useRouter();
   const [filter, setFilter] = useState('all');
+  const [query, setQuery] = useState('');
+  const { pending, activeVendorName, select, confirm, cancel } = useVendorSelect(stalls);
 
-  const visible = stalls.filter((s) => (filter === 'all' ? true : s.category === filter));
-  const openStall = (s: Stall) => {
-    if (s.open) router.push(`/m/${s.id}`);
-  };
+  const q = query.trim().toLowerCase();
+  const visible = stalls
+    .filter((s) => (filter === 'all' ? true : s.category === filter))
+    .filter((s) => !q || s.name.toLowerCase().includes(q) || s.type.toLowerCase().includes(q));
   const nearest = [...stalls].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance)).slice(0, 3);
   const filterCount = (v: string) => (v === 'all' ? stalls.length : stalls.filter((s) => s.category === v).length);
 
@@ -59,7 +67,19 @@ export function DiscoveryDesktopView({ stalls }: { stalls: Stall[] }) {
           </div>
         </div>
 
-        <div className="px-10 pt-[22px] pb-2 flex-none flex items-center justify-between">
+        <div className="px-10 pt-[22px] flex-none">
+          <div className="flex items-center gap-2.5 bg-white rounded-[14px] px-[17px] py-[13px] shadow-[0_3px_12px_rgba(35,24,15,.05)] max-w-[420px]">
+            <Icon name="search" size={18} className="text-faint" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Cari gerobak atau makanan…"
+              className="flex-1 min-w-0 border-0 outline-none bg-transparent text-sm text-ink font-sans"
+            />
+          </div>
+        </div>
+
+        <div className="px-10 pt-[14px] pb-2 flex-none flex items-center justify-between">
           <div className="font-display font-extrabold text-[19px]">
             {FILTERS.find((f) => f.value === filter)?.label ?? 'Semua gerobak'}{' '}
             <span className="text-faint font-bold text-[15px]">· {visible.length} gerobak</span>
@@ -97,11 +117,13 @@ export function DiscoveryDesktopView({ stalls }: { stalls: Stall[] }) {
             <div className="text-center text-faint text-sm py-16">Belum ada gerobak di filter ini.</div>
           ) : (
             <div className="grid gap-[18px] [grid-template-columns:repeat(auto-fill,minmax(260px,1fr))]">
-              {visible.map((s, i) => (
+              {visible.map((s, i) => {
+                const tier = tierBadge(s);
+                return (
                 <button
                   key={s.id}
                   type="button"
-                  onClick={() => openStall(s)}
+                  onClick={() => select(s)}
                   disabled={!s.open}
                   className={cn(
                     'text-left bg-white rounded-[20px] overflow-hidden shadow-[0_5px_16px_rgba(35,24,15,.05)] flex flex-col transition-transform',
@@ -117,6 +139,15 @@ export function DiscoveryDesktopView({ stalls }: { stalls: Stall[] }) {
                       <Icon name="star" size={11} className="text-[#F5A623]" />
                       {s.type}
                     </span>
+                    {tier && (
+                      <span
+                        className="absolute top-3 right-3 inline-flex items-center gap-1 text-[11px] font-extrabold px-2.5 py-1 rounded-full"
+                        style={{ background: tier.bg, color: tier.color }}
+                      >
+                        <Icon name="medal" size={11} />
+                        {tier.label}
+                      </span>
+                    )}
                     <span
                       className={cn(
                         'absolute bottom-2.5 left-3 inline-flex items-center gap-[5px] text-[11px] font-extrabold px-2.5 py-1 rounded-full',
@@ -148,7 +179,8 @@ export function DiscoveryDesktopView({ stalls }: { stalls: Stall[] }) {
                     </div>
                   </div>
                 </button>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -169,7 +201,7 @@ export function DiscoveryDesktopView({ stalls }: { stalls: Stall[] }) {
             <button
               key={s.id}
               type="button"
-              onClick={() => openStall(s)}
+              onClick={() => select(s)}
               aria-label={s.name}
               className="absolute -translate-x-1/2 -translate-y-full flex flex-col items-center transition-transform active:scale-90"
               style={{ left: s.mapX, top: s.mapY }}
@@ -197,7 +229,7 @@ export function DiscoveryDesktopView({ stalls }: { stalls: Stall[] }) {
             <button
               key={n.id}
               type="button"
-              onClick={() => openStall(n)}
+              onClick={() => select(n)}
               disabled={!n.open}
               className="w-full flex items-center gap-[11px] py-[7px] text-left"
             >
@@ -213,6 +245,14 @@ export function DiscoveryDesktopView({ stalls }: { stalls: Stall[] }) {
           ))}
         </div>
       </aside>
+
+      <SwitchVendorModal
+        open={!!pending}
+        onClose={cancel}
+        activeVendorName={activeVendorName}
+        pendingVendorName={pending?.name ?? ''}
+        onConfirm={confirm}
+      />
     </div>
   );
 }

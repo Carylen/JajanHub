@@ -9,6 +9,7 @@ import { computeTotals } from '../../lib/pricing';
 import { itemGradient } from '../../lib/visuals';
 import { MenuGridCard } from './MenuGridCard';
 import type { MerchantScreenView } from './useMerchantScreen';
+import { useAuth } from './auth/AuthContext';
 
 type CatFilter = 'all' | 'food' | 'drink' | 'best';
 
@@ -30,6 +31,7 @@ const CATS: Array<{ value: CatFilter; label: string; icon: IconName }> = [
  */
 export function MerchantDesktopView({ warung, isLoading, isError, refetch }: MerchantScreenView) {
   const router = useRouter();
+  const { requireAuth } = useAuth();
   const [query, setQuery] = useState('');
   const [cat, setCat] = useState<CatFilter>('all');
   const items = useCartStore((s) => s.items);
@@ -54,10 +56,12 @@ export function MerchantDesktopView({ warung, isLoading, isError, refetch }: Mer
   const catLabel = query ? `Hasil "${query}"` : (CATS.find((c) => c.value === cat)?.label ?? 'Semua menu');
 
   const checkout = () => {
-    createOrder.mutate(
-      { merchantId: warung.id, cart: items, priority, pickupMode: 'now' },
-      { onSuccess: (order) => router.push(`/order/${order.id}/pay`) },
-    );
+    requireAuth(() => {
+      createOrder.mutate(
+        { merchantId: warung.id, cart: items, priority, pickupMode: 'now' },
+        { onSuccess: (order) => router.push(`/order/${order.id}/pay`) },
+      );
+    });
   };
 
   return (

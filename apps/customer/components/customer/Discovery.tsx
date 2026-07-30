@@ -1,10 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Stall } from '@jajanhub/api';
+import { tierDefinition, type Stall } from '@jajanhub/api';
 import { IconButton, Icon, cn } from '@jajanhub/ui';
 import { FOOD_GRADIENTS, DRINK_GRADIENT } from '../../lib/visuals';
 import { FoodGlyph } from './FoodGlyph';
+import { useVendorSelect } from './useVendorSelect';
+import { SwitchVendorSheet } from './SwitchVendorSheet';
 
 type View = 'list' | 'map';
 const FILTERS = [
@@ -32,18 +34,24 @@ function pinColor(stall: Stall) {
   return stall.queue <= 5 ? '#16C784' : '#FF9A3D';
 }
 
+function tierBadge(stall: Stall) {
+  if (stall.tier !== 'gold' && stall.tier !== 'silver') return null;
+  const def = tierDefinition(stall.tier);
+  return { label: def.name, bg: def.soft, color: def.accent };
+}
+
 export function Discovery({ stalls }: { stalls: Stall[] }) {
   const router = useRouter();
   const [view, setView] = useState<View>('list');
   const [filter, setFilter] = useState('all');
+  const [query, setQuery] = useState('');
+  const { pending, activeVendorName, select, confirm, cancel } = useVendorSelect(stalls);
 
-  const visible = stalls.filter((s) =>
-    filter === 'all' ? true : filter === 'sepi' ? s.open && s.queue <= 5 : s.category === filter,
-  );
+  const q = query.trim().toLowerCase();
+  const visible = stalls
+    .filter((s) => (filter === 'all' ? true : filter === 'sepi' ? s.open && s.queue <= 5 : s.category === filter))
+    .filter((s) => !q || s.name.toLowerCase().includes(q) || s.type.toLowerCase().includes(q));
   const openCount = stalls.filter((s) => s.open).length;
-  const openStall = (s: Stall) => {
-    if (s.open) router.push(`/m/${s.id}`);
-  };
 
   return (
     <div className="animate-screen-in pb-8">
@@ -55,7 +63,7 @@ export function Discovery({ stalls }: { stalls: Stall[] }) {
               <Icon name="chevron-left" size={19} strokeWidth={2.2} />
             </IconButton>
             <div>
-              <div className="text-xs text-faint font-semibold">Lokasimu</div>
+              <div className="text-xs text-faint font-semibold">Lagi di sekitar</div>
               <div className="flex items-center gap-[5px] font-display font-extrabold text-[19px] leading-[1.05]">
                 <Icon name="map-pin" size={16} className="text-brand" />
                 Area SCBD
@@ -67,7 +75,16 @@ export function Discovery({ stalls }: { stalls: Stall[] }) {
             <ViewToggle active={view === 'map'} onClick={() => setView('map')} icon="map" label="Tampilan peta" />
           </div>
         </div>
-        <div className="flex items-center gap-[7px] mt-2 pl-0.5">
+        <div className="flex items-center gap-2.5 bg-white rounded-[15px] px-[15px] py-3 mt-3 shadow-[0_3px_12px_rgba(35,24,15,.05)]">
+          <Icon name="search" size={18} className="text-faint" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Cari gerobak atau makanan…"
+            className="flex-1 min-w-0 border-0 outline-none bg-transparent text-sm text-ink font-sans"
+          />
+        </div>
+        <div className="flex items-center gap-[7px] mt-2.5 pl-0.5">
           <span className="w-2 h-2 rounded-full bg-mint animate-pulse" />
           <span className="text-[13px] text-muted font-semibold">{openCount} gerobak buka sekarang</span>
         </div>
@@ -98,11 +115,12 @@ export function Discovery({ stalls }: { stalls: Stall[] }) {
           ) : (
             visible.map((s, i) => {
               const badge = badgeOf(s);
+              const tier = tierBadge(s);
               return (
                 <button
                   key={s.id}
                   type="button"
-                  onClick={() => openStall(s)}
+                  onClick={() => select(s)}
                   className={cn(
                     'w-full text-left bg-white rounded-[22px] p-3 flex gap-3.5 items-center shadow-card transition-transform active:scale-[.99]',
                     s.open ? 'cursor-pointer' : 'opacity-60 cursor-default',
@@ -113,6 +131,15 @@ export function Discovery({ stalls }: { stalls: Stall[] }) {
                     style={{ background: stallGradient(s, i) }}
                   >
                     <FoodGlyph cat={s.category === 'minuman' ? 'drink' : 'food'} size={34} />
+                    {tier && (
+                      <span
+                        className="absolute -top-1.5 -left-1.5 inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-[3px] rounded-full shadow-[0_4px_9px_rgba(35,24,15,.14)] whitespace-nowrap"
+                        style={{ background: tier.bg, color: tier.color }}
+                      >
+                        <Icon name="medal" size={10} />
+                        {tier.label}
+                      </span>
+                    )}
                     {!s.open && (
                       <span className="absolute inset-0 bg-[rgba(35,24,15,.28)] rounded-[17px] flex items-center justify-center text-white font-extrabold text-xs">
                         Tutup
@@ -138,8 +165,16 @@ export function Discovery({ stalls }: { stalls: Stall[] }) {
           )}
         </div>
       ) : (
-        <MapView stalls={visible} onOpen={openStall} />
+        <MapView stalls={visible} onOpen={select} />
       )}
+
+      <SwitchVendorSheet
+        open={!!pending}
+        onClose={cancel}
+        activeVendorName={activeVendorName}
+        pendingVendorName={pending?.name ?? ''}
+        onConfirm={confirm}
+      />
     </div>
   );
 }

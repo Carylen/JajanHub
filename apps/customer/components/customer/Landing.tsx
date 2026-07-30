@@ -21,7 +21,13 @@ export function Landing({ warung, onSeeMenu }: LandingProps) {
             <circle cx="12" cy="12" r="5" stroke="#fff" strokeWidth="1.2" />
           </svg>
           <div className="relative p-[22px] flex justify-between items-center">
-            <div className="font-display font-extrabold text-white text-[23px] tracking-[-.6px]">JajanHub</div>
+            <Link
+              href="/"
+              className="flex items-center gap-[7px] bg-white/[.22] text-white font-bold text-[13px] px-[13px] py-2 rounded-full transition-transform active:scale-95"
+            >
+              <Icon name="chevron-left" size={16} strokeWidth={2.2} />
+              Semua Gerobak
+            </Link>
             <div className="flex items-center gap-[9px]">
               <div className="flex items-center gap-1.5 bg-white/[.22] px-[11px] py-[7px] rounded-full text-white text-xs font-semibold">
                 <Icon name="check" size={13} strokeWidth={2.4} />
@@ -98,7 +104,7 @@ export function Landing({ warung, onSeeMenu }: LandingProps) {
 
           {/* Discovery upsell */}
           <Link
-            href="/near"
+            href="/"
             className="mt-3 w-full text-left bg-white border-[1.5px] border-line rounded-[22px] px-[18px] py-[15px] flex items-center gap-[13px] shadow-[0_5px_16px_rgba(35,24,15,.05)] transition-transform active:scale-[.98]"
           >
             <div className="flex-none w-[42px] h-[42px] rounded-[13px] bg-[#E7FBF2] flex items-center justify-center">

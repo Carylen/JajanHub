@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { getClient } from './getClient';
 import type { AddonInput } from './client';
 import type {
+  AuthSession,
   CreateOrderInput,
   LoyalCustomer,
   Order,
@@ -36,10 +37,12 @@ import type {
 export const queryKeys = {
   warung: (id: string) => ['warung', id] as const,
   order: (id: string) => ['order', id] as const,
+  activeOrders: ['orders', 'active'] as const,
   stalls: ['stalls'] as const,
   plans: ['plans'] as const,
   benefits: ['benefits'] as const,
   profile: ['profile'] as const,
+  session: ['session'] as const,
   vendorSummary: ['vendor', 'summary'] as const,
   vendorOrders: ['vendor', 'orders'] as const,
   preorders: ['vendor', 'preorders'] as const,
@@ -112,6 +115,36 @@ export function useBenefits(): UseQueryResult<SubscriptionBenefit[]> {
 }
 export function useProfile(): UseQueryResult<UserProfile> {
   return useQuery({ queryKey: queryKeys.profile, queryFn: () => getClient().getProfile() });
+}
+export function useActiveOrders(): UseQueryResult<Order[]> {
+  return useQuery({ queryKey: queryKeys.activeOrders, queryFn: () => getClient().getActiveOrders() });
+}
+
+export function useSession(): UseQueryResult<AuthSession> {
+  return useQuery({ queryKey: queryKeys.session, queryFn: () => getClient().getSession() });
+}
+export function useSendOtp(): UseMutationResult<void, Error, string> {
+  return useMutation({ mutationFn: (phone: string) => getClient().sendOtp(phone) });
+}
+export function useVerifyOtp(): UseMutationResult<AuthSession, Error, { phone: string; code: string }> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ phone, code }) => getClient().verifyOtp(phone, code),
+    onSuccess: (session) => {
+      qc.setQueryData(queryKeys.session, session);
+      qc.invalidateQueries({ queryKey: queryKeys.profile });
+    },
+  });
+}
+export function useLogout(): UseMutationResult<void, Error, void> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => getClient().logout(),
+    onSuccess: () => {
+      qc.setQueryData(queryKeys.session, { phone: '', loggedIn: false });
+      qc.invalidateQueries({ queryKey: queryKeys.profile });
+    },
+  });
 }
 
 export function useVendorSummary(): UseQueryResult<VendorSummary> {

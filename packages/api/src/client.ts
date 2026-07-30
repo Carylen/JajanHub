@@ -4,6 +4,7 @@
  * http is invisible to components (BRIEF §6).
  */
 import type {
+  AuthSession,
   CreateOrderInput,
   LoyalCustomer,
   Order,
@@ -50,6 +51,16 @@ export interface JajanhubClient {
   getPlans(): Promise<SubscriptionPlan[]>;
   getBenefits(): Promise<SubscriptionBenefit[]>;
   getProfile(): Promise<UserProfile>;
+  /** Orders across all vendors that aren't picked up/cancelled/refunded yet. */
+  getActiveOrders(): Promise<Order[]>;
+
+  /* auth */
+  /** Send a WhatsApp OTP to `phone`. */
+  sendOtp(phone: string): Promise<void>;
+  /** Verify the OTP and start a session. */
+  verifyOtp(phone: string, code: string): Promise<AuthSession>;
+  logout(): Promise<void>;
+  getSession(): Promise<AuthSession>;
 
   /* vendor */
   getVendorSummary(): Promise<VendorSummary>;

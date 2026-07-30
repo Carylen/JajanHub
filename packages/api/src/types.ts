@@ -139,6 +139,14 @@ export interface Stall {
   /** Map pin position as CSS percentages. */
   mapX: string;
   mapY: string;
+  /** Loyalty badge shown on the card (bronze = no badge). */
+  tier?: VendorTier;
+}
+
+/** Phone + WhatsApp-OTP session state. */
+export interface AuthSession {
+  phone: string;
+  loggedIn: boolean;
 }
 
 export interface SubscriptionPlan {
