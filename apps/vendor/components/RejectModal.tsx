@@ -1,21 +1,21 @@
 'use client';
 import { useState } from 'react';
-import { REJECT_REASONS } from '@jajanhub/api';
+import { REJECT_REASONS, type RejectReasonId } from '@jajanhub/api';
 import { Modal, Icon, cn, type IconName } from '@jajanhub/ui';
 
-const REASON_ICON: Record<string, IconName> = { habis: 'box', ramai: 'users', tutup: 'store' };
+const REASON_ICON: Record<RejectReasonId, IconName> = { bahan_habis: 'box', terlalu_ramai: 'users', tutup: 'store' };
 
 interface RejectModalProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: (reason: string) => void;
+  onConfirm: (reason: RejectReasonId) => void;
   pending?: boolean;
 }
 
 /** Desktop counterpart to RejectSheet — matches Antre/Antri Pedagang
  * Desktop.dc.html's reject modal (icon + checkmark-circle radio style). */
 export function RejectModal({ open, onClose, onConfirm, pending }: RejectModalProps) {
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<RejectReasonId | ''>('');
 
   return (
     <Modal open={open} onClose={onClose} label="Tolak pesanan">
@@ -26,12 +26,12 @@ export function RejectModal({ open, onClose, onConfirm, pending }: RejectModalPr
 
       <div className="flex flex-col gap-2.5 my-5">
         {REJECT_REASONS.map((r) => {
-          const selected = reason === r.label;
+          const selected = reason === r.id;
           return (
             <button
               key={r.id}
               type="button"
-              onClick={() => setReason(r.label)}
+              onClick={() => setReason(r.id)}
               className={cn(
                 'text-left flex items-center gap-[13px] border-2 rounded-2xl px-4 py-3.5 transition-transform active:scale-[.98]',
                 selected ? 'border-brand-deep bg-[#FFF6EE]' : 'border-line bg-white',
@@ -61,7 +61,7 @@ export function RejectModal({ open, onClose, onConfirm, pending }: RejectModalPr
         <button
           type="button"
           disabled={!reason || pending}
-          onClick={() => onConfirm(reason)}
+          onClick={() => reason && onConfirm(reason)}
           className={cn(
             'flex-[1.4] rounded-[14px] py-[15px] font-extrabold text-[15px] text-white transition-transform active:scale-[.98] disabled:cursor-not-allowed',
             reason ? 'bg-danger' : 'bg-[#E0B5AD]',

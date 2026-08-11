@@ -1,19 +1,19 @@
 'use client';
 import { useState } from 'react';
-import { CANCEL_REASONS } from '@jajanhub/api';
+import { CANCEL_REASONS, type CancelReason } from '@jajanhub/api';
 import { BottomSheet, Button, Chip, Money, Icon } from '@jajanhub/ui';
 
 interface CancelSheetProps {
   open: boolean;
   onClose: () => void;
   refundAmount: number;
-  onConfirm: (reason: string) => void;
+  onConfirm: (reason: CancelReason) => void;
   pending?: boolean;
 }
 
-/** Bottom-sheet confirmation for cancelling an order (BRIEF §5). */
+/** Bottom-sheet confirmation for cancelling an order (BRIEF §5). Reason is optional here (unlike desktop's CancelModal) — defaults to `'lainnya'` when the shopper skips picking one. */
 export function CancelSheet({ open, onClose, refundAmount, onConfirm, pending }: CancelSheetProps) {
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<CancelReason | ''>('');
 
   return (
     <BottomSheet open={open} onClose={onClose} label="Batalkan pesanan">
@@ -22,8 +22,8 @@ export function CancelSheet({ open, onClose, refundAmount, onConfirm, pending }:
 
       <div className="flex flex-wrap gap-[9px] mt-4">
         {CANCEL_REASONS.map((r) => (
-          <Chip key={r} active={reason === r} onClick={() => setReason(reason === r ? '' : r)}>
-            {r}
+          <Chip key={r.id} active={reason === r.id} onClick={() => setReason(reason === r.id ? '' : r.id)}>
+            {r.label}
           </Chip>
         ))}
       </div>
@@ -45,7 +45,7 @@ export function CancelSheet({ open, onClose, refundAmount, onConfirm, pending }:
         fullWidth
         className="mt-[18px]"
         disabled={pending}
-        onClick={() => onConfirm(reason)}
+        onClick={() => onConfirm(reason || 'lainnya')}
       >
         {pending ? 'Membatalkan…' : 'Ya, Batalkan Pesanan'}
       </Button>

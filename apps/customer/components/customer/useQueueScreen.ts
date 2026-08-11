@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useOrder, useQueueState, useCancelOrder, stageOf, type Order, type OrderStatus } from '@jajanhub/api';
+import { useOrder, useQueueState, useCancelOrder, stageOf, type CancelReason, type Order, type OrderStatus } from '@jajanhub/api';
 import { useAddonFlow, type AddonFlowView } from './useAddonFlow';
 import { usePickupFlow, type PickupFlowView } from './usePickupFlow';
 
@@ -28,7 +28,7 @@ export interface QueueScreenView {
   cancelOpen: boolean;
   openCancel: () => void;
   closeCancel: () => void;
-  confirmCancel: () => void;
+  confirmCancel: (reason: CancelReason) => void;
   cancelPending: boolean;
   goPickup: () => void;
   addon: AddonFlowView;
@@ -56,12 +56,12 @@ export function useQueueScreen(orderId: string): QueueScreenView {
   const addon = useAddonFlow(order);
   const pickup = usePickupFlow(order);
 
-  const status: OrderStatus = queue?.status ?? order?.status ?? 'paid';
+  const status: OrderStatus = queue?.status ?? order?.status ?? 'waiting_confirmation';
   const stage = stageOf(status);
 
   useEffect(() => {
-    if (status === 'awaiting_payment') router.replace(`/order/${orderId}/pay`);
-    if (status === 'cancelled' || status === 'refunding' || status === 'refunded') {
+    if (status === 'pending_payment') router.replace(`/order/${orderId}/pay`);
+    if (status === 'cancelled' || status === 'rejected') {
       router.replace(`/order/${orderId}/refund`);
     }
   }, [status, orderId, router]);
@@ -85,13 +85,16 @@ export function useQueueScreen(orderId: string): QueueScreenView {
     cancelOpen,
     openCancel: () => setCancelOpen(true),
     closeCancel: () => setCancelOpen(false),
-    confirmCancel: () => {
-      cancelOrder.mutate(orderId, {
-        onSuccess: () => {
-          setCancelOpen(false);
-          router.push(`/order/${orderId}/refund`);
+    confirmCancel: (reason: CancelReason) => {
+      cancelOrder.mutate(
+        { id: orderId, reason },
+        {
+          onSuccess: () => {
+            setCancelOpen(false);
+            router.push(`/order/${orderId}/refund`);
+          },
         },
-      });
+      );
     },
     cancelPending: cancelOrder.isPending,
     goPickup: () => router.push(`/order/${orderId}/pickup`),

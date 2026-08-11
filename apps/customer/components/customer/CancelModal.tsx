@@ -1,12 +1,12 @@
 'use client';
 import { useState } from 'react';
-import { CANCEL_REASONS } from '@jajanhub/api';
+import { CANCEL_REASONS, type CancelReason } from '@jajanhub/api';
 import { Modal, Icon, cn } from '@jajanhub/ui';
 
 interface CancelModalProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: (reason: string) => void;
+  onConfirm: (reason: CancelReason) => void;
   pending?: boolean;
 }
 
@@ -22,7 +22,7 @@ interface CancelModalProps {
  * would fork that logic instead of reusing it.
  */
 export function CancelModal({ open, onClose, onConfirm, pending }: CancelModalProps) {
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<CancelReason | ''>('');
 
   return (
     <Modal open={open} onClose={onClose} label="Batalkan pesanan">
@@ -33,18 +33,18 @@ export function CancelModal({ open, onClose, onConfirm, pending }: CancelModalPr
 
       <div className="flex flex-col gap-2.5 my-5">
         {CANCEL_REASONS.map((r) => {
-          const selected = reason === r;
+          const selected = reason === r.id;
           return (
             <button
-              key={r}
+              key={r.id}
               type="button"
-              onClick={() => setReason(r)}
+              onClick={() => setReason(r.id)}
               className={cn(
                 'text-left flex items-center gap-3 border-2 rounded-2xl px-4 py-3.5 transition-transform active:scale-[.98]',
                 selected ? 'border-brand-press bg-[#FBEEE9]' : 'border-line bg-white',
               )}
             >
-              <span className="flex-1 font-bold text-[15px]">{r}</span>
+              <span className="flex-1 font-bold text-[15px]">{r.label}</span>
               {selected && (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <circle cx="12" cy="12" r="10" fill="#C4402F" />
@@ -67,7 +67,7 @@ export function CancelModal({ open, onClose, onConfirm, pending }: CancelModalPr
         <button
           type="button"
           disabled={!reason || pending}
-          onClick={() => onConfirm(reason)}
+          onClick={() => reason && onConfirm(reason)}
           className={cn(
             'flex-[1.4] rounded-[14px] py-[15px] font-extrabold text-[15px] text-white transition-transform active:scale-[.98] disabled:cursor-not-allowed',
             reason ? 'bg-brand-press' : 'bg-[#E0B5AD]',

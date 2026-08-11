@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
-import type { Warung } from '@jajanhub/api';
+import type { Vendor } from '@jajanhub/api';
 import { Button, Icon } from '@jajanhub/ui';
 
 interface LandingProps {
-  warung: Warung;
+  warung: Vendor;
   onSeeMenu: () => void;
 }
 
@@ -69,14 +69,14 @@ export function Landing({ warung, onSeeMenu }: LandingProps) {
           {/* Live queue card */}
           <div className="mt-[14px] bg-[linear-gradient(135deg,#FFF3E7,#FFE7D2)] border border-brand/[.16] rounded-[24px] px-5 py-[18px] flex items-center gap-4 shadow-[0_8px_20px_rgba(255,122,26,.08)]">
             <div className="flex-none w-[60px] h-[60px] rounded-[19px] bg-white flex flex-col items-center justify-center shadow-[0_5px_14px_rgba(255,122,26,.16)]">
-              <span className="font-display font-extrabold text-[25px] text-brand leading-none">{warung.peopleAhead}</span>
+              <span className="font-display font-extrabold text-[25px] text-brand leading-none">{warung.queueEstimate.peopleAhead}</span>
               <span className="text-[9px] text-faint font-semibold">antre</span>
             </div>
             <div className="flex-1">
-              <div className="font-bold text-[15px]">{warung.peopleAhead} orang di depanmu</div>
+              <div className="font-bold text-[15px]">{warung.queueEstimate.peopleAhead} orang di depanmu</div>
               <div className="text-faint text-[13px] flex items-center gap-[5px] mt-0.5">
                 <Icon name="clock" size={14} strokeWidth={2} className="text-faint" />
-                estimasi ±{warung.etaMin} menit
+                estimasi ±{warung.queueEstimate.etaMin} menit
               </div>
             </div>
           </div>

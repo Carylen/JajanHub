@@ -2,12 +2,20 @@
  * Central place for pricing constants and user-facing copy that depends on
  * payment-gateway / disbursement rules not yet finalized (see BRIEF §9).
  * Change these here rather than hardcoding across screens.
+ *
+ * Field names match API_CONTRACT.md §11's `GET /config/fees` exactly — this
+ * object doubles as the mock's response for that endpoint (see
+ * `getConfigFees` in mockClient.ts). The values themselves are the product's
+ * real, already-shipped numbers, not the contract doc's illustrative 🔸
+ * examples (which differ, e.g. `priorityFeeRp: 3000` there vs `8000` here) —
+ * §15 marks those as unagreed, not as instructions to change pricing.
+ * TODO confirm with backend.
  */
 export const PRICING = {
-  serviceFee: 2000,
-  priorityFee: 8000,
-  /** Fee for an order add-on — cheaper than a fresh order's priorityFee since it rides the same queue slot. */
-  addonFee: 2000,
+  serviceFeeRp: 2000,
+  priorityFeeRp: 8000,
+  /** Fee for an order add-on — cheaper than a fresh order's priorityFeeRp since it rides the same queue slot. */
+  addonFeeRp: 2000,
   /** Max add-ons a single order can carry (D3). */
   maxAddonsPerOrder: 2,
 } as const;

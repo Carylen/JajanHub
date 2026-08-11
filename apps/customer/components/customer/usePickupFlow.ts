@@ -43,7 +43,7 @@ export function usePickupFlow(order: Order | undefined): PickupFlowView {
     finish: () => {
       setRatingOpen(false);
       clearCart();
-      if (order) router.push(`/m/${order.merchantId}`);
+      if (order) router.push(`/m/${order.vendorId}`);
     },
   };
 }

@@ -16,18 +16,18 @@ export function RefundStatus({ orderId }: { orderId: string }) {
   if (isLoading) return <LoadingState label="Memuat status refund…" />;
   if (isError || !order) return <ErrorState onRetry={() => refetch()} />;
 
-  const amount = refund?.amount ?? order.total;
+  const amount = refund?.amountRp ?? order.totalRp;
   const stage = refund?.stage ?? 'cancelled';
   const method = refund?.method ?? 'GoPay •••• 7890';
 
   const orderAgain = () => {
     clearCart();
-    router.push(`/m/${order.merchantId}`);
+    router.push(`/m/${order.vendorId}`);
   };
 
   return (
     <div className="animate-screen-in min-h-screen bg-[linear-gradient(180deg,#FFF8F1,#FFF1E4)] pb-[130px]">
-      <ScreenHeader title="Status Refund" backHref={`/m/${order.merchantId}`} />
+      <ScreenHeader title="Status Refund" backHref={`/m/${order.vendorId}`} />
 
       <div className="text-center mt-3.5">
         <div className="w-[72px] h-[72px] rounded-[22px] mx-auto bg-[linear-gradient(135deg,#FF9A8A,#E5484D)] flex items-center justify-center shadow-[0_12px_26px_rgba(229,72,77,.28)] animate-popin">
@@ -35,7 +35,7 @@ export function RefundStatus({ orderId }: { orderId: string }) {
         </div>
         <h1 className="font-display font-extrabold text-2xl mt-4 mb-1.5 tracking-[-.4px]">Pesanan dibatalkan</h1>
         <p className="text-faint text-sm">
-          Pesanan {order.code} · {order.merchantName}
+          Pesanan {order.code} · {order.vendorName}
         </p>
       </div>
 

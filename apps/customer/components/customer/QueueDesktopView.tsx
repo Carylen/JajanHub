@@ -1,3 +1,4 @@
+import { formatQueueCode } from '@jajanhub/api';
 import { Icon, QrCode, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
 import { QueueSteps } from './QueueSteps';
@@ -35,8 +36,7 @@ export function QueueDesktopView(vm: QueueScreenView) {
               key={order.queueNumber}
               className="font-display font-extrabold text-[92px] leading-[.9] tracking-[-2px] animate-qnum"
             >
-              {order.queueLetter}
-              {order.queueNumber}
+              {formatQueueCode(order)}
             </div>
           </div>
           <div className="flex-1">
@@ -150,11 +150,11 @@ export function QueueDesktopView(vm: QueueScreenView) {
       </div>
 
       <CancelModal open={vm.cancelOpen} onClose={vm.closeCancel} onConfirm={vm.confirmCancel} pending={vm.cancelPending} />
-      <AddonModal vm={vm.addon} orderNo={`${order.queueLetter}${order.queueNumber}`} orderSeed={order.queueNumber * 13 + 7} />
+      <AddonModal vm={vm.addon} orderNo={formatQueueCode(order)} orderSeed={order.queueNumber * 13 + 7} />
       <RatingModal
         open={vm.pickup.ratingOpen}
         onClose={vm.pickup.finish}
-        merchantName={order.merchantName}
+        merchantName={order.vendorName}
         orderCode={order.code}
         onSubmit={vm.pickup.finish}
       />

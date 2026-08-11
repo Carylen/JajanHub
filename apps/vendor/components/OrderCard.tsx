@@ -1,5 +1,5 @@
 'use client';
-import type { VendorOrder, VendorOrderStatus } from '@jajanhub/api';
+import { formatQueueCode, minutesSince, type Order, type OrderStatus } from '@jajanhub/api';
 import { Icon, Money, cn, type IconName } from '@jajanhub/ui';
 
 export interface StatusConfig {
@@ -13,8 +13,8 @@ export interface StatusConfig {
 
 /** Exported so KanbanOrderCard (desktop) reuses the same text/icon/cooking
  * mapping, applying its own color classes for the reference's palette. */
-export const ORDER_STATUS_CONFIG: Record<Exclude<VendorOrderStatus, 'ditolak'>, StatusConfig> = {
-  baru: {
+export const ORDER_STATUS_CONFIG: Record<Exclude<OrderStatus, 'pending_payment' | 'picked_up' | 'cancelled' | 'rejected'>, StatusConfig> = {
+  waiting_confirmation: {
     chipText: 'Pesanan Baru',
     chipClass: 'bg-[#FFF0E0] text-[#B8791F]',
     cooking: false,
@@ -22,7 +22,7 @@ export const ORDER_STATUS_CONFIG: Record<Exclude<VendorOrderStatus, 'ditolak'>, 
     btnClass: 'bg-brand text-white shadow-[0_8px_18px_rgba(255,122,26,.32)]',
     btnIcon: 'play',
   },
-  masak: {
+  cooking: {
     chipText: 'Sedang Dimasak',
     chipClass: 'bg-[#FFEDD9] text-brand-deep',
     cooking: true,
@@ -30,7 +30,7 @@ export const ORDER_STATUS_CONFIG: Record<Exclude<VendorOrderStatus, 'ditolak'>, 
     btnClass: 'bg-mint text-white shadow-[0_8px_18px_rgba(22,199,132,.32)]',
     btnIcon: 'check',
   },
-  siap: {
+  ready: {
     chipText: 'Siap Diambil',
     chipClass: 'bg-mint-soft text-mint-deep',
     cooking: false,
@@ -41,25 +41,25 @@ export const ORDER_STATUS_CONFIG: Record<Exclude<VendorOrderStatus, 'ditolak'>, 
 };
 
 interface OrderCardProps {
-  order: VendorOrder;
+  order: Order;
   onAdvance: () => void;
   onReject: () => void;
 }
 
 export function OrderCard({ order, onAdvance, onReject }: OrderCardProps) {
-  const cfg = order.status === 'ditolak' ? null : ORDER_STATUS_CONFIG[order.status];
-  const rejected = cfg === null;
-  const num = order.no.split('-')[1];
-  const canReject = !rejected && (order.status === 'baru' || order.status === 'masak');
+  const cfg = order.status === 'rejected' ? null : ORDER_STATUS_CONFIG[order.status as keyof typeof ORDER_STATUS_CONFIG];
+  const rejected = cfg == null;
+  const num = formatQueueCode(order).replace(/^[A-Za-z]+/, '');
+  const canReject = !rejected && (order.status === 'waiting_confirmation' || order.status === 'cooking');
 
   return (
     <div
       className={cn(
         'rounded-[24px] p-[18px] shadow-[0_6px_18px_rgba(35,24,15,.06)] relative',
-        rejected ? 'bg-[#F7F1E9] border border-[#EADFD2] opacity-90' : order.priority ? 'bg-[#FBF8FF] border-2 border-[#C9B0FF]' : 'bg-white border border-[#F1E7DC]',
+        rejected ? 'bg-[#F7F1E9] border border-[#EADFD2] opacity-90' : order.isPriority ? 'bg-[#FBF8FF] border-2 border-[#C9B0FF]' : 'bg-white border border-[#F1E7DC]',
       )}
     >
-      {order.priority && !rejected && (
+      {order.isPriority && !rejected && (
         <span className="absolute -top-[9px] left-[18px] bg-prio text-white text-[11px] font-extrabold px-3 py-1 rounded-full shadow-[0_5px_12px_rgba(122,59,245,.4)] flex items-center gap-1.5">
           <Icon name="bolt" size={12} className="text-white" />
           PRIORITAS
@@ -75,8 +75,8 @@ export function OrderCard({ order, onAdvance, onReject }: OrderCardProps) {
         <div
           className="flex-none w-[58px] h-[58px] rounded-[17px] flex flex-col items-center justify-center text-white"
           style={{
-            background: rejected ? '#C6B7A8' : order.priority ? 'linear-gradient(135deg,#A879FF,#7A3BF5)' : 'linear-gradient(135deg,#FFB870,#FF7A1A)',
-            boxShadow: rejected ? 'none' : `0 5px 14px ${order.priority ? 'rgba(122,59,245,.35)' : 'rgba(255,122,26,.32)'}`,
+            background: rejected ? '#C6B7A8' : order.isPriority ? 'linear-gradient(135deg,#A879FF,#7A3BF5)' : 'linear-gradient(135deg,#FFB870,#FF7A1A)',
+            boxShadow: rejected ? 'none' : `0 5px 14px ${order.isPriority ? 'rgba(122,59,245,.35)' : 'rgba(255,122,26,.32)'}`,
           }}
         >
           <span className="font-display font-extrabold text-xl leading-none">{num}</span>
@@ -88,16 +88,16 @@ export function OrderCard({ order, onAdvance, onReject }: OrderCardProps) {
               {cfg?.cooking && <span className="w-[11px] h-[11px] rounded-full border-2 border-[rgba(228,86,10,.3)] border-t-brand-deep animate-spin" />}
               {rejected ? 'Ditolak' : cfg!.chipText}
             </div>
-            {!!order.addonCount && (
+            {order.addons.length > 0 && (
               <span className="inline-flex items-center gap-1 bg-mint-soft text-mint-deep font-extrabold text-[11px] px-2 py-1 rounded-full">
-                +{order.addonCount} tambahan
+                +{order.addons.length} tambahan
               </span>
             )}
           </div>
-          <div className="text-[13px] text-faint mt-1.5">Menunggu {order.waitMins} menit</div>
+          <div className="text-[13px] text-faint mt-1.5">Menunggu {minutesSince(order.createdAt)} menit</div>
         </div>
         <div className="text-right">
-          <Money amount={order.total} display className="text-[17px] text-brand-deep" />
+          <Money amount={order.totalRp} display className="text-[17px] text-brand-deep" />
         </div>
       </div>
 

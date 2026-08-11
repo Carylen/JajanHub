@@ -35,7 +35,7 @@ export function AddonSheet({
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-bold text-sm leading-[1.2] truncate">{item.name}</div>
-                  <Money amount={item.price} display className="text-brand-deep font-extrabold text-[15px] mt-0.5 block" />
+                  <Money amount={item.priceRp} display className="text-brand-deep font-extrabold text-[15px] mt-0.5 block" />
                 </div>
                 {qty > 0 ? (
                   <div className="flex-none flex items-center gap-2 bg-[#FFEEDF] rounded-xl p-1">
@@ -66,7 +66,7 @@ export function AddonSheet({
               <span className="flex items-center gap-1.5">Biaya tambahan</span>
               <span className="flex items-center gap-1.5">
                 <span className="line-through text-faint text-xs">
-                  <Money amount={PRICING.priorityFee} />
+                  <Money amount={PRICING.priorityFeeRp} />
                 </span>
                 <span className="font-bold text-mint-deep">
                   <Money amount={vm.fee} />
@@ -76,7 +76,7 @@ export function AddonSheet({
             <div className="flex justify-end -mt-0.5 mb-1">
               <span className="inline-flex items-center gap-1 bg-mint-soft text-[#0E7A56] font-bold text-[11px] px-[9px] py-1 rounded-full">
                 <Icon name="check" size={12} strokeWidth={2.6} className="text-mint" />
-                Hemat <Money amount={PRICING.priorityFee - vm.fee} /> — udah gabung antrian
+                Hemat <Money amount={PRICING.priorityFeeRp - vm.fee} /> — udah gabung antrian
               </span>
             </div>
             <div className="h-px bg-[#F4ECE2] my-1" />

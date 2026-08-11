@@ -9,6 +9,6 @@ import type { Order } from './types';
  * inline in a component.
  */
 export function canAddOrder(order: Pick<Order, 'status' | 'addons'>): boolean {
-  const addable = order.status === 'paid' || order.status === 'cooking';
+  const addable = order.status === 'waiting_confirmation' || order.status === 'cooking';
   return addable && order.addons.length < PRICING.maxAddonsPerOrder;
 }

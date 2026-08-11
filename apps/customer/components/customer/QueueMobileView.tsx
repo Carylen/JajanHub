@@ -1,3 +1,4 @@
+import { formatQueueCode } from '@jajanhub/api';
 import { Button, Card, Icon, Spinner, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
 import { QueueSteps } from './QueueSteps';
@@ -54,13 +55,13 @@ export function QueueMobileView(vm: QueueScreenView) {
           <span className="w-[9px] h-[9px] rounded-full bg-mint animate-pulse" />
           <span className="text-[13px] text-muted font-semibold">Pesanan {order.code} · live</span>
         </div>
-        <span className="text-xs text-faint">{order.merchantName.split(' ').slice(-1)}</span>
+        <span className="text-xs text-faint">{order.vendorName.split(' ').slice(-1)}</span>
       </div>
 
       <div className="text-center mt-5">
         <div className="text-[13px] text-faint font-semibold tracking-[.5px]">NOMOR ANTRIANMU</div>
         <div className="flex items-baseline justify-center gap-1 mt-0.5">
-          <span className="font-display font-extrabold text-[34px] text-brand leading-none">{order.queueLetter}</span>
+          <span className="font-display font-extrabold text-[34px] text-brand leading-none">{formatQueueCode(order).charAt(0)}</span>
           <span
             key={order.queueNumber}
             className="font-display font-extrabold text-[128px] text-ink leading-[.9] tracking-[-4px] animate-qnum"
@@ -173,15 +174,15 @@ export function QueueMobileView(vm: QueueScreenView) {
       <CancelSheet
         open={vm.cancelOpen}
         onClose={vm.closeCancel}
-        refundAmount={order.total}
+        refundAmount={order.totalRp}
         onConfirm={vm.confirmCancel}
         pending={vm.cancelPending}
       />
       <AddonSheet
         vm={vm.addon}
-        orderNo={`${order.queueLetter}${order.queueNumber}`}
+        orderNo={formatQueueCode(order)}
         orderSeed={order.queueNumber * 13 + 7}
-        merchantName={order.merchantName}
+        merchantName={order.vendorName}
       />
     </div>
   );

@@ -1,14 +1,15 @@
 import Link from 'next/link';
+import { formatQueueCode } from '@jajanhub/api';
 import { Card, Icon, Money, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
 import { TierCard } from '../TierCard';
 import type { HomeScreenView } from './useHomeScreen';
 
 const STATUS_LABEL: Record<string, { text: string; color: string }> = {
-  baru: { text: 'Pesanan Baru', color: 'text-[#B8791F]' },
-  masak: { text: 'Sedang Dimasak', color: 'text-brand-deep' },
-  siap: { text: 'Siap Diambil', color: 'text-mint-deep' },
-  ditolak: { text: 'Ditolak', color: 'text-brand-press' },
+  waiting_confirmation: { text: 'Pesanan Baru', color: 'text-[#B8791F]' },
+  cooking: { text: 'Sedang Dimasak', color: 'text-brand-deep' },
+  ready: { text: 'Siap Diambil', color: 'text-mint-deep' },
+  rejected: { text: 'Ditolak', color: 'text-brand-press' },
 };
 
 export function HomeMobileView(vm: HomeScreenView) {
@@ -162,14 +163,14 @@ export function HomeMobileView(vm: HomeScreenView) {
                 key={o.id}
                 className={cn(
                   'bg-white rounded-[18px] px-4 py-3.5 flex items-center gap-[13px] shadow-[0_4px_14px_rgba(35,24,15,.05)] border',
-                  o.priority ? 'border-2 border-[#C9B0FF]' : 'border-[#F1E7DC]',
+                  o.isPriority ? 'border-2 border-[#C9B0FF]' : 'border-[#F1E7DC]',
                 )}
               >
                 <div
                   className="flex-none w-[46px] h-[46px] rounded-[13px] flex items-center justify-center text-white font-display font-extrabold text-[15px]"
-                  style={{ background: o.priority ? 'linear-gradient(135deg,#A879FF,#7A3BF5)' : 'linear-gradient(135deg,#FFB870,#FF7A1A)' }}
+                  style={{ background: o.isPriority ? 'linear-gradient(135deg,#A879FF,#7A3BF5)' : 'linear-gradient(135deg,#FFB870,#FF7A1A)' }}
                 >
-                  {o.no.split('-')[1]}
+                  {formatQueueCode(o).replace(/^[A-Za-z]+/, '')}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-bold text-sm leading-[1.2] truncate">
@@ -177,7 +178,7 @@ export function HomeMobileView(vm: HomeScreenView) {
                   </div>
                   <div className={cn('text-xs font-semibold mt-0.5', label.color)}>{label.text}</div>
                 </div>
-                {o.priority && (
+                {o.isPriority && (
                   <span className="flex-none bg-prio text-white text-[10px] font-extrabold px-[9px] py-1 rounded-full">PRIORITAS</span>
                 )}
               </div>

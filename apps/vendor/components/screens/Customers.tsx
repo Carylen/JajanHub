@@ -39,22 +39,23 @@ export function Customers() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-[7px]">
                 <span className="font-bold text-[15px]">{c.name}</span>
-                {c.member && (
+                {c.isPriorityMember && (
                   <span className="bg-prio-soft text-prio text-[10px] font-extrabold px-2 py-[3px] rounded-full flex items-center gap-[3px]">
                     <Icon name="bolt" size={10} className="text-prio" />
                     PRIORITAS
                   </span>
                 )}
+                <span className="text-[11px] text-faint font-semibold">{c.customerPhoneMasked}</span>
               </div>
               <div className="text-xs text-faint mt-[3px] flex items-center gap-[5px]">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="#FFB020" aria-hidden="true">
                   <path d="M12 2l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6 21l1.2-6.6L2.4 9.7l6.6-.9z" />
                 </svg>
-                Suka {c.favorite}
+                Suka {c.favoriteItem}
               </div>
             </div>
             <div className="text-right">
-              <div className="font-display font-extrabold text-xl leading-none">{c.transactions}×</div>
+              <div className="font-display font-extrabold text-xl leading-none">{c.orderCount}×</div>
               <div className="text-[11px] text-faint">pesan</div>
             </div>
           </Card>

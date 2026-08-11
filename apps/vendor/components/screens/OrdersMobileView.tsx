@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { usePreorders, SLOT_ORDER, type Preorder } from '@jajanhub/api';
+import { usePreorders, SLOT_ORDER, formatQueueCode, type Preorder } from '@jajanhub/api';
 import { Icon, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
 import { OrderCard } from '../OrderCard';
@@ -129,7 +129,7 @@ export function OrdersMobileView(vm: OrdersScreenView) {
       <VerifyCodeSheet open={verifyOpen} onClose={closeVerify} />
       <RejectSheet
         open={vm.rejectId !== null}
-        orderNo={vm.rejectingOrder?.no ?? ''}
+        orderNo={vm.rejectingOrder ? formatQueueCode(vm.rejectingOrder) : ''}
         onClose={vm.closeReject}
         pending={vm.rejectPending}
         onConfirm={vm.confirmReject}

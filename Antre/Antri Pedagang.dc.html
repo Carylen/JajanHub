@@ -135,6 +135,10 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
   <div style="position:sticky;top:0;z-index:15;background:rgba(255,248,241,.94);backdrop-filter:blur(10px);padding:22px 22px 12px">
     <div style="display:flex;align-items:center;justify-content:space-between">
       <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;letter-spacing:-.5px">Pesanan Masuk</div><div style="font-size:13px;color:#9A8A7C;display:flex;align-items:center;gap:6px;margin-top:2px"><span style="width:8px;height:8px;border-radius:50%;background:#16C784;animation:pulse 1.8s infinite"></span>Live · {{ activeCount }} pesanan aktif</div></div>
+      <div style="flex:none;display:inline-flex;align-items:center;gap:9px;background:#F7F2FF;border:1px solid #E6DAF7;border-radius:13px;padding:8px 12px">
+        <span style="flex:none;width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#A879FF,#7A3BF5);display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 10-12h-6z" fill="#fff"/></svg></span>
+        <div style="line-height:1.1"><div style="font-size:12.5px;font-weight:800;color:#5B2BC4">{{ prioUsedStr }}/{{ prioQuotaStr }} slot prio</div><div style="display:flex;gap:4px;margin-top:4px"><sc-for list="{{ prioSlots }}" as="s" hint-placeholder-count="3"><span style="width:8px;height:8px;border-radius:50%;background:{{ s.bg }}"></span></sc-for></div></div>
+      </div>
     </div>
     <div style="display:flex;gap:6px;background:#F1E7DC;border-radius:15px;padding:5px;margin-top:14px">
       <button onClick="{{ setTabNow }}" style="flex:1;cursor:pointer;border:none;border-radius:11px;padding:12px;font-weight:800;font-size:15px;background:{{ nowTabBg }};color:{{ nowTabColor }};box-shadow:{{ nowTabShadow }};transition:all .18s" style-active="transform:scale(.97)">Sekarang</button>
@@ -156,6 +160,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
               {{ o.chipText }}
             </div>
             <div style="font-size:13px;color:#9A8A7C;margin-top:6px">Menunggu {{ o.waitStr }}</div>
+            <sc-if value="{{ o.showDeadline }}"><div style="display:inline-flex;align-items:center;gap:5px;margin-top:6px;background:{{ o.deadlineBg }};border-radius:999px;padding:3px 10px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="8" stroke="{{ o.deadlineColor }}" stroke-width="2"/><path d="M12 9v4l2.5 1.6" stroke="{{ o.deadlineColor }}" stroke-width="2" stroke-linecap="round"/><path d="M9 2.5h6" stroke="{{ o.deadlineColor }}" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:11px;font-weight:800;color:{{ o.deadlineColor }}">{{ o.deadlineStr }}</span></div></sc-if>
           </div>
           <div style="text-align:right"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:17px;color:#E4560A">{{ o.totalStr }}</div></div>
         </div>
@@ -591,6 +596,8 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
     <div style="background:#fff;border-radius:20px;padding:16px;box-shadow:0 5px 16px rgba(35,24,15,.05)">
       <div style="font-weight:700;font-size:14px">Sedikit lagi menuju Level <span style="color:{{ tierAccent }}">{{ nextTierName }}</span></div>
       <div style="font-size:12.5px;color:#9A8A7C;margin-top:3px;line-height:1.45">{{ progText }}</div>
+      <button onClick="{{ toggleScoreInfo }}" style="margin-top:11px;width:100%;text-align:left;cursor:pointer;background:#F3FAF6;border:1px solid #D7EFE3;border-radius:13px;padding:11px 13px;display:flex;align-items:center;gap:9px" style-active="transform:scale(.99)"><span style="flex:none;width:26px;height:26px;border-radius:8px;background:#DFF7EC;display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#0E9F6E" stroke-width="2"/><path d="M12 11v5" stroke="#0E9F6E" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.1" fill="#0E9F6E"/></svg></span><span style="flex:1;font-size:12.5px;font-weight:700;color:#0E7A56">Penolakan nggak nurunin skor — ketuk buat tahu</span><span style="flex:none;color:#9A8A7C;font-size:12px;transform:{{ scoreInfoChevron }};transition:transform .2s">▸</span></button>
+      <sc-if value="{{ scoreInfoOpen }}" hint-placeholder-val="{{ false }}"><div style="margin-top:8px;background:#F3FAF6;border:1px solid #D7EFE3;border-radius:13px;padding:12px 14px;font-size:12.5px;color:#3A6B57;line-height:1.5;animation:fadeIn .2s ease">Skor Level dihitung dari <b>pesanan yang nggak kamu respons</b> (dibiarin sampai auto-batal). Nolak pakai alasan kayak bahan habis atau lagi ramai <b>nggak</b> ikut dihitung — jadi mending tolak cepat daripada didiemin.</div></sc-if>
       <div style="height:10px;border-radius:999px;background:#F1E7DC;overflow:hidden;margin-top:12px"><div style="width:{{ progPctStr }};height:100%;border-radius:999px;background:{{ tierGrad }}"></div></div>
       <button onClick="{{ levelUp }}" style="margin-top:14px;width:100%;cursor:pointer;background:{{ tierGrad }};color:#fff;border:none;border-radius:15px;padding:14px;font-weight:800;font-size:14px;box-shadow:0 10px 24px rgba(35,24,15,.16)" style-active="transform:scale(.98)">Pratinjau naik ke {{ nextTierName }}</button>
       <div style="font-size:11px;color:#B8A99B;text-align:center;margin-top:8px">Simulasi buat lihat perayaan & benefit tier berikutnya</div>
@@ -723,6 +730,10 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
     <div style="margin-top:16px;background:#DFF7EC;border-radius:16px;padding:14px 15px;display:flex;align-items:center;gap:12px">
       <span style="flex:none;width:38px;height:38px;border-radius:11px;background:#16C784;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <div style="flex:1;font-size:13px;color:#0E7A56;font-weight:700;line-height:1.4">Dana pelanggan otomatis dikembalikan penuh. Kamu nggak kena potongan.</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:9px;margin-top:12px;padding:0 2px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9" stroke="#9A8A7C" stroke-width="2"/><path d="M12 11v5" stroke="#9A8A7C" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.1" fill="#9A8A7C"/></svg>
+      <div style="flex:1;font-size:12.5px;color:#9A8A7C;line-height:1.45">Nolak cepat dengan alasan jujur <b style="color:#6B5D50">nggak nurunin skor Level</b>-mu. Yang ngaruh cuma pesanan yang dibiarin tanpa respons.</div>
     </div>
     <button onClick="{{ confirmReject }}" disabled="{{ rejectDisabled }}" style="margin-top:18px;width:100%;cursor:{{ rejectCursor }};background:{{ rejectBtnBg }};color:#fff;border:none;border-radius:18px;padding:17px;font-weight:800;font-size:16px;box-shadow:{{ rejectBtnShadow }}" style-active="transform:scale(.98)">Tolak & Kembalikan Dana</button>
     <button onClick="{{ closeReject }}" style="margin-top:8px;width:100%;cursor:pointer;background:none;border:none;color:#9A8A7C;font-weight:700;font-size:14px;padding:12px 0" style-active="transform:scale(.98)">Batal, lanjut masak</button>
@@ -880,7 +891,7 @@ class Component extends DCLogic {
     quota:{ '11.00':6, '11.30':6, '12.00':6, '12.30':6, '13.00':6 },
     verifyOpen:false, code:'', vresult:null, vmatch:null, vtried:'', vshake:0,
     stockOpen:false,
-    rejectSheet:false, rejectId:null, rejectReason:'',
+    rejectSheet:false, rejectId:null, rejectReason:'', scoreInfoOpen:false,
     orders:[
       {id:5, no:'A-26', mins:1, items:[{n:'Ayam Penyet Original',q:1},{n:'Es Teh Jumbo',q:2}], total:36000, priority:true, status:'baru'},
       {id:1, no:'A-24', mins:2, items:[{n:'Ayam Penyet Sambal Ijo',q:1},{n:'Es Teh Jumbo',q:1}], total:30000, priority:true, status:'baru'},
@@ -925,12 +936,19 @@ class Component extends DCLogic {
         ? {chipText:'Siap Diambil', chipBg:'#DFF7EC', chipColor:'#0E9F6E', cooking:false, btnLabel:'Sudah Diambil', btnBg:'#23180F', btnColor:'#fff', btnShadow:'0 8px 18px rgba(35,24,15,.25)'}
         : {chipText:'Ditolak', chipBg:'#FBEEE9', chipColor:'#C4402F', cooking:false, btnLabel:'', btnBg:'#F7F1E9', btnColor:'#C4402F', btnShadow:'none'};
       const parts=o.no.split('-');
+      const LIMIT=6;
+      const confirmLeft = o.status==='baru' ? Math.max(0, LIMIT-o.mins) : null;
+      const near = confirmLeft!=null && confirmLeft<=3;
+      const warmth = confirmLeft==null?null:(confirmLeft<=1?'#E4560A':confirmLeft<=2?'#F5820A':confirmLeft<=3?'#F2A93B':'#B08979');
+      const warmBg = confirmLeft==null?null:(confirmLeft<=1?'#FCEBE1':confirmLeft<=2?'#FDEFE0':confirmLeft<=3?'#FBF4E6':'#F4ECE2');
       return {...o, ...cfg,
         noNum:parts[1], noPre:rejected?'DITOLAK':'ANTRIAN', totalStr:rp(o.total), waitStr:o.mins+' menit',
         noBg: rejected?'#C6B7A8' : o.priority?'linear-gradient(135deg,#A879FF,#7A3BF5)':'linear-gradient(135deg,#FFB870,#FF7A1A)',
         noShadow: rejected?'rgba(0,0,0,0)' : o.priority?'rgba(122,59,245,.35)':'rgba(255,122,26,.32)',
         cardBg: rejected?'#F7F1E9' : o.priority?'#FBF8FF':'#fff',
-        cardBorder: rejected?'1px solid #EADFD2' : o.priority?'2px solid #C9B0FF':'1px solid #F1E7DC',
+        cardBorder: rejected?'1px solid #EADFD2' : near?('2px solid '+warmth) : o.priority?'2px solid #C9B0FF':'1px solid #F1E7DC',
+        showDeadline: o.status==='baru', deadlineStr: confirmLeft!=null?('Auto-batal ~'+confirmLeft+' mnt'):'',
+        deadlineColor: warmth, deadlineBg: warmBg,
         cardOpacity: rejected?'.9':'1',
         isBaru:o.status==='baru', isMasak:o.status==='masak', isSiap:o.status==='siap',
         rejected, actionDisplay: rejected?'none':'flex',
@@ -1006,6 +1024,9 @@ class Component extends DCLogic {
       dot: sel?'#E4560A':'#D6C9BA', dotFill: sel?'#E4560A':'transparent' }; });
 
     const activeCount = S.orders.filter(o=>o.status!=='ditolak').length;
+    const PRIORITY_QUOTA=3;
+    const prioUsed=Math.min(PRIORITY_QUOTA, S.orders.filter(o=>o.priority && o.status!=='ditolak').length);
+    const prioSlots=Array.from({length:PRIORITY_QUOTA},(_,i)=>({bg:i<prioUsed?'#7A3BF5':'#E0D0FA'}));
     const mkTab = k => ({ onClick:()=>this.go(k), color:(S.tab===k?'#FF7A1A':'#B8A99B') });
 
     const lvl = S.level;
@@ -1060,6 +1081,9 @@ class Component extends DCLogic {
       toggleAutoPrint:()=>this.setState(st=>({autoPrint:!st.autoPrint})),
       toggleAutoPayout:()=>this.setState(st=>({autoPayout:!st.autoPayout})),
       orders, homeOrders, noOrders:orders.length===0, activeCount,
+      prioUsedStr:String(prioUsed), prioQuotaStr:String(PRIORITY_QUOTA), prioSlots,
+      scoreInfoOpen:S.scoreInfoOpen, scoreInfoChevron:S.scoreInfoOpen?'rotate(90deg)':'none',
+      toggleScoreInfo:()=>this.setState(st=>({scoreInfoOpen:!st.scoreInfoOpen})),
       menu, menuCountStr:String(menuCount), loyal:LOYAL,
       hasHabis: habisCount>0, habisCountStr:String(habisCount), habisSubStr: habisCount>0?(habisCount+' menu ditandai habis'):'Semua menu tersedia',
       orderTab:S.orderTab, tabNow:S.orderTab==='now', tabLater:S.orderTab==='later',

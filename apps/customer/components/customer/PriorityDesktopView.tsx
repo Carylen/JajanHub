@@ -76,7 +76,7 @@ export function PriorityDesktopView() {
                 <div className={cn('font-extrabold text-sm', active ? 'text-[#5B2BC4]' : 'text-faint')}>{p.name}</div>
                 <div className="flex items-end gap-1 mt-3">
                   <span className={cn('font-display font-extrabold text-[40px] leading-none', active ? 'text-[#5B2BC4]' : 'text-ink')}>
-                    <Money amount={p.price} />
+                    <Money amount={p.priceRp} />
                   </span>
                   <span className="text-sm text-faint font-semibold mb-1.5">{p.per}</span>
                 </div>
@@ -118,7 +118,7 @@ export function PriorityDesktopView() {
             onClick={() => router.back()}
             className="flex-none bg-ink text-white font-extrabold text-sm px-6 py-3.5 rounded-2xl transition-transform active:scale-[.97]"
           >
-            Langganan · <Money amount={selected?.price} />
+            Langganan · <Money amount={selected?.priceRp} />
           </button>
         </div>
       </div>

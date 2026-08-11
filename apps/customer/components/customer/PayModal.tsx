@@ -14,8 +14,8 @@ export function PayModal(vm: PaymentScreenView) {
         <div className="w-[210px] h-[210px] bg-white rounded-[20px] mx-auto my-5 p-4 shadow-[0_8px_20px_rgba(35,24,15,.08)]">
           <QrCode branded seed={order.queueNumber * 7 + 3} />
         </div>
-        <Money amount={order.total} display className="text-[30px]" />
-        <div className="text-[13px] text-faint mt-0.5">{order.merchantName}</div>
+        <Money amount={order.totalRp} display className="text-[30px]" />
+        <div className="text-[13px] text-faint mt-0.5">{order.vendorName}</div>
         <div className="text-xs text-faint mt-2 tabular-nums">Bayar sebelum {formatCountdown(vm.payLeft)}</div>
         <button
           type="button"

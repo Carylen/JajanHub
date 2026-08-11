@@ -29,7 +29,7 @@ export function usePaymentScreen(orderId: string): PaymentScreenView {
   const markPaid = useMarkPaid();
 
   useEffect(() => {
-    if (order && order.status !== 'awaiting_payment') {
+    if (order && order.status !== 'pending_payment') {
       router.replace(`/order/${orderId}`);
     }
   }, [order, orderId, router]);

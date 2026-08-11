@@ -1,5 +1,5 @@
 'use client';
-import { useVendorSummary, getVendorTierProgress, type VendorTierProgress } from '@jajanhub/api';
+import { useVendorTier as useVendorTierStatus, getVendorTierProgress, type VendorTierProgress } from '@jajanhub/api';
 
 export interface VendorTierView {
   progress: VendorTierProgress | undefined;
@@ -11,14 +11,16 @@ export interface VendorTierView {
 /**
  * Read-only tier progress, shared by every screen that displays it (Beranda
  * card, Level Pedagang detail, Settlement banner, Analytics lock) — one
- * `useVendorSummary()` query + one call to the pure `getVendorTierProgress`,
- * not recomputed per screen. Mutating the tier (demo preview/reset) lives in
- * `useTierLevelUpFlow`, used only by the Level Pedagang page.
+ * `GET /vendors/:id/tier` query (via the API package's `useVendorTier` hook,
+ * aliased here to avoid a name clash with this file's own export) + one call
+ * to the pure `getVendorTierProgress`, not recomputed per screen. Mutating
+ * the tier (demo preview/reset) lives in `useTierLevelUpFlow`, used only by
+ * the Level Pedagang page.
  */
 export function useVendorTier(): VendorTierView {
-  const { data: summary, isLoading, isError, refetch } = useVendorSummary();
+  const { data: status, isLoading, isError, refetch } = useVendorTierStatus();
   return {
-    progress: summary ? getVendorTierProgress(summary) : undefined,
+    progress: status ? getVendorTierProgress(status) : undefined,
     isLoading,
     isError,
     refetch,

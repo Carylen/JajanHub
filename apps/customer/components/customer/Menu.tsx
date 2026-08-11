@@ -1,7 +1,7 @@
 'use client';
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Warung } from '@jajanhub/api';
+import type { Vendor } from '@jajanhub/api';
 import { Chip, Icon, Money } from '@jajanhub/ui';
 import { ScreenHeader } from '../ScreenHeader';
 import { useCartStore, cartCount } from '../../lib/cart-store';
@@ -17,7 +17,7 @@ const FILTERS: Array<{ value: Filter; label: string }> = [
   { value: 'drink', label: 'Minuman' },
 ];
 
-export function Menu({ warung, onBack }: { warung: Warung; onBack: () => void }) {
+export function Menu({ warung, onBack }: { warung: Vendor; onBack: () => void }) {
   const router = useRouter();
   const [filter, setFilter] = useState<Filter>('all');
   const items = useCartStore((s) => s.items);
@@ -31,7 +31,7 @@ export function Menu({ warung, onBack }: { warung: Warung; onBack: () => void })
   );
 
   const visible = warung.menu.filter((m) =>
-    filter === 'all' ? true : filter === 'best' ? m.best : m.cat === filter,
+    filter === 'all' ? true : filter === 'best' ? m.isBestSeller : m.cat === filter,
   );
 
   return (

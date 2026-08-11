@@ -1,8 +1,11 @@
 'use client';
-import { usePayouts, useTxns } from '@jajanhub/api';
+import { usePayouts, useTxns, type Payout } from '@jajanhub/api';
 import { Icon, Money, cn } from '@jajanhub/ui';
 import { VendorTopBar } from '../VendorTopBar';
 import { LoadingState, ErrorState } from '../StateViews';
+
+/** Contract's `Payout.status` is the English enum ('processing'|'completed'); this maps it to the Indonesian badge text the design uses. */
+const PAYOUT_STATUS_LABEL: Record<Payout['status'], string> = { processing: 'Diproses', completed: 'Cair' };
 
 /** Desktop Pencairan — 2-col grid matching Antre/Antri Pedagang Desktop.dc.html. */
 export function SettlementDesktopView() {
@@ -41,7 +44,7 @@ export function SettlementDesktopView() {
                 <div className="font-display font-extrabold text-[17px] mb-3.5">Riwayat pencairan</div>
                 <div className="flex flex-col">
                   {payouts.data.map((p, i) => {
-                    const settled = p.status === 'Cair';
+                    const settled = p.status === 'completed';
                     return (
                       <div key={p.id} className={cn('flex items-center gap-[13px] py-3.5', i < payouts.data.length - 1 && 'border-b border-[#F4ECE2]')}>
                         <span className={cn('flex-none w-10 h-10 rounded-xl flex items-center justify-center', settled ? 'bg-mint-soft' : 'bg-[#FFF0E0]')}>
@@ -52,8 +55,8 @@ export function SettlementDesktopView() {
                           <div className="text-xs text-faint">{p.sub}</div>
                         </div>
                         <div className="text-right">
-                          <Money amount={p.amount} display className="text-[15px] block" />
-                          <span className={cn('text-xs font-bold', settled ? 'text-mint-deep' : 'text-[#B8791F]')}>{p.status}</span>
+                          <Money amount={p.amountRp} display className="text-[15px] block" />
+                          <span className={cn('text-xs font-bold', settled ? 'text-mint-deep' : 'text-[#B8791F]')}>{PAYOUT_STATUS_LABEL[p.status]}</span>
                         </div>
                       </div>
                     );

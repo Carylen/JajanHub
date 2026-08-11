@@ -17,7 +17,7 @@ export function MenuGridCard({ item, index, qty, onAdd, onRemove }: MenuGridCard
   return (
     <div className="bg-white rounded-[20px] overflow-hidden shadow-card flex flex-col">
       <div className="h-[120px] relative" style={{ background: itemGradient(item, index) }}>
-        {item.best && (
+        {item.isBestSeller && (
           <span className="absolute top-3 left-3 bg-[rgba(35,24,15,.82)] text-white text-[11px] font-extrabold px-2.5 py-1.5 rounded-full">
             ★ Terlaris
           </span>
@@ -27,7 +27,7 @@ export function MenuGridCard({ item, index, qty, onAdd, onRemove }: MenuGridCard
         <div className="font-display font-extrabold text-[16.5px] leading-[1.2]">{item.name}</div>
         <div className="text-[13px] text-faint mt-1.5 leading-[1.4] flex-1">{item.desc}</div>
         <div className="flex items-center justify-between mt-3.5">
-          <Money amount={item.price} display className="text-lg text-brand-deep" />
+          <Money amount={item.priceRp} display className="text-lg text-brand-deep" />
           {qty === 0 ? (
             <button
               type="button"

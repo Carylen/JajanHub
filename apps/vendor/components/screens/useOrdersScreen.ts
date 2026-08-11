@@ -1,21 +1,28 @@
 'use client';
 import { useMemo, useState } from 'react';
-import { useVendorOrders, useAdvanceVendorOrder, useRejectVendorOrder, type VendorOrder } from '@jajanhub/api';
+import {
+  useVendorOrders,
+  useAdvanceVendorOrder,
+  useRejectVendorOrder,
+  minutesSince,
+  type Order,
+  type RejectReasonId,
+} from '@jajanhub/api';
 
 export interface OrdersScreenView {
-  orders: VendorOrder[] | undefined;
+  orders: Order[] | undefined;
   isLoading: boolean;
   isError: boolean;
   refetch: () => void;
   /** Rejected-last, priority-first, longest-waiting-first. */
-  sorted: VendorOrder[];
+  sorted: Order[];
   activeCount: number;
   advance: (id: string) => void;
   rejectId: string | null;
   openReject: (id: string) => void;
   closeReject: () => void;
-  rejectingOrder: VendorOrder | undefined;
-  confirmReject: (reason: string) => void;
+  rejectingOrder: Order | undefined;
+  confirmReject: (reason: RejectReasonId) => void;
   rejectPending: boolean;
 }
 
@@ -35,10 +42,13 @@ export function useOrdersScreen(): OrdersScreenView {
   const sorted = useMemo(() => {
     const list = [...(orders ?? [])];
     return list.sort((a, b) => {
-      const ar = a.status === 'ditolak' ? 1 : 0;
-      const br = b.status === 'ditolak' ? 1 : 0;
+      const ar = a.status === 'rejected' ? 1 : 0;
+      const br = b.status === 'rejected' ? 1 : 0;
       if (ar !== br) return ar - br;
-      return Number(b.priority) - Number(a.priority) || b.waitMins - a.waitMins;
+      return (
+        Number(b.isPriority) - Number(a.isPriority) ||
+        minutesSince(b.createdAt) - minutesSince(a.createdAt)
+      );
     });
   }, [orders]);
 
@@ -48,7 +58,7 @@ export function useOrdersScreen(): OrdersScreenView {
     isError,
     refetch,
     sorted,
-    activeCount: (orders ?? []).filter((o) => o.status !== 'ditolak').length,
+    activeCount: (orders ?? []).filter((o) => o.status !== 'rejected').length,
     advance: (id) => advanceMut.mutate(id),
     rejectId,
     openReject: (id) => setRejectId(id),

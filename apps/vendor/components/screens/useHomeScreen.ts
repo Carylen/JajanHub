@@ -1,5 +1,5 @@
 'use client';
-import { useVendorSummary, useVendorOrders, useVendorMenu, type VendorOrder, type VendorMenuItem, type VendorSummary } from '@jajanhub/api';
+import { useVendorSummary, useVendorOrders, useVendorMenu, type Order, type VendorMenuItem, type VendorSummary } from '@jajanhub/api';
 import { useVendorUi } from '../../lib/ui-store';
 import { useVendorTier, type VendorTierView } from './useVendorTier';
 
@@ -8,7 +8,7 @@ export interface HomeScreenView {
   isLoading: boolean;
   isError: boolean;
   refetch: () => void;
-  activeOrders: VendorOrder[];
+  activeOrders: Order[];
   habisCount: number;
   menu: VendorMenuItem[];
   warungOpen: boolean;
@@ -31,7 +31,7 @@ export function useHomeScreen(): HomeScreenView {
     isLoading: summary.isLoading,
     isError: summary.isError,
     refetch: summary.refetch,
-    activeOrders: orders.filter((o) => o.status !== 'ditolak'),
+    activeOrders: orders.filter((o) => o.status !== 'rejected'),
     habisCount: menu.filter((m) => !m.inStock).length,
     menu,
     warungOpen,

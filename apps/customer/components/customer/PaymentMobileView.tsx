@@ -16,7 +16,7 @@ export function PaymentMobileView(vm: PaymentScreenView) {
 
       <div className="text-center px-5 pt-3.5">
         <div className="text-faint text-[13px]">Total tagihan</div>
-        <Money amount={order.total} display className="text-[34px] text-ink tracking-[-.5px]" />
+        <Money amount={order.totalRp} display className="text-[34px] text-ink tracking-[-.5px]" />
       </div>
 
       {/* QR card */}
@@ -29,7 +29,7 @@ export function PaymentMobileView(vm: PaymentScreenView) {
           <QrCode branded seed={order.queueNumber * 7 + 3} />
         </div>
         <div className="text-center mt-3.5 text-xs text-faint leading-[1.4]">
-          {order.merchantName}
+          {order.vendorName}
           <br />
           NMID : ID10243398201
         </div>

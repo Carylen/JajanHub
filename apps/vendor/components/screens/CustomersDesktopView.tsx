@@ -32,17 +32,20 @@ export function CustomersDesktopView() {
                   >
                     {c.initials}
                   </div>
-                  <div className="font-bold text-[15px] truncate">{c.name}</div>
+                  <div className="min-w-0">
+                    <div className="font-bold text-[15px] truncate">{c.name}</div>
+                    <div className="text-xs text-faint truncate">{c.customerPhoneMasked}</div>
+                  </div>
                 </div>
-                <div className="text-sm text-[#3A2A1C] truncate">{c.favorite}</div>
-                <div className="text-right font-display font-extrabold text-lg">{c.transactions}</div>
+                <div className="text-sm text-[#3A2A1C] truncate">{c.favoriteItem}</div>
+                <div className="text-right font-display font-extrabold text-lg">{c.orderCount}</div>
                 <div className="text-right">
                   <span
                     className={`inline-block text-xs font-bold px-[11px] py-[5px] rounded-full ${
-                      c.member ? 'bg-prio-soft text-prio' : 'bg-[#F1E7DC] text-faint'
+                      c.isPriorityMember ? 'bg-prio-soft text-prio' : 'bg-[#F1E7DC] text-faint'
                     }`}
                   >
-                    {c.member ? 'Member' : 'Reguler'}
+                    {c.isPriorityMember ? 'Member' : 'Reguler'}
                   </span>
                 </div>
               </div>

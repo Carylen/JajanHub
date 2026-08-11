@@ -1,3 +1,4 @@
+import { formatQueueCode } from '@jajanhub/api';
 import { Money } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
 import { VendorTopBar } from '../VendorTopBar';
@@ -6,9 +7,9 @@ import { RejectModal } from '../RejectModal';
 import type { OrdersScreenView } from './useOrdersScreen';
 
 const COLUMNS = [
-  { key: 'baru' as const, title: 'Pesanan Baru', dot: '#FF7A1A', titleColor: '#E4560A', badgeBg: '#FFE4CC', badgeColor: '#E4560A', bg: '#FBEFE1' },
-  { key: 'masak' as const, title: 'Sedang Dimasak', dot: '#F5A623', titleColor: '#B8791F', badgeBg: '#FFEFD4', badgeColor: '#B8791F', bg: '#FBF3E4' },
-  { key: 'siap' as const, title: 'Siap Diambil', dot: '#16C784', titleColor: '#0E9F6E', badgeBg: '#D7F2E5', badgeColor: '#0E9F6E', bg: '#EAF6EF' },
+  { key: 'waiting_confirmation' as const, title: 'Pesanan Baru', dot: '#FF7A1A', titleColor: '#E4560A', badgeBg: '#FFE4CC', badgeColor: '#E4560A', bg: '#FBEFE1' },
+  { key: 'cooking' as const, title: 'Sedang Dimasak', dot: '#F5A623', titleColor: '#B8791F', badgeBg: '#FFEFD4', badgeColor: '#B8791F', bg: '#FBF3E4' },
+  { key: 'ready' as const, title: 'Siap Diambil', dot: '#16C784', titleColor: '#0E9F6E', badgeBg: '#D7F2E5', badgeColor: '#0E9F6E', bg: '#EAF6EF' },
 ];
 
 /**
@@ -36,7 +37,7 @@ export function OrdersDesktopView(vm: OrdersScreenView) {
     );
   }
 
-  const rejectedList = vm.sorted.filter((o) => o.status === 'ditolak');
+  const rejectedList = vm.sorted.filter((o) => o.status === 'rejected');
 
   return (
     <>
@@ -89,13 +90,13 @@ export function OrdersDesktopView(vm: OrdersScreenView) {
                 <div key={o.id} className="flex items-center gap-[13px] bg-[#F7F1E9] rounded-[14px] px-[15px] py-3.5">
                   <div className="flex-none w-10 h-10 rounded-xl bg-[#C6B7A8] flex flex-col items-center justify-center text-white leading-none">
                     <span className="text-[7px] font-extrabold">DITOLAK</span>
-                    <span className="font-display font-extrabold text-sm">{o.no.split('-')[1]}</span>
+                    <span className="font-display font-extrabold text-sm">{formatQueueCode(o).replace(/^[A-Za-z]+/, '')}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-sm">{o.lines[0]?.name ?? '—'}</div>
                     <div className="text-xs text-brand-press font-semibold mt-0.5">{o.rejectReason ? `Alasan: ${o.rejectReason}` : ''}</div>
                   </div>
-                  <Money amount={o.total} display className="text-sm text-faint" />
+                  <Money amount={o.totalRp} display className="text-sm text-faint" />
                 </div>
               ))}
             </div>

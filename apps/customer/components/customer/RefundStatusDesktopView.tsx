@@ -30,13 +30,13 @@ export function RefundStatusDesktopView({ orderId }: { orderId: string }) {
   if (isLoading) return <LoadingState label="Memuat status refund…" />;
   if (isError || !order) return <ErrorState onRetry={() => refetch()} />;
 
-  const amount = refund?.amount ?? order.total;
+  const amount = refund?.amountRp ?? order.totalRp;
   const stage = refund?.stage ?? 'cancelled';
   const idx = stageIndex(stage);
 
   const orderAgain = () => {
     clearCart();
-    router.push(`/m/${order.merchantId}`);
+    router.push(`/m/${order.vendorId}`);
   };
 
   return (

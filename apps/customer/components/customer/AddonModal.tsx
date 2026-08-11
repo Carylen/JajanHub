@@ -34,7 +34,7 @@ export function AddonModal({ vm, orderNo, orderSeed }: { vm: AddonFlowView; orde
                   <div className="flex-none w-12 h-12 rounded-xl" style={{ background: itemGradient(item, i) }} />
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-[13.5px] leading-[1.2] truncate">{item.name}</div>
-                    <Money amount={item.price} className="text-brand-deep font-extrabold text-[13px] mt-[3px] block" />
+                    <Money amount={item.priceRp} className="text-brand-deep font-extrabold text-[13px] mt-[3px] block" />
                   </div>
                   {qty > 0 ? (
                     <div className="flex-none flex items-center gap-[7px]">
@@ -107,7 +107,7 @@ export function AddonModal({ vm, orderNo, orderSeed }: { vm: AddonFlowView; orde
                         <div className="font-bold text-[13.5px] leading-[1.2]">{item.name}</div>
                         <div className="text-xs text-faint mt-px">×{qty}</div>
                       </div>
-                      <Money amount={item.price * qty} className="font-extrabold text-[13.5px]" />
+                      <Money amount={item.priceRp * qty} className="font-extrabold text-[13.5px]" />
                     </div>
                   ))}
               </div>
@@ -123,7 +123,7 @@ export function AddonModal({ vm, orderNo, orderSeed }: { vm: AddonFlowView; orde
                 </span>
                 <span className="flex items-center gap-[7px]">
                   <span className="line-through text-faint font-semibold">
-                    <Money amount={PRICING.priorityFee} />
+                    <Money amount={PRICING.priorityFeeRp} />
                   </span>
                   <Money amount={vm.fee} className="font-extrabold text-mint-deep" />
                 </span>

@@ -48,14 +48,14 @@ export function MerchantDesktopView({ warung, isLoading, isError, refetch }: Mer
   const filtered = warung.menu.filter((m) => {
     if (query) return (m.name + ' ' + m.desc).toLowerCase().includes(query.toLowerCase());
     if (cat === 'all') return true;
-    if (cat === 'best') return !!m.best;
+    if (cat === 'best') return !!m.isBestSeller;
     return m.cat === cat;
   });
   const catLabel = query ? `Hasil "${query}"` : (CATS.find((c) => c.value === cat)?.label ?? 'Semua menu');
 
   const checkout = () => {
     createOrder.mutate(
-      { merchantId: warung.id, cart: items, priority, pickupMode: 'now' },
+      { vendorId: warung.id, cart: items, isPriority: priority, pickupMode: 'now' },
       { onSuccess: (order) => router.push(`/order/${order.id}/pay`) },
     );
   };
@@ -86,7 +86,7 @@ export function MerchantDesktopView({ warung, isLoading, isError, refetch }: Mer
           </div>
           <div className="flex-none flex items-center gap-[7px] bg-[#EAF6EF] text-mint-deep font-bold text-[13.5px] px-[15px] py-3 rounded-[14px]">
             <span className="w-2 h-2 rounded-full bg-mint animate-pulse" />
-            Antrean sekarang · {warung.peopleAhead} orang
+            Antrean sekarang · {warung.queueEstimate.peopleAhead} orang
           </div>
         </div>
 
@@ -171,7 +171,7 @@ export function MerchantDesktopView({ warung, isLoading, isError, refetch }: Mer
                       />
                       <div className="flex-1 min-w-0">
                         <div className="font-bold text-sm leading-[1.2]">{l.item.name}</div>
-                        <Money amount={l.item.price * l.qty} className="text-brand-deep font-bold text-[13px] mt-[3px] block" />
+                        <Money amount={l.item.priceRp * l.qty} className="text-brand-deep font-bold text-[13px] mt-[3px] block" />
                       </div>
                       <div className="flex-none flex items-center gap-[9px]">
                         <button
@@ -212,7 +212,7 @@ export function MerchantDesktopView({ warung, isLoading, isError, refetch }: Mer
                 <div className="flex-1">
                   <div className={cn('font-extrabold text-sm', priority ? 'text-[#5B2BC4]' : 'text-ink')}>Prioritas antrean</div>
                   <div className="text-xs text-faint mt-px">
-                    Naik ke depan · <Money amount={PRICING.priorityFee} />
+                    Naik ke depan · <Money amount={PRICING.priorityFeeRp} />
                   </div>
                 </div>
                 <span className={cn('flex-none w-[46px] h-[26px] rounded-full relative', priority ? 'bg-prio' : 'bg-[#DDD2C4]')}>

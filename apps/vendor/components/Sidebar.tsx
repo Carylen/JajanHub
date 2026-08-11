@@ -26,7 +26,7 @@ export function Sidebar() {
   const { progress: tierProgress } = useVendorTier();
   const warungOpen = useVendorUi((s) => s.warungOpen);
   const toggleWarungOpen = useVendorUi((s) => s.toggleWarungOpen);
-  const activeCount = (orders ?? []).filter((o) => o.status !== 'ditolak').length;
+  const activeCount = (orders ?? []).filter((o) => o.status !== 'rejected').length;
 
   return (
     <aside className="hidden lg:flex flex-none w-[264px] min-h-screen bg-ink text-[#F4ECE2] flex-col sticky top-0 h-screen px-[18px] py-6">

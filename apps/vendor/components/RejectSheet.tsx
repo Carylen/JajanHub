@@ -1,21 +1,21 @@
 'use client';
 import { useState } from 'react';
-import { REJECT_REASONS } from '@jajanhub/api';
+import { REJECT_REASONS, type RejectReasonId } from '@jajanhub/api';
 import { BottomSheet, Button, Icon, cn, type IconName } from '@jajanhub/ui';
 
-const REASON_ICON: Record<string, IconName> = { habis: 'box', ramai: 'users', tutup: 'store' };
+const REASON_ICON: Record<RejectReasonId, IconName> = { bahan_habis: 'box', terlalu_ramai: 'users', tutup: 'store' };
 
 interface RejectSheetProps {
   open: boolean;
   orderNo: string;
   onClose: () => void;
-  onConfirm: (reason: string) => void;
+  onConfirm: (reason: RejectReasonId) => void;
   pending?: boolean;
 }
 
 /** Reject-order overlay with reason picker + refund reassurance (BRIEF §5). */
 export function RejectSheet({ open, orderNo, onClose, onConfirm, pending }: RejectSheetProps) {
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<RejectReasonId | ''>('');
 
   return (
     <BottomSheet open={open} onClose={onClose} label="Tolak pesanan">
@@ -24,12 +24,12 @@ export function RejectSheet({ open, orderNo, onClose, onConfirm, pending }: Reje
 
       <div className="flex flex-col gap-[9px] mt-4">
         {REJECT_REASONS.map((r) => {
-          const active = reason === r.label;
+          const active = reason === r.id;
           return (
             <button
               key={r.id}
               type="button"
-              onClick={() => setReason(r.label)}
+              onClick={() => setReason(r.id)}
               className={cn(
                 'w-full text-left rounded-[16px] px-4 py-[15px] flex items-center gap-[13px] border-[1.5px] transition-transform active:scale-[.98]',
                 active ? 'border-brand-deep bg-[#FFF6EE]' : 'border-line bg-white',
@@ -56,7 +56,7 @@ export function RejectSheet({ open, orderNo, onClose, onConfirm, pending }: Reje
         </div>
       </div>
 
-      <Button variant="danger" fullWidth className="mt-[18px]" disabled={!reason || pending} onClick={() => onConfirm(reason)}>
+      <Button variant="danger" fullWidth className="mt-[18px]" disabled={!reason || pending} onClick={() => reason && onConfirm(reason)}>
         {pending ? 'Memproses…' : 'Tolak & Kembalikan Dana'}
       </Button>
       <Button variant="ghost" fullWidth className="mt-2 text-faint" onClick={onClose}>

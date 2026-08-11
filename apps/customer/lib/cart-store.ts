@@ -4,15 +4,15 @@ import { persist } from 'zustand/middleware';
 export type PickupMode = 'now' | 'later';
 
 interface CartState {
-  /** Merchant the cart belongs to; switching merchants clears it. */
-  merchantId: string | null;
+  /** Vendor the cart belongs to; switching vendors clears it. */
+  vendorId: string | null;
   /** menu item id -> quantity */
   items: Record<string, number>;
   priority: boolean;
   pickupMode: PickupMode;
   pickupSlot: string | null;
 
-  ensureMerchant: (merchantId: string) => void;
+  ensureVendor: (vendorId: string) => void;
   add: (itemId: string) => void;
   remove: (itemId: string) => void;
   setPriority: (priority: boolean) => void;
@@ -25,15 +25,15 @@ interface CartState {
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
-      merchantId: null,
+      vendorId: null,
       items: {},
       priority: false,
       pickupMode: 'now',
       pickupSlot: null,
 
-      ensureMerchant: (merchantId) => {
-        if (get().merchantId !== merchantId) {
-          set({ merchantId, items: {}, priority: false, pickupMode: 'now', pickupSlot: null });
+      ensureVendor: (vendorId) => {
+        if (get().vendorId !== vendorId) {
+          set({ vendorId, items: {}, priority: false, pickupMode: 'now', pickupSlot: null });
         }
       },
       add: (itemId) =>
@@ -52,7 +52,8 @@ export const useCartStore = create<CartState>()(
       setPickupSlot: (pickupSlot) => set({ pickupSlot }),
       clear: () => set({ items: {}, priority: false, pickupMode: 'now', pickupSlot: null }),
     }),
-    { name: 'jajanhub:cart' },
+    // v2: bumped when the persisted `merchantId` field was renamed to `vendorId`.
+    { name: 'jajanhub:cart:v2' },
   ),
 );
 

@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useWarung, useStalls, DEFAULT_MERCHANT_ID, type Warung } from '@jajanhub/api';
+import { useWarung, useStalls, DEFAULT_VENDOR_ID, type Vendor } from '@jajanhub/api';
 import { Icon, cn, type IconName } from '@jajanhub/ui';
 import { BrandMark } from './BrandMark';
 
@@ -24,12 +24,12 @@ import { BrandMark } from './BrandMark';
  */
 export function CustomerSidebar() {
   const pathname = usePathname();
-  const merchantId = pathname.match(/^\/m\/([^/]+)/)?.[1];
-  const { data: warung } = useWarung(merchantId ?? '');
+  const vendorId = pathname.match(/^\/m\/([^/]+)/)?.[1];
+  const { data: warung } = useWarung(vendorId ?? '');
   const { data: stalls } = useStalls();
 
   const NAV: Array<{ href: string; icon: IconName; label: string; badge?: string; match: (p: string) => boolean }> = [
-    { href: `/m/${merchantId ?? DEFAULT_MERCHANT_ID}`, icon: 'store', label: 'Pesan di sini', match: (p) => p.startsWith('/m/') },
+    { href: `/m/${vendorId ?? DEFAULT_VENDOR_ID}`, icon: 'store', label: 'Pesan di sini', match: (p) => p.startsWith('/m/') },
     { href: '/near', icon: 'map-pin', label: 'Sekitar Sini', badge: stalls ? String(stalls.length) : undefined, match: (p) => p.startsWith('/near') },
     { href: '/subscribe', icon: 'bolt', label: 'Langganan Prioritas', match: (p) => p.startsWith('/subscribe') },
     { href: '/profile', icon: 'users', label: 'Profil', match: (p) => p.startsWith('/profile') },
@@ -44,7 +44,7 @@ export function CustomerSidebar() {
         <span className="font-display font-extrabold text-2xl tracking-[-.6px]">JajanHub</span>
       </Link>
 
-      {merchantId && warung && <MerchantCard warung={warung} />}
+      {vendorId && warung && <MerchantCard warung={warung} />}
 
       <nav className="flex flex-col gap-[3px] mt-5">
         <div className="text-[11px] font-extrabold text-faint tracking-[.5px] px-3 pb-2">NAVIGASI</div>
@@ -87,7 +87,7 @@ export function CustomerSidebar() {
   );
 }
 
-function MerchantCard({ warung }: { warung: Warung }) {
+function MerchantCard({ warung }: { warung: Vendor }) {
   return (
     <div className="bg-[linear-gradient(155deg,#FFB870,#FF7A1A_60%,#E4560A)] rounded-[20px] p-[18px] text-white relative overflow-hidden">
       <span className="inline-flex items-center gap-1.5 bg-white/[.22] text-[11px] font-bold px-2.5 py-1 rounded-full">

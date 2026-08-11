@@ -38,7 +38,7 @@ export function Menu() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-bold text-[15px] leading-[1.2]">{m.name}</div>
-              <Money amount={m.price} display className="text-brand-deep text-[15px] mt-[3px] block" />
+              <Money amount={m.priceRp} display className="text-brand-deep text-[15px] mt-[3px] block" />
               <div className={cn('text-xs font-bold mt-[3px]', m.inStock ? 'text-mint-deep' : 'text-brand-press')}>
                 {m.inStock ? 'Tersedia' : 'Stok Habis'}
               </div>

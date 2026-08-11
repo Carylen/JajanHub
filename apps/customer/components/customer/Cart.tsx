@@ -10,9 +10,9 @@ import { computeTotals } from '../../lib/pricing';
 import { itemGradient } from '../../lib/visuals';
 import { PickupPicker } from './PickupPicker';
 
-export function Cart({ merchantId }: { merchantId: string }) {
+export function Cart({ vendorId }: { vendorId: string }) {
   const router = useRouter();
-  const { data: warung, isLoading, isError, refetch } = useWarung(merchantId);
+  const { data: warung, isLoading, isError, refetch } = useWarung(vendorId);
   const items = useCartStore((s) => s.items);
   const priority = useCartStore((s) => s.priority);
   const togglePriority = useCartStore((s) => s.togglePriority);
@@ -30,7 +30,7 @@ export function Cart({ merchantId }: { merchantId: string }) {
   if (isLoading) return <LoadingState />;
   if (isError || !warung) return <ErrorState onRetry={() => refetch()} />;
 
-  const backToMenu = () => router.push(`/m/${merchantId}`);
+  const backToMenu = () => router.push(`/m/${vendorId}`);
 
   if (!totals || totals.count === 0) {
     return (
@@ -50,7 +50,7 @@ export function Cart({ merchantId }: { merchantId: string }) {
 
   const submit = () => {
     createOrder.mutate(
-      { merchantId, cart: items, priority, pickupMode, pickupSlot: pickupSlot ?? undefined },
+      { vendorId, cart: items, isPriority: priority, pickupMode, pickupSlot: pickupSlot ?? undefined },
       { onSuccess: (order) => router.push(`/order/${order.id}/pay`) },
     );
   };
@@ -78,7 +78,7 @@ export function Cart({ merchantId }: { merchantId: string }) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-sm leading-[1.2]">{l.item.name}</div>
-                    <Money amount={l.item.price} className="text-faint text-xs mt-px block" />
+                    <Money amount={l.item.priceRp} className="text-faint text-xs mt-px block" />
                   </div>
                   <div className="flex items-center gap-1.5 bg-[#FFF6EE] rounded-xl p-1">
                     <button
@@ -129,7 +129,7 @@ export function Cart({ merchantId }: { merchantId: string }) {
             <div className="flex-1">
               <div className="font-bold text-sm">Antrian Prioritas</div>
               <div className="text-faint text-xs mt-px">
-                Dimasak duluan, hemat waktu · <Money amount={PRICING.priorityFee} />
+                Dimasak duluan, hemat waktu · <Money amount={PRICING.priorityFeeRp} />
               </div>
             </div>
             <span

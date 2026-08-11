@@ -27,8 +27,8 @@ export function computeTotals(
     .filter((m) => (items[m.id] ?? 0) > 0)
     .map((m) => ({ item: m, qty: items[m.id] ?? 0 }));
   const count = lines.reduce((a, l) => a + l.qty, 0);
-  const subtotal = lines.reduce((a, l) => a + l.qty * l.item.price, 0);
-  const serviceFee = count > 0 ? PRICING.serviceFee : 0;
-  const priorityFee = priority ? PRICING.priorityFee : 0;
+  const subtotal = lines.reduce((a, l) => a + l.qty * l.item.priceRp, 0);
+  const serviceFee = count > 0 ? PRICING.serviceFeeRp : 0;
+  const priorityFee = priority ? PRICING.priorityFeeRp : 0;
   return { lines, count, subtotal, serviceFee, priorityFee, total: subtotal + serviceFee + priorityFee };
 }

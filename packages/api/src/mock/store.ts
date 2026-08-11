@@ -5,7 +5,10 @@
  */
 import type { Order } from '../types';
 
-const KEY = 'jajanhub:orders';
+// v2: bumped when `Order`'s field names changed to match API_CONTRACT.md — a
+// v1-shaped cached order (e.g. `merchantId`/`total`/`priority`) would silently
+// mismatch every renamed field, so start clean rather than migrate it.
+const KEY = 'jajanhub:orders:v2';
 const mem = new Map<string, Order>();
 let hydrated = false;
 

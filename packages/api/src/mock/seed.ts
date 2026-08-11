@@ -1,12 +1,18 @@
 /**
- * Seed data ported verbatim (values) from the design files' `<script>`
- * constants: MENU, BENEFITS, PLANS, STALLS, SLOTS, CANCEL_REASONS, plus the
- * vendor TXNS/LOYAL/PAYOUTS/REJECT_REASONS. Swapped for backend responses in
- * http mode; kept here so the UI runs with no backend.
+ * Seed data ported (values) from the design files' `<script>` constants:
+ * MENU, BENEFITS, PLANS, STALLS, SLOTS, CANCEL_REASONS, plus the vendor
+ * TXNS/LOYAL/PAYOUTS/REJECT_REASONS. Field names/enums follow API_CONTRACT.md
+ * (see types.ts) — swapped for real backend responses in http mode, kept
+ * here so the UI runs with no backend.
  */
+import { PRICING } from '../config';
 import type {
+  CancelReason,
+  DisplayLine,
   LoyalCustomer,
   MenuItem,
+  Order,
+  OrderLine,
   Payout,
   PickupRecord,
   PickupSlot,
@@ -17,41 +23,53 @@ import type {
   SubscriptionPlan,
   Txn,
   UserProfile,
+  Vendor,
   VendorMenuItem,
-  VendorOrder,
   VendorSummary,
-  Warung,
+  VendorTierStatus,
 } from '../types';
 
 export const MENU: MenuItem[] = [
-  { id: 'ayam-ijo', name: 'Ayam Penyet Sambal Ijo', desc: 'Ayam goreng garing, sambal hijau nampol', price: 22000, cat: 'food', best: true, available: true },
-  { id: 'ayam-ori', name: 'Ayam Penyet Original', desc: 'Sambal terasi khas + lalapan segar', price: 20000, cat: 'food', available: true },
-  { id: 'lele', name: 'Lele Penyet', desc: 'Lele goreng kremes, sambal mentah', price: 19000, cat: 'food', available: true },
-  { id: 'nasgor', name: 'Nasi Goreng Spesial', desc: 'Telur, ayam suwir, kerupuk, acar', price: 18000, cat: 'food', best: true, available: true },
-  { id: 'seblak', name: 'Seblak Ceker Pedas', desc: 'Kerupuk basah, ceker, level 1–5', price: 15000, cat: 'food', available: true },
-  { id: 'tahutempe', name: 'Tahu Tempe Penyet', desc: 'Gorengan hangat + sambal bawang', price: 8000, cat: 'food', available: true },
-  { id: 'esteh', name: 'Es Teh Jumbo', desc: 'Manis segar, gelas jumbo', price: 8000, cat: 'drink', best: true, available: true },
-  { id: 'esjeruk', name: 'Es Jeruk Peras', desc: 'Jeruk peras asli, seger', price: 10000, cat: 'drink', available: true },
+  { id: 'ayam-ijo', name: 'Ayam Penyet Sambal Ijo', desc: 'Ayam goreng garing, sambal hijau nampol', priceRp: 22000, cat: 'food', isBestSeller: true, isAvailable: true },
+  { id: 'ayam-ori', name: 'Ayam Penyet Original', desc: 'Sambal terasi khas + lalapan segar', priceRp: 20000, cat: 'food', isAvailable: true },
+  { id: 'lele', name: 'Lele Penyet', desc: 'Lele goreng kremes, sambal mentah', priceRp: 19000, cat: 'food', isAvailable: true },
+  { id: 'nasgor', name: 'Nasi Goreng Spesial', desc: 'Telur, ayam suwir, kerupuk, acar', priceRp: 18000, cat: 'food', isBestSeller: true, isAvailable: true },
+  { id: 'seblak', name: 'Seblak Ceker Pedas', desc: 'Kerupuk basah, ceker, level 1–5', priceRp: 15000, cat: 'food', isAvailable: true },
+  { id: 'tahutempe', name: 'Tahu Tempe Penyet', desc: 'Gorengan hangat + sambal bawang', priceRp: 8000, cat: 'food', isAvailable: true },
+  { id: 'esteh', name: 'Es Teh Jumbo', desc: 'Manis segar, gelas jumbo', priceRp: 8000, cat: 'drink', isBestSeller: true, isAvailable: true },
+  { id: 'esjeruk', name: 'Es Jeruk Peras', desc: 'Jeruk peras asli, seger', priceRp: 10000, cat: 'drink', isAvailable: true },
 ];
 
-export const WARUNGS: Record<string, Warung> = {
+export const WARUNGS: Record<string, Vendor> = {
   'my-bosz': {
     id: 'my-bosz',
     name: 'Ayam Penyet My Bosz',
+    category: 'ayam',
+    /** TODO confirm with backend — no real photo pipeline in the mock. */
+    photoUrl: '',
+    isOpen: true,
+    tier: 'bronze',
+    queueEstimate: { peopleAhead: 12, etaMin: 18 },
+    avgServeTimeSec: 240,
+    location: { lat: -6.2088, lng: 106.8456, address: 'Jl. Merdeka No.12' },
     tagline: 'Sambal nampol, antre terpantau',
-    address: 'Jl. Merdeka No.12',
     rating: 4.8,
     orderCount: 320,
     openFrom: '10.00',
     openTo: '22.00',
-    isOpen: true,
-    peopleAhead: 12,
-    etaMin: 18,
     menu: MENU,
   },
 };
 
-export const DEFAULT_MERCHANT_ID = 'my-bosz';
+export const DEFAULT_VENDOR_ID = 'my-bosz';
+
+/** Looks up `priceRp` from `MENU` by name — vendor-board/preorder seed data below is written as `{name, qty}` for readability, this fills in the rest of `OrderLine`. */
+function toOrderLines(spec: { name: string; qty: number }[]): OrderLine[] {
+  return spec.map(({ name, qty }) => {
+    const item = MENU.find((m) => m.name === name);
+    return { menuItemId: item?.id ?? name, name, qty, priceRp: item?.priceRp ?? 0 };
+  });
+}
 
 export const BENEFITS: SubscriptionBenefit[] = [
   { title: 'Prioritas antrean tiap pesan', sub: 'Pesananmu naik ke urutan depan otomatis' },
@@ -61,8 +79,8 @@ export const BENEFITS: SubscriptionBenefit[] = [
 ];
 
 export const PLANS: SubscriptionPlan[] = [
-  { id: 'bulan', name: 'Bulanan', note: 'Fleksibel, bisa stop kapan aja', price: 15000, per: '/bulan' },
-  { id: 'tahun', name: 'Tahunan', note: 'Cuma Rp12.400/bulan', price: 149000, per: '/tahun', badge: 'HEMAT 17%' },
+  { id: 'plan_monthly', name: 'Bulanan', note: 'Fleksibel, bisa stop kapan aja', priceRp: 15000, periodDays: 30, per: '/bulan' },
+  { id: 'plan_yearly', name: 'Tahunan', note: 'Cuma Rp12.400/bulan', priceRp: 149000, periodDays: 365, per: '/tahun', badge: 'HEMAT 17%' },
 ];
 
 export const STALLS: Stall[] = [
@@ -84,7 +102,13 @@ export const SLOTS: PickupSlot[] = [
   { time: '13.00' },
 ];
 
-export const CANCEL_REASONS = ['Salah pesan', 'Kelamaan', 'Berubah pikiran'] as const;
+/** Matches API_CONTRACT.md §4's cancel-reason enum; `label` is what the reason chips display. */
+export const CANCEL_REASONS: { id: CancelReason; label: string }[] = [
+  { id: 'salah_pesan', label: 'Salah pesan' },
+  { id: 'kelamaan', label: 'Kelamaan' },
+  { id: 'berubah_pikiran', label: 'Berubah pikiran' },
+  { id: 'lainnya', label: 'Lainnya' },
+];
 
 export const RATING_CHIPS = ['Enak banget', 'Cepet', 'Porsi pas', 'Sambalnya mantap', 'Ramah'] as const;
 export const RATING_LABELS = ['', 'Kurang oke', 'Lumayan', 'Cukup enak', 'Enak!', 'Mantap banget!'] as const;
@@ -110,16 +134,94 @@ export const VENDOR_SUMMARY: VendorSummary = {
   revenueDeltaPct: 18,
   ordersToday: 42,
   avgServeLabel: '4 mnt 30 dtk',
-  tier: 'bronze',
-  tierOrdersThisWindow: 6,
 };
 
-export const VENDOR_ORDERS: VendorOrder[] = [
-  { id: '5', no: 'A-26', waitMins: 1, lines: [{ name: 'Ayam Penyet Original', qty: 1 }, { name: 'Es Teh Jumbo', qty: 2 }], total: 36000, priority: true, status: 'baru' },
-  { id: '1', no: 'A-24', waitMins: 2, lines: [{ name: 'Ayam Penyet Sambal Ijo', qty: 1 }, { name: 'Es Teh Jumbo', qty: 1 }], total: 30000, priority: true, status: 'baru' },
-  { id: '2', no: 'A-25', waitMins: 4, lines: [{ name: 'Nasi Goreng Spesial', qty: 2 }], total: 38000, priority: false, status: 'baru' },
-  { id: '3', no: 'A-23', waitMins: 6, lines: [{ name: 'Lele Penyet', qty: 1 }, { name: 'Tahu Tempe Penyet', qty: 1 }, { name: 'Es Jeruk Peras', qty: 1 }], total: 37000, priority: false, status: 'masak', addonCount: 1 },
-  { id: '4', no: 'A-22', waitMins: 9, lines: [{ name: 'Seblak Ceker Pedas', qty: 1 }], total: 15000, priority: false, status: 'siap' },
+/** Per-tier advancement thresholds for the `GET /vendors/:id/tier` demo — TODO confirm with backend (real values are server-computed from order history). No entry for `gold` (already max). */
+export const TIER_THRESHOLDS: Record<'bronze' | 'silver', { ordersRequired: number; responseRequiredSec: number }> = {
+  bronze: { ordersRequired: 20, responseRequiredSec: 240 },
+  silver: { ordersRequired: 30, responseRequiredSec: 180 },
+};
+
+/** Per-tier `benefits` for `GET /vendors/:id/tier` — TODO confirm with backend (payout schedule/fee share are disbursement-gateway-dependent, see API_CONTRACT.md §15). */
+export const TIER_BENEFITS: Record<Vendor['tier'], VendorTierStatus['benefits']> = {
+  bronze: { payoutSchedule: '1x_per_day', priorityFeeShare: 0, discoveryBoost: false, advancedAnalytics: false },
+  silver: { payoutSchedule: '2x_per_day', priorityFeeShare: 0.1, discoveryBoost: true, advancedAnalytics: false },
+  gold: { payoutSchedule: 'realtime', priorityFeeShare: 0.3, discoveryBoost: true, advancedAnalytics: true },
+};
+
+export const VENDOR_TIER_STATUS: VendorTierStatus = {
+  current: 'bronze',
+  next: 'silver',
+  progress: {
+    ordersCompleted: 6,
+    ordersRequired: TIER_THRESHOLDS.bronze.ordersRequired,
+    avgResponseSec: 260,
+    responseRequiredSec: TIER_THRESHOLDS.bronze.responseRequiredSec,
+    timeoutRejectRate: 0.02,
+    timeoutRejectRateMax: 0.05,
+  },
+  benefits: TIER_BENEFITS.bronze,
+};
+
+/** Builds a full `Order` for the vendor board seed — `agoMin` fills `createdAt` so `minutesSince()` matches the design's original static "waitMins" numbers. */
+function vendorOrder(spec: {
+  id: string;
+  queueNumber: number;
+  agoMin: number;
+  lines: { name: string; qty: number }[];
+  isPriority: boolean;
+  status: Order['status'];
+  addonSubtotalRp?: number;
+}): Order {
+  const lines = toOrderLines(spec.lines);
+  const subtotalRp = lines.reduce((a, l) => a + l.priceRp * l.qty, 0);
+  const serviceFeeRp = PRICING.serviceFeeRp;
+  const priorityFeeRp = spec.isPriority ? PRICING.priorityFeeRp : 0;
+  const createdAt = new Date(Date.now() - spec.agoMin * 60_000).toISOString();
+  const addons: Order['addons'] = spec.addonSubtotalRp
+    ? [
+        {
+          id: `${spec.id}-addon-1`,
+          parentOrderId: spec.id,
+          lines: toOrderLines([{ name: 'Es Jeruk Peras', qty: 1 }]),
+          feeRp: PRICING.addonFeeRp,
+          status: 'paid',
+          createdAt,
+          subtotalRp: spec.addonSubtotalRp,
+          totalRp: spec.addonSubtotalRp + PRICING.addonFeeRp,
+        },
+      ]
+    : [];
+
+  return {
+    id: spec.id,
+    vendorId: DEFAULT_VENDOR_ID,
+    customerId: `cus_demo_${spec.id}`,
+    queueNumber: spec.queueNumber,
+    lines,
+    subtotalRp,
+    serviceFeeRp,
+    totalRp: subtotalRp + serviceFeeRp + priorityFeeRp,
+    status: spec.status,
+    isPriority: spec.isPriority,
+    addons,
+    pickupCode: spec.status === 'ready' ? String(4000 + Math.floor(Math.random() * 5999)) : '',
+    createdAt,
+    estimatedReadyAt: null,
+    confirmDeadlineAt: null,
+    code: `#AY-${2000 + spec.queueNumber}`,
+    vendorName: WARUNGS[DEFAULT_VENDOR_ID]!.name,
+    priorityFeeRp,
+    pickupMode: 'now',
+  };
+}
+
+export const VENDOR_ORDERS: Order[] = [
+  vendorOrder({ id: '5', queueNumber: 26, agoMin: 1, lines: [{ name: 'Ayam Penyet Original', qty: 1 }, { name: 'Es Teh Jumbo', qty: 2 }], isPriority: true, status: 'waiting_confirmation' }),
+  vendorOrder({ id: '1', queueNumber: 24, agoMin: 2, lines: [{ name: 'Ayam Penyet Sambal Ijo', qty: 1 }, { name: 'Es Teh Jumbo', qty: 1 }], isPriority: true, status: 'waiting_confirmation' }),
+  vendorOrder({ id: '2', queueNumber: 25, agoMin: 4, lines: [{ name: 'Nasi Goreng Spesial', qty: 2 }], isPriority: false, status: 'waiting_confirmation' }),
+  vendorOrder({ id: '3', queueNumber: 23, agoMin: 6, lines: [{ name: 'Lele Penyet', qty: 1 }, { name: 'Tahu Tempe Penyet', qty: 1 }, { name: 'Es Jeruk Peras', qty: 1 }], isPriority: false, status: 'cooking', addonSubtotalRp: 10000 }),
+  vendorOrder({ id: '4', queueNumber: 22, agoMin: 9, lines: [{ name: 'Seblak Ceker Pedas', qty: 1 }], isPriority: false, status: 'ready' }),
 ];
 
 export const PREORDERS: Preorder[] = [
@@ -143,16 +245,16 @@ export const PICKUP_RECORDS: PickupRecord[] = [
 export const VENDOR_MENU: VendorMenuItem[] = MENU.map((m) => ({
   id: m.id,
   name: m.name,
-  price: m.price,
+  priceRp: m.priceRp,
   cat: m.cat,
   inStock: true,
 }));
 
 export const PAYOUTS: Payout[] = [
-  { id: 'p0', date: 'Hari ini', amount: 420_000, status: 'Diproses', sub: 'Menunggu dicairkan besok' },
-  { id: 'p1', date: 'Kemarin · 21 Jul', amount: 1_180_000, status: 'Cair', sub: 'BCA •••• 3391' },
-  { id: 'p2', date: '20 Jul', amount: 960_000, status: 'Cair', sub: 'BCA •••• 3391' },
-  { id: 'p3', date: '19 Jul', amount: 1_035_000, status: 'Cair', sub: 'BCA •••• 3391' },
+  { id: 'p0', date: 'Hari ini', amountRp: 420_000, status: 'processing', sub: 'Menunggu dicairkan besok' },
+  { id: 'p1', date: 'Kemarin · 21 Jul', amountRp: 1_180_000, status: 'completed', sub: 'BCA •••• 3391' },
+  { id: 'p2', date: '20 Jul', amountRp: 960_000, status: 'completed', sub: 'BCA •••• 3391' },
+  { id: 'p3', date: '19 Jul', amountRp: 1_035_000, status: 'completed', sub: 'BCA •••• 3391' },
 ];
 
 export const TXNS: Txn[] = [
@@ -165,16 +267,20 @@ export const TXNS: Txn[] = [
 ];
 
 export const LOYAL_CUSTOMERS: LoyalCustomer[] = [
-  { id: 'l1', name: 'Bu Sari', initials: 'BS', transactions: 38, member: true, favorite: 'Ayam Sambal Ijo', avatarGradient: 'linear-gradient(135deg,#FFB870,#FF7A1A)' },
-  { id: 'l2', name: 'Mas Andi', initials: 'MA', transactions: 27, member: true, favorite: 'Nasi Goreng Spesial', avatarGradient: 'linear-gradient(135deg,#34C9A8,#16C784)' },
-  { id: 'l3', name: 'Pak Rahmat', initials: 'PR', transactions: 19, member: false, favorite: 'Lele Penyet', avatarGradient: 'linear-gradient(135deg,#A879FF,#7A3BF5)' },
-  { id: 'l4', name: 'Dinda', initials: 'DN', transactions: 15, member: true, favorite: 'Seblak Ceker', avatarGradient: 'linear-gradient(135deg,#FFB7A0,#FF7A5C)' },
-  { id: 'l5', name: 'Koh Aliong', initials: 'KA', transactions: 12, member: false, favorite: 'Es Teh Jumbo', avatarGradient: 'linear-gradient(135deg,#FFD98A,#F5A623)' },
-  { id: 'l6', name: 'Mbak Tuti', initials: 'MT', transactions: 9, member: false, favorite: 'Tahu Tempe Penyet', avatarGradient: 'linear-gradient(135deg,#8FB7FF,#4D7BF5)' },
+  { id: 'l1', name: 'Bu Sari', customerPhoneMasked: '0812-••••-101', initials: 'BS', orderCount: 38, isPriorityMember: true, favoriteItem: 'Ayam Sambal Ijo', avatarGradient: 'linear-gradient(135deg,#FFB870,#FF7A1A)' },
+  { id: 'l2', name: 'Mas Andi', customerPhoneMasked: '0813-••••-202', initials: 'MA', orderCount: 27, isPriorityMember: true, favoriteItem: 'Nasi Goreng Spesial', avatarGradient: 'linear-gradient(135deg,#34C9A8,#16C784)' },
+  { id: 'l3', name: 'Pak Rahmat', customerPhoneMasked: '0812-••••-303', initials: 'PR', orderCount: 19, isPriorityMember: false, favoriteItem: 'Lele Penyet', avatarGradient: 'linear-gradient(135deg,#A879FF,#7A3BF5)' },
+  { id: 'l4', name: 'Dinda', customerPhoneMasked: '0821-••••-404', initials: 'DN', orderCount: 15, isPriorityMember: true, favoriteItem: 'Seblak Ceker', avatarGradient: 'linear-gradient(135deg,#FFB7A0,#FF7A5C)' },
+  { id: 'l5', name: 'Koh Aliong', customerPhoneMasked: '0878-••••-505', initials: 'KA', orderCount: 12, isPriorityMember: false, favoriteItem: 'Es Teh Jumbo', avatarGradient: 'linear-gradient(135deg,#FFD98A,#F5A623)' },
+  { id: 'l6', name: 'Mbak Tuti', customerPhoneMasked: '0856-••••-606', initials: 'MT', orderCount: 9, isPriorityMember: false, favoriteItem: 'Tahu Tempe Penyet', avatarGradient: 'linear-gradient(135deg,#8FB7FF,#4D7BF5)' },
 ];
 
+/** Matches API_CONTRACT.md §4's reject-reason enum (vendor). */
 export const REJECT_REASONS: RejectReason[] = [
-  { id: 'habis', label: 'Bahan habis' },
-  { id: 'ramai', label: 'Terlalu ramai' },
+  { id: 'bahan_habis', label: 'Bahan habis' },
+  { id: 'terlalu_ramai', label: 'Terlalu ramai' },
   { id: 'tutup', label: 'Tutup dulu' },
 ];
+
+/** Not part of API_CONTRACT.md's typed `Preorder`/`PickupRecord`, but re-exported for convenience where a raw display-line list is needed. */
+export type { DisplayLine };

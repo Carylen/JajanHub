@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { formatQueueCode } from '@jajanhub/api';
 import { Icon, Money, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
 import { VendorTopBar } from '../VendorTopBar';
@@ -119,14 +120,14 @@ export function HomeDesktopView(vm: HomeScreenView) {
                     <div key={o.id} className="bg-[#FBF6EF] rounded-[15px] px-3.5 py-3 flex items-center gap-3">
                       <div
                         className="flex-none w-[42px] h-[42px] rounded-xl flex items-center justify-center text-white font-display font-extrabold text-sm"
-                        style={{ background: o.priority ? 'linear-gradient(135deg,#A879FF,#7A3BF5)' : 'linear-gradient(135deg,#FFB870,#FF7A1A)' }}
+                        style={{ background: o.isPriority ? 'linear-gradient(135deg,#A879FF,#7A3BF5)' : 'linear-gradient(135deg,#FFB870,#FF7A1A)' }}
                       >
-                        {o.no.split('-')[1]}
+                        {formatQueueCode(o).replace(/^[A-Za-z]+/, '')}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-bold text-sm truncate">{first ? `${first.qty}× ${first.name}${more}` : '—'}</div>
                       </div>
-                      {o.priority && (
+                      {o.isPriority && (
                         <span className="flex-none bg-prio text-white text-[9px] font-extrabold px-2 py-1 rounded-full">PRIORITAS</span>
                       )}
                     </div>

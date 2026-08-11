@@ -20,7 +20,7 @@ export function MenuItemCard({ item, index, qty, onAdd, onRemove }: MenuItemCard
         className="flex-none w-[86px] h-[86px] rounded-[17px] flex items-center justify-center relative shadow-[inset_0_-18px_30px_rgba(0,0,0,.08)]"
         style={{ background: itemGradient(item, index) }}
       >
-        {item.best && (
+        {item.isBestSeller && (
           <span className="absolute -top-[7px] -left-1.5 bg-[#FF3D57] text-white text-[10px] font-extrabold px-[9px] py-[3px] rounded-full shadow-[0_4px_9px_rgba(255,61,87,.42)] whitespace-nowrap">
             Terlaris
           </span>
@@ -30,7 +30,7 @@ export function MenuItemCard({ item, index, qty, onAdd, onRemove }: MenuItemCard
       <div className="flex-1 min-w-0">
         <div className="font-bold text-[15px] leading-[1.2]">{item.name}</div>
         <div className="text-faint text-xs my-0.5 mb-[9px] leading-[1.3]">{item.desc}</div>
-        <Money amount={item.price} display className="font-bold text-brand-deep text-base" />
+        <Money amount={item.priceRp} display className="font-bold text-brand-deep text-base" />
       </div>
       <div className="flex-none">
         <QtyStepper qty={qty} onAdd={onAdd} onRemove={onRemove} name={item.name} />

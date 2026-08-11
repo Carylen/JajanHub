@@ -17,7 +17,7 @@ export const NAV_TABS: Array<{ href: string; label: string; icon: IconName }> = 
 export function BottomNav() {
   const pathname = usePathname();
   const { data: orders } = useVendorOrders();
-  const activeCount = (orders ?? []).filter((o) => o.status !== 'ditolak').length;
+  const activeCount = (orders ?? []).filter((o) => o.status !== 'rejected').length;
 
   return (
     <nav className="fixed left-1/2 -translate-x-1/2 bottom-0 w-full max-w-vendor md:max-w-tablet lg:hidden bg-white/[.96] backdrop-blur-[12px] border-t border-line px-2 pt-[9px] pb-4 flex z-50 shadow-[0_-6px_24px_rgba(35,24,15,.06)]">

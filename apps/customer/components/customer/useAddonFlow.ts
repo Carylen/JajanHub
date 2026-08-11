@@ -45,7 +45,7 @@ export interface AddonFlowView {
  * duplicated locally so there's exactly one countdown timer, not two.
  */
 export function useAddonFlow(order: Order | undefined): AddonFlowView {
-  const { data: warung } = useWarung(order?.merchantId ?? '');
+  const { data: warung } = useWarung(order?.vendorId ?? '');
   const createAddon = useCreateAddon();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<'menu' | 'pay'>('menu');
@@ -72,9 +72,9 @@ export function useAddonFlow(order: Order | undefined): AddonFlowView {
   const qty = ids.reduce((a, id) => a + (cart[id] ?? 0), 0);
   const subtotal = ids.reduce((a, id) => {
     const item = menuItems.find((m) => m.id === id);
-    return a + (item ? item.price * (cart[id] ?? 0) : 0);
+    return a + (item ? item.priceRp * (cart[id] ?? 0) : 0);
   }, 0);
-  const fee = PRICING.addonFee;
+  const fee = PRICING.addonFeeRp;
 
   const addonsLeft = order ? PRICING.maxAddonsPerOrder - order.addons.length : 0;
   const canOpen = order ? canAddOrder(order) : false;

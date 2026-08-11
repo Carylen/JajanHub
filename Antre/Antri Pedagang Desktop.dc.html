@@ -29,6 +29,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 @keyframes popin{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 @keyframes shakex{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 @keyframes slideCard{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes confettiFall{0%{transform:translateY(-24px) rotate(0);opacity:1}100%{transform:translateY(620px) rotate(760deg);opacity:0}}
 </style>
 </helmet>
 <div style="display:flex;min-height:100vh;width:100%;background:#E7DCCE">
@@ -119,6 +120,19 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
       </sc-for>
     </div>
 
+    <button onClick="{{ goLevel }}" style="cursor:pointer;text-align:left;width:100%;border:none;background:#fff;border-radius:22px;padding:20px 24px;box-shadow:0 6px 16px rgba(35,24,15,.05);display:flex;align-items:center;gap:26px" style-hover="filter:brightness(1.01)" style-active="transform:scale(.997)">
+      <div style="flex:none;display:flex;align-items:center;gap:14px">
+        <div style="width:56px;height:56px;border-radius:16px;background:{{ tierGrad }};display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px {{ tierShadow }}">{{ tierMedal }}</div>
+        <div><div style="font-size:11.5px;font-weight:800;color:#9A8A7C;letter-spacing:.4px">LEVEL PEDAGANG</div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;color:{{ tierColor }};line-height:1.05">{{ tierName }}</div></div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:8px"><span style="color:#3A2A1C">Menuju {{ nextTierName }}</span><span style="color:#9A8A7C">{{ tierProgressLabel }} pesanan</span></div>
+        <div style="height:12px;border-radius:99px;background:#EFE4D6;overflow:hidden"><div style="height:100%;border-radius:99px;background:{{ tierGrad }};width:{{ tierProgressPct }};animation:barGrow .6s ease both"></div></div>
+        <div style="font-size:12.5px;color:#9A8A7C;margin-top:9px">{{ tierReqText }}</div>
+      </div>
+      <div style="flex:none;display:flex;align-items:center;gap:5px;color:#FF7A1A;font-weight:800;font-size:14px">Lihat detail ›</div>
+    </button>
+
     <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:18px">
       <div style="background:#fff;border-radius:22px;padding:24px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
@@ -166,6 +180,18 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
   <!-- ============ PESANAN (KANBAN) ============ -->
   <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ false }}">
   <div style="animation:screenIn .3s ease">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div style="display:inline-flex;align-items:center;gap:11px;background:#F7F2FF;border:1px solid #E6DAF7;border-radius:14px;padding:10px 15px">
+        <span style="flex:none;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#A879FF,#7A3BF5);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 10-12h-6z" fill="#fff"/></svg></span>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#5B2BC4;line-height:1.1">{{ prioUsedStr }}/{{ prioQuotaStr }} slot prioritas terpakai</div>
+          <div style="font-size:11.5px;color:#9A8A7C;margin-top:2px">Pesanan prioritas naik otomatis ke urutan atas antrian</div>
+        </div>
+        <div style="display:flex;gap:5px;margin-left:6px">
+          <sc-for list="{{ prioSlots }}" as="s" hint-placeholder-count="3"><span style="width:10px;height:10px;border-radius:50%;background:{{ s.bg }}"></span></sc-for>
+        </div>
+      </div>
+    </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start">
       <sc-for list="{{ columns }}" as="col" hint-placeholder-count="3">
         <div style="background:{{ col.bg }};border-radius:20px;padding:16px;min-height:200px">
@@ -182,6 +208,7 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
                   <div style="flex:1;min-width:0">
                     <div style="display:flex;align-items:center;gap:7px"><span style="font-weight:800;font-size:15px">{{ o.totalStr }}</span><sc-if value="{{ o.priorityBadge }}"><span style="background:#7A3BF5;color:#fff;font-size:9px;font-weight:800;padding:3px 7px;border-radius:999px">PRIORITAS</span></sc-if></div>
                     <div style="font-size:12px;color:#9A8A7C;font-weight:600;margin-top:2px">Masuk {{ o.waitStr }} lalu</div>
+                    <sc-if value="{{ o.showDeadline }}"><div style="display:inline-flex;align-items:center;gap:5px;margin-top:5px;background:{{ o.deadlineBg }};border-radius:999px;padding:3px 9px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="8" stroke="{{ o.deadlineColor }}" stroke-width="2"/><path d="M12 9v4l2.5 1.6" stroke="{{ o.deadlineColor }}" stroke-width="2" stroke-linecap="round"/><path d="M9 2.5h6" stroke="{{ o.deadlineColor }}" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:11px;font-weight:800;color:{{ o.deadlineColor }}">{{ o.deadlineStr }}</span></div></sc-if>
                   </div>
                   <sc-if value="{{ o.cooking }}"><span style="flex:none;width:9px;height:9px;border-radius:50%;background:#E4560A;animation:pulse 1.4s infinite"></span></sc-if>
                 </div>
@@ -190,6 +217,24 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
                     <div style="display:flex;gap:9px;font-size:13.5px"><span style="flex:none;font-weight:800;color:#E4560A;min-width:22px">{{ it.q }}×</span><span style="flex:1;color:#3A2A1C">{{ it.n }}</span></div>
                   </sc-for>
                 </div>
+                <sc-if value="{{ o.hasAddons }}">
+                <button onClick="{{ o.onToggleAddon }}" style="margin-top:11px;width:100%;cursor:pointer;text-align:left;border:1px dashed #C9B0FF;background:#F7F2FF;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:9px" style-active="transform:scale(.99)" style-hover="background:#F1E9FF">
+                  <span style="flex:none;background:#7A3BF5;color:#fff;font-size:10px;font-weight:800;padding:4px 9px;border-radius:999px">+{{ o.addonCount }} tambahan</span>
+                  <span style="flex:1;font-size:12.5px;font-weight:700;color:#7A3BF5">Tambahan dari pelanggan</span>
+                  <span style="flex:none;color:#7A3BF5;font-size:12px;transform:{{ o.addonChevron }};transition:transform .2s">▸</span>
+                </button>
+                <sc-if value="{{ o.addonExpanded }}">
+                  <div style="margin-top:8px;background:#F7F2FF;border-radius:12px;padding:12px 13px;animation:fadeIn .2s ease">
+                    <div style="font-size:10.5px;font-weight:800;color:#9A8A7C;letter-spacing:.4px;margin-bottom:9px">TERHUBUNG KE ANTRIAN {{ o.no }}</div>
+                    <div style="display:flex;flex-direction:column;gap:7px">
+                      <sc-for list="{{ o.addonItems }}" as="a" hint-placeholder-count="2">
+                        <div style="display:flex;gap:9px;font-size:13px;align-items:center"><span style="flex:none;font-weight:800;color:#7A3BF5;min-width:22px">{{ a.q }}×</span><span style="flex:1;color:#3A2A1C">{{ a.n }}</span><span style="font-weight:700;color:#7A3BF5">{{ a.priceStr }}</span></div>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;border-top:1px solid #E6DAF7;margin-top:10px;padding-top:9px;font-size:13px;font-weight:800"><span style="color:#3A2A1C">Total tambahan</span><span style="color:#7A3BF5">{{ o.addonTotalStr }}</span></div>
+                  </div>
+                </sc-if>
+                </sc-if>
                 <sc-if value="{{ o.rejected }}">
                   <div style="margin-top:12px;background:#FBEEE9;color:#C4402F;font-size:12.5px;font-weight:600;padding:9px 12px;border-radius:11px">{{ o.rejectReasonText }} · dana pelanggan otomatis dikembalikan</div>
                 </sc-if>
@@ -261,6 +306,23 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
         </div>
       </div>
     </div>
+    <sc-if value="{{ showLocked }}">
+    <div style="position:relative;background:#fff;border-radius:22px;padding:24px;box-shadow:0 6px 16px rgba(35,24,15,.05);overflow:hidden">
+      <div style="filter:blur(7px);pointer-events:none;user-select:none">
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;margin-bottom:6px">Tren retensi pelanggan</div>
+        <div style="font-size:13px;color:#9A8A7C;margin-bottom:18px">Berapa banyak pelanggan yang kembali tiap minggu</div>
+        <div style="display:flex;align-items:flex-end;gap:12px;height:150px">
+          <sc-for list="{{ lockedBars }}" as="b" hint-placeholder-count="10"><div style="flex:1;border-radius:7px;background:linear-gradient(180deg,#FFCE8F,#FF9A3D);height:{{ b.h }}"></div></sc-for>
+        </div>
+      </div>
+      <div style="position:absolute;inset:0;background:rgba(255,248,241,.6);backdrop-filter:blur(1px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;text-align:center;padding:24px">
+        <div style="width:56px;height:56px;border-radius:16px;background:{{ goldGrad }};display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(217,154,28,.4)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2.2" stroke="#fff" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px">Analitik lanjutan terkunci</div>
+        <div style="font-size:13.5px;color:#7C6F62;max-width:360px;line-height:1.5">Tren retensi, proyeksi pendapatan & analisis perilaku pelanggan.</div>
+        <span style="background:{{ goldGrad }};color:#fff;font-weight:800;font-size:13px;padding:9px 16px;border-radius:12px;box-shadow:0 6px 14px rgba(217,154,28,.3)">Buka otomatis saat naik ke Gold</span>
+      </div>
+    </div>
+    </sc-if>
   </div>
   </sc-if>
 
@@ -308,6 +370,10 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
         <div style="color:#C9B8A6;font-size:13.5px;font-weight:600">Saldo siap dicairkan</div>
         <div style="font-family:'Bricolage Grotesque';font-weight:800;color:#fff;font-size:42px;letter-spacing:-1.5px;line-height:1;margin-top:8px">Rp2.180.000</div>
         <div style="font-size:13px;color:#9A8A7C;margin-top:10px">Rekening tujuan · BCA •••• 3391</div>
+        <div style="display:inline-flex;align-items:center;gap:9px;margin-top:15px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:7px 13px 7px 9px">
+          <span style="flex:none;width:26px;height:26px;border-radius:8px;background:{{ tierGrad }};display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="14" r="6" stroke="#fff" stroke-width="2"/><path d="M9 8.6L7 3h3.5L12 6M15 8.6L17 3h-3.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span style="font-size:12.5px;font-weight:700;color:#EBDFD0">Sebagai <b style="color:#fff">{{ tierName }}</b>, dana kamu cair {{ tierPayout }}</span>
+        </div>
         <button style="margin-top:20px;width:100%;cursor:pointer;border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15.5px;background:#fff;color:#23180F" style-active="transform:scale(.98)" style-hover="filter:brightness(.96)">Cairkan sekarang</button>
       </div>
       <div style="background:#fff;border-radius:22px;padding:22px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
@@ -333,6 +399,105 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
             <div style="font-weight:800;font-size:15px;color:{{ t.amtColor }}">{{ t.amtStr }}</div>
           </div>
         </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ LEVEL PEDAGANG ============ -->
+  <sc-if value="{{ isLevel }}" hint-placeholder-val="{{ false }}">
+  <div style="animation:screenIn .3s ease;display:flex;flex-direction:column;gap:20px">
+    <div style="background:linear-gradient(150deg,#2B1E12,#3A2A1C);border-radius:22px;padding:24px 26px;box-shadow:0 14px 30px rgba(35,24,15,.18);display:flex;align-items:center;gap:24px">
+      <div style="flex:none;width:62px;height:62px;border-radius:18px;background:{{ tierGrad }};display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px {{ tierShadow }}">{{ tierMedal }}</div>
+      <div style="flex:1;min-width:0">
+        <div style="color:#C9B8A6;font-size:12px;font-weight:700;letter-spacing:.4px">TIER KAMU SEKARANG</div>
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:26px;color:#fff;line-height:1.05;margin:2px 0 11px">{{ tierName }}</div>
+        <div style="height:11px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden;max-width:540px"><div style="height:100%;border-radius:99px;background:{{ tierGrad }};width:{{ tierProgressPct }};animation:barGrow .6s ease both"></div></div>
+        <div style="font-size:12.5px;color:#B79C82;margin-top:9px">Menuju {{ nextTierName }} · {{ tierReqText }}</div>
+        <button onClick="{{ toggleScoreInfo }}" style="margin-top:11px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:7px 12px;color:#EBDFD0;font-size:12px;font-weight:700" style-active="transform:scale(.98)" style-hover="background:rgba(255,255,255,.16)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#EBDFD0" stroke-width="2"/><path d="M12 11v5" stroke="#EBDFD0" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.1" fill="#EBDFD0"/></svg>Apa yang dihitung ke skor?</button>
+        <sc-if value="{{ scoreInfoOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 14px;font-size:12.5px;color:#E7DBCB;line-height:1.5;max-width:560px;animation:fadeIn .2s ease">Yang menambah atau mengurangi skor Level cuma <b style="color:#fff">pesanan yang tidak direspons</b> sampai auto-batal. Menolak dengan alasan — bahan habis, terlalu ramai, atau tutup — <b style="color:#fff">tidak</b> dihitung sebagai pelanggaran.</div>
+        </sc-if>
+      </div>
+      <button onClick="{{ openTierUp }}" style="flex:none;cursor:pointer;border:none;border-radius:13px;padding:13px 18px;font-weight:800;font-size:14px;background:{{ goldGrad }};color:#fff;box-shadow:0 8px 18px rgba(217,154,28,.35)" style-active="transform:scale(.97)" style-hover="filter:brightness(1.05)">Simulasikan naik tier</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start">
+      <sc-for list="{{ tiers }}" as="t" hint-placeholder-count="3">
+        <div style="background:#fff;border-radius:22px;padding:24px;border:{{ t.border }};box-shadow:{{ t.shadow }};opacity:{{ t.opacity }};transform:{{ t.scale }};position:relative">
+          <sc-if value="{{ t.isCurrent }}"><span style="position:absolute;top:20px;right:20px;background:{{ t.grad }};color:#fff;font-size:10px;font-weight:800;letter-spacing:.3px;padding:5px 11px;border-radius:999px">TIER KAMU</span></sc-if>
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="flex:none;width:52px;height:52px;border-radius:15px;background:{{ t.grad }};display:flex;align-items:center;justify-content:center;box-shadow:0 8px 16px {{ t.shadowSoft }}">{{ t.medal }}</div>
+            <div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;color:{{ t.color }};line-height:1">{{ t.name }}</div><div style="font-size:12.5px;color:#9A8A7C;font-weight:600;margin-top:3px">{{ t.req }}</div></div>
+          </div>
+          <div style="height:1px;background:#F1E7DC;margin:18px 0"></div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ t.benefits }}" as="b" hint-placeholder-count="4">
+              <div style="display:flex;gap:12px;align-items:flex-start"><span style="flex:none;width:30px;height:30px;border-radius:9px;background:{{ t.iconBg }};display:flex;align-items:center;justify-content:center">{{ b.icon }}</span><div style="flex:1"><div style="font-weight:700;font-size:14px;line-height:1.25">{{ b.label }}</div><div style="font-size:12px;color:#9A8A7C;margin-top:1px">{{ b.detail }}</div></div></div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ PENGATURAN ============ -->
+  <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+  <div style="animation:screenIn .3s ease;display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="background:#fff;border-radius:22px;padding:22px 24px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;margin-bottom:4px">Notifikasi</div>
+        <div style="font-size:13px;color:#9A8A7C;margin-bottom:8px">Atur pemberitahuan yang kamu terima</div>
+        <sc-for list="{{ notif }}" as="n" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #F4ECE2">
+            <div style="flex:1"><div style="font-weight:700;font-size:14.5px">{{ n.label }}</div><div style="font-size:12.5px;color:#9A8A7C;margin-top:1px">{{ n.desc }}</div></div>
+            <button onClick="{{ n.toggle }}" style="flex:none;cursor:pointer;border:none;background:none;padding:0" style-active="transform:scale(.92)"><span style="display:block;width:52px;height:30px;border-radius:999px;background:{{ n.track }};position:relative;transition:background .2s"><span style="position:absolute;top:3px;left:{{ n.knob }};width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.25);transition:left .2s"></span></span></button>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="background:#fff;border-radius:22px;padding:22px 24px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px">Jam operasional</div><div style="font-size:13px;color:#9A8A7C;margin-top:2px">Warung tampil buka sesuai jam ini</div></div><button style="cursor:pointer;border:1px solid #F0D9D3;background:#FFF1E9;color:#E4560A;font-weight:700;font-size:13px;padding:9px 14px;border-radius:11px" style-active="transform:scale(.97)" style-hover="background:#FDE0DA">Ubah</button></div>
+        <sc-for list="{{ jam }}" as="j" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #F4ECE2">
+            <span style="font-weight:700;font-size:14.5px">{{ j.day }}</span>
+            <span style="display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px;color:#3A2A1C"><span style="background:#FBF6EF;border-radius:9px;padding:6px 12px">{{ j.open }}</span><span style="color:#B0A192">–</span><span style="background:#FBF6EF;border-radius:9px;padding:6px 12px">{{ j.close }}</span></span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="background:#fff;border-radius:22px;padding:22px 24px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div class="ftitle" style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px">Info warung</div><button style="cursor:pointer;border:1px solid #F0D9D3;background:#FFF1E9;color:#E4560A;font-weight:700;font-size:13px;padding:9px 14px;border-radius:11px" style-active="transform:scale(.97)" style-hover="background:#FDE0DA">Ubah</button></div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div><div style="font-size:12px;font-weight:800;color:#9A8A7C;letter-spacing:.3px;margin-bottom:6px">NAMA WARUNG</div><div style="background:#FBF6EF;border-radius:12px;padding:13px 15px;font-weight:700;font-size:14.5px">{{ warungInfo.name }}</div></div>
+          <div><div style="font-size:12px;font-weight:800;color:#9A8A7C;letter-spacing:.3px;margin-bottom:6px">KATEGORI</div><div style="background:#FBF6EF;border-radius:12px;padding:13px 15px;font-size:14px;color:#3A2A1C">{{ warungInfo.cat }}</div></div>
+          <div><div style="font-size:12px;font-weight:800;color:#9A8A7C;letter-spacing:.3px;margin-bottom:6px">ALAMAT</div><div style="background:#FBF6EF;border-radius:12px;padding:13px 15px;font-size:14px;color:#3A2A1C">{{ warungInfo.addr }}</div></div>
+          <div><div style="font-size:12px;font-weight:800;color:#9A8A7C;letter-spacing:.3px;margin-bottom:6px">NOMOR TELEPON</div><div style="background:#FBF6EF;border-radius:12px;padding:13px 15px;font-size:14px;color:#3A2A1C">{{ warungInfo.phone }}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:sticky;top:110px;display:flex;flex-direction:column;gap:16px">
+      <div style="background:#fff;border-radius:22px;padding:22px;box-shadow:0 6px 16px rgba(35,24,15,.05)">
+        <div style="font-size:12px;font-weight:800;color:#9A8A7C;letter-spacing:.4px;margin-bottom:14px">TAMPILAN DI APLIKASI PELANGGAN</div>
+        <div style="border-radius:18px;overflow:hidden;border:1px solid #F1E7DC">
+          <div style="height:120px;background:linear-gradient(135deg,#FFCE8F,#FF7A1A);position:relative">
+            <span style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);color:#0E9F6E;font-size:11px;font-weight:800;padding:5px 11px;border-radius:999px;display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:#16C784"></span>Buka sekarang</span>
+          </div>
+          <div style="padding:16px">
+            <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:19px;line-height:1.1">{{ warungInfo.name }}</div>
+            <div style="font-size:12.5px;color:#9A8A7C;margin-top:3px">{{ warungInfo.cat }}</div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:11px;font-size:12.5px;font-weight:700">
+              <span style="display:flex;align-items:center;gap:4px;color:#E4560A"><svg width="14" height="14" viewBox="0 0 24 24" fill="#E4560A"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.3 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg>4,9 · 320+ ulasan</span>
+              <span style="color:#9A8A7C">·</span>
+              <span style="color:#3A2A1C">Buka 09.00–21.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="background:#FBF3E4;border-radius:18px;padding:18px 20px">
+        <div style="display:flex;align-items:center;gap:10px"><span style="flex:none;width:34px;height:34px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#E4560A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 21a2 2 0 0 0 3 0" stroke="#E4560A" stroke-width="2" stroke-linecap="round"/></svg></span><div style="font-weight:800;font-size:14px;color:#B8791F">Notifikasi pesanan aktif</div></div>
+        <div style="font-size:12.5px;color:#9A8A7C;margin-top:9px;line-height:1.5">Kamu akan langsung dengar bunyi tiap ada pesanan baru masuk. Pastikan volume perangkat tidak senyap.</div>
       </div>
     </div>
   </div>
@@ -401,10 +566,33 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
         </button>
       </sc-for>
     </div>
+    <div style="display:flex;align-items:flex-start;gap:9px;margin:0 2px 20px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9" stroke="#9A8A7C" stroke-width="2"/><path d="M12 11v5" stroke="#9A8A7C" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.1" fill="#9A8A7C"/></svg>
+      <div style="flex:1;font-size:12.5px;color:#9A8A7C;line-height:1.45">Menolak cepat dengan alasan jujur <b style="color:#6B5D50">tidak menurunkan skor Level</b>-mu. Yang berpengaruh cuma pesanan yang dibiarkan tanpa respons sampai auto-batal.</div>
+    </div>
     <div style="display:flex;gap:10px">
       <button onClick="{{ closeReject }}" style="flex:1;cursor:pointer;border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:#F1E7DC;color:#23180F" style-active="transform:scale(.98)">Batal</button>
       <button onClick="{{ confirmReject }}" disabled="{{ rejectDisabled }}" style="flex:1.4;cursor:{{ rejectCursor }};border:none;border-radius:14px;padding:15px;font-weight:800;font-size:15px;background:{{ rejectBtnBg }};color:#fff" style-active="transform:scale(.98)">Tolak & kembalikan dana</button>
     </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ TIER-UP CELEBRATION ============ -->
+<sc-if value="{{ tierUpOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeTierUp }}" style="position:fixed;inset:0;z-index:70;background:rgba(35,24,15,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:30px;animation:fadeIn .2s ease">
+  {{ confettiLayer }}
+  <div onClick="{{ stop }}" style="position:relative;background:#FFF8F1;border-radius:26px;padding:34px 30px;width:440px;max-width:100%;box-shadow:0 30px 70px rgba(0,0,0,.4);animation:popin .35s ease;text-align:center">
+    <div style="width:92px;height:92px;border-radius:26px;background:{{ tierUpGrad }};display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 14px 30px {{ tierUpShadow }};animation:pop .7s ease .1s both">{{ tierUpMedal }}</div>
+    <div style="font-size:12.5px;font-weight:800;letter-spacing:.5px;color:#9A8A7C">SELAMAT, PAK BUDI!</div>
+    <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:27px;margin-top:5px;line-height:1.12">Kamu naik ke <span style="color:{{ tierUpColor }}">{{ tierUpName }}</span></div>
+    <div style="font-size:14px;color:#9A8A7C;margin-top:8px;line-height:1.5">Warungmu makin dipercaya. Keuntungan baru ini langsung aktif:</div>
+    <div style="background:#fff;border-radius:18px;padding:16px 18px;margin-top:20px;text-align:left;box-shadow:0 5px 14px rgba(35,24,15,.06);display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ tierUpBenefits }}" as="b" hint-placeholder-count="4">
+        <div style="display:flex;gap:11px;align-items:center"><span style="flex:none;width:28px;height:28px;border-radius:8px;background:{{ tierUpIconBg }};display:flex;align-items:center;justify-content:center">{{ b.icon }}</span><span style="flex:1;font-weight:700;font-size:14px">{{ b.label }}</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M20 6L9 17l-5-5" stroke="#16C784" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </sc-for>
+    </div>
+    <button onClick="{{ seeNewBenefits }}" style="margin-top:20px;width:100%;cursor:pointer;border:none;border-radius:14px;padding:16px;font-weight:800;font-size:16px;background:{{ tierUpGrad }};color:#fff;box-shadow:0 10px 22px {{ tierUpShadow }}" style-active="transform:scale(.98)" style-hover="filter:brightness(1.04)">Lihat benefit baru</button>
   </div>
 </div>
 </sc-if>
@@ -414,6 +602,38 @@ button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:940}}">
 const rp = n => 'Rp' + (n||0).toLocaleString('id-ID');
 const H = s => React.createElement('span',{dangerouslySetInnerHTML:{__html:s},style:{display:'flex'}});
+const Hc = (s,c) => React.createElement('span',{dangerouslySetInnerHTML:{__html:s},style:{display:'flex',color:c}});
+const MEDAL_SVG = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="14" r="6" stroke="#fff" stroke-width="2"/><path d="M9 8.6L7 3h3.5L12 6M15 8.6L17 3h-3.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11.4l.9 1.9 2 .2-1.5 1.4.4 2-1.8-1-1.8 1 .4-2L9 13.5l2-.2z" fill="#fff"/></svg>';
+const TIER_ORDER = ['bronze','silver','gold'];
+const CURRENT_TIER = 'silver';
+const TIER_META = {
+  bronze:{name:'Bronze', color:'#A9713F', grad:'linear-gradient(135deg,#D2A074,#A9713F)', shadow:'rgba(169,113,63,.35)', iconBg:'#F3E6D8', bg:'#F6ECE0'},
+  silver:{name:'Silver', color:'#7C858C', grad:'linear-gradient(135deg,#C3CBD1,#8A939A)', shadow:'rgba(124,133,140,.35)', iconBg:'#EDEFF1', bg:'#EEF0F2'},
+  gold:{name:'Gold', color:'#C6890F', grad:'linear-gradient(135deg,#F3CD6B,#D99A1C)', shadow:'rgba(217,154,28,.42)', iconBg:'#FBF0D2', bg:'#FBF3DD'},
+};
+const TIER_REQ = { bronze:'0–14 pesanan / hari', silver:'15–29 pesanan / hari', gold:'30+ pesanan / hari' };
+const BENEFIT_ICONS = [
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h7l-1 8 9-12h-7z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>',
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.3" stroke="currentColor" stroke-width="2"/></svg>',
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="7.5" cy="7.5" r="2.1" stroke="currentColor" stroke-width="2"/><circle cx="16.5" cy="16.5" r="2.1" stroke="currentColor" stroke-width="2"/></svg>',
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+];
+const TIER_BENEFITS = {
+  bronze:[{label:'Pencairan 1× sehari', detail:'Dana cair tiap malam'},{label:'Posisi standar Discovery', detail:'Tampil sesuai jarak'},{label:'Bagi hasil fee 70%', detail:'Dari biaya prioritas pelanggan'},{label:'Analitik dasar', detail:'Ringkasan penjualan harian'}],
+  silver:[{label:'Pencairan 2× sehari', detail:'Siang & malam'},{label:'Posisi lebih tinggi', detail:'Naik di hasil Discovery'},{label:'Bagi hasil fee 80%', detail:'Dari biaya prioritas pelanggan'},{label:'Analitik + jam tersibuk', detail:'Lihat pola jam ramai'}],
+  gold:[{label:'Pencairan instan', detail:'Real-time tiap transaksi'},{label:'Prioritas teratas', detail:'Paling atas di Discovery'},{label:'Bagi hasil fee 90%', detail:'Bagi hasil tertinggi'},{label:'Analitik lanjutan', detail:'Tren, retensi & proyeksi'}],
+};
+const NOTIF_DEF = [
+  {id:'order', label:'Pesanan baru masuk', desc:'Bunyi & notifikasi tiap ada order'},
+  {id:'promo', label:'Promo & kampanye Antri', desc:'Info program promosi untuk pedagang'},
+  {id:'payout', label:'Status pencairan', desc:'Saat dana cair ke rekeningmu'},
+];
+const JAM = [
+  {day:'Senin – Jumat', open:'09.00', close:'21.00'},
+  {day:'Sabtu', open:'09.00', close:'22.00'},
+  {day:'Minggu', open:'10.00', close:'20.00'},
+];
+const WARUNG_INFO = { name:'Ayam Penyet My Bosz', cat:'Ayam & Lauk · Masakan Rumahan', addr:'Jl. Kaliurang KM 5,5 No.12, Sleman', phone:'0812-3456-7890' };
 const GRADS = ['linear-gradient(135deg,#FFCE8F,#FF9A3D)','linear-gradient(135deg,#FFB7A0,#FF7A5C)','linear-gradient(135deg,#FFD98A,#F5A623)','linear-gradient(135deg,#FFC48F,#F97B3D)','linear-gradient(135deg,#FFD0A0,#FF8A4D)','linear-gradient(135deg,#F5C48A,#E8863D)'];
 const MENU = [
   {id:'ayam-ijo', name:'Ayam Penyet Sambal Ijo', price:22000, cat:'food'},
@@ -464,6 +684,8 @@ const NAVDEF = [
   {id:'loyal', label:'Pelanggan', icon:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 6.5a3 3 0 0 1 0 5.5M20.5 19a5 5 0 0 0-3.5-4.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'},
   {id:'menu', label:'Menu', icon:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/></svg>'},
   {id:'settle', label:'Pencairan', icon:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="3" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/><path d="M7 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'},
+  {id:'level', label:'Level Pedagang', icon:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M7 4h10v4a5 5 0 0 1-10 0z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 5H4v1a3 3 0 0 0 3 3M17 5h3v1a3 3 0 0 1-3 3M9 20h6M12 13v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'},
+  {id:'settings', label:'Pengaturan', icon:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="2"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>'},
 ];
 const PAGE = {
   home:{title:'Beranda', sub:'Senin, 22 Jul 2026 · Ringkasan warungmu hari ini'},
@@ -472,6 +694,8 @@ const PAGE = {
   loyal:{title:'Pelanggan Setia', sub:'Pelanggan yang paling sering jajan'},
   menu:{title:'Kelola Menu', sub:'Atur ketersediaan menu secara real-time'},
   settle:{title:'Pencairan Dana', sub:'Saldo, riwayat pencairan & transaksi'},
+  level:{title:'Level Pedagang', sub:'Naik tier, buka lebih banyak keuntungan'},
+  settings:{title:'Pengaturan', sub:'Notifikasi, jam operasional & info warung'},
 };
 const CHART = [
   {day:'Sen', total:960000, pre:180000},{day:'Sel', total:1035000, pre:220000},
@@ -493,12 +717,14 @@ class Component extends DCLogic {
     tab:'home', warungOpen:true,
     stock:{ seblak:false, lele:false, esjeruk:false },
     verifyOpen:false, code:'', vresult:null, vmatch:null, vtried:'', vshake:0,
-    rejectSheet:false, rejectId:null, rejectReason:'',
+    rejectSheet:false, rejectId:null, rejectReason:'', scoreInfoOpen:false,
+    expanded:{}, tierUpOpen:false, confettiPieces:[],
+    notif:{order:true, promo:false, payout:true},
     orders:[
       {id:5, no:'A-26', mins:1, items:[{n:'Ayam Penyet Original',q:1},{n:'Es Teh Jumbo',q:2}], total:36000, priority:true, status:'baru'},
-      {id:1, no:'A-24', mins:2, items:[{n:'Ayam Penyet Sambal Ijo',q:1},{n:'Es Teh Jumbo',q:1}], total:30000, priority:true, status:'baru'},
+      {id:1, no:'A-24', mins:2, items:[{n:'Ayam Penyet Sambal Ijo',q:1},{n:'Es Teh Jumbo',q:1}], addons:[{n:'Kerupuk Udang',q:2,price:4000},{n:'Sambal Extra Pedas',q:1,price:2000}], total:40000, priority:true, status:'baru'},
       {id:2, no:'A-25', mins:4, items:[{n:'Nasi Goreng Spesial',q:2}], total:38000, priority:false, status:'baru'},
-      {id:3, no:'A-23', mins:6, items:[{n:'Lele Penyet',q:1},{n:'Tahu Tempe Penyet',q:1},{n:'Es Jeruk Peras',q:1}], total:37000, priority:false, status:'masak'},
+      {id:3, no:'A-23', mins:6, items:[{n:'Lele Penyet',q:1},{n:'Tahu Tempe Penyet',q:1},{n:'Es Jeruk Peras',q:1}], addons:[{n:'Nasi Putih Tambah',q:1,price:5000}], total:42000, priority:false, status:'masak'},
       {id:4, no:'A-22', mins:9, items:[{n:'Seblak Ceker Pedas',q:1}], total:15000, priority:false, status:'siap'},
     ],
   };
@@ -522,6 +748,14 @@ class Component extends DCLogic {
   closeReject(){ this.setState({rejectSheet:false}); }
   confirmReject(){ const {rejectId,rejectReason}=this.state; if(!rejectReason) return;
     this.setState(st=>({rejectSheet:false, orders:st.orders.map(o=>o.id===rejectId?{...o,status:'ditolak',rejectReason}:o)})); }
+  toggleAddon(id){ this.setState(st=>({expanded:{...st.expanded,[id]:!st.expanded[id]}})); }
+  toggleNotif(id){ this.setState(st=>({notif:{...st.notif,[id]:!st.notif[id]}})); }
+  openTierUp(){ const cols=['#F3CD6B','#D99A1C','#FF9A3D','#FFB870','#7A3BF5','#16C784','#FFFFFF'];
+    const pieces=Array.from({length:48},(_,i)=>({ left:+(Math.random()*100).toFixed(1), bg:cols[i%cols.length],
+      delay:+(Math.random()*.5).toFixed(2), dur:+(1.6+Math.random()*1.5).toFixed(2),
+      size:6+Math.round(Math.random()*8), rot:Math.round(Math.random()*360), round:Math.random()>.5 }));
+    this.setState({tierUpOpen:true, confettiPieces:pieces}); }
+  closeTierUp(){ this.setState({tierUpOpen:false}); }
   renderVals(){
     const S=this.state;
     const REASON_TEXT={'Bahan habis':'Alasan: bahan lagi habis','Terlalu ramai':'Alasan: lagi terlalu ramai','Tutup dulu':'Alasan: warung tutup dulu'};
@@ -552,15 +786,27 @@ class Component extends DCLogic {
         : {chipText:'Ditolak', chipColor:'#C4402F', cooking:false, btnLabel:'', btnBg:'#F7F1E9', btnColor:'#C4402F', btnShadow:'none'};
       const parts=o.no.split('-');
       const it=o.items[0]; const more=o.items.length>1?(' +'+(o.items.length-1)+' lagi'):'';
+      const LIMIT=6;
+      const confirmLeft = o.status==='baru' ? Math.max(0, LIMIT-o.mins) : null;
+      const near = confirmLeft!=null && confirmLeft<=3;
+      const warmth = confirmLeft==null?null:(confirmLeft<=1?'#E4560A':confirmLeft<=2?'#F5820A':confirmLeft<=3?'#F2A93B':'#B08979');
+      const warmBg = confirmLeft==null?null:(confirmLeft<=1?'#FCEBE1':confirmLeft<=2?'#FDEFE0':confirmLeft<=3?'#FBF4E6':'#F4ECE2');
       return {...o, ...cfg,
         noNum:parts[1], noPre:rejected?'DITOLAK':'ANTRIAN', totalStr:rp(o.total), waitStr:o.mins+' mnt',
         summary:it.q+'× '+it.n+more,
         noBg: rejected?'#C6B7A8' : o.priority?'linear-gradient(135deg,#A879FF,#7A3BF5)':'linear-gradient(135deg,#FFB870,#FF7A1A)',
         cardBg: rejected?'#F7F1E9' : o.priority?'#FBF8FF':'#fff',
-        cardBorder: rejected?'1px solid #EADFD2' : o.priority?'2px solid #C9B0FF':'1px solid #F1E7DC',
+        cardBorder: rejected?'1px solid #EADFD2' : near?('2px solid '+warmth) : o.priority?'2px solid #C9B0FF':'1px solid #F1E7DC',
+        showDeadline: o.status==='baru', deadlineStr: confirmLeft!=null?('Auto-batal ~'+confirmLeft+' mnt'):'',
+        deadlineColor: warmth, deadlineBg: warmBg,
         rejected, showActions: !rejected, priorityBadge: o.priority && !rejected,
         canReject: !rejected && (o.status==='baru'||o.status==='masak'),
         rejectReasonText: REASON_TEXT[o.rejectReason]||('Alasan: '+(o.rejectReason||'-')),
+        hasAddons: !!(o.addons&&o.addons.length), addonCount: o.addons?o.addons.length:0,
+        addonExpanded: !!S.expanded[o.id], onToggleAddon:()=>this.toggleAddon(o.id),
+        addonChevron: S.expanded[o.id]?'rotate(90deg)':'none',
+        addonItems: (o.addons||[]).map(a=>({...a, priceStr:rp(a.price*a.q)})),
+        addonTotalStr: rp((o.addons||[]).reduce((s,a)=>s+a.price*a.q,0)),
         onAdvance:()=>this.advance(o.id), onReject:()=>this.openReject(o.id) };
     };
     const mapped = S.orders.map(mapOrder);
@@ -573,6 +819,9 @@ class Component extends DCLogic {
         .sort((a,b)=>(b.priority-a.priority)||(b.mins-a.mins));
       return {...c, items, count:String(items.length), empty:items.length===0}; });
     const rejectedList = mapped.filter(o=>o.status==='ditolak');
+    const PRIORITY_QUOTA=3;
+    const prioUsed=Math.min(PRIORITY_QUOTA, S.orders.filter(o=>o.priority && o.status!=='ditolak').length);
+    const prioSlots=Array.from({length:PRIORITY_QUOTA},(_,i)=>({bg:i<prioUsed?'#7A3BF5':'#E0D0FA'}));
     const homeOrders = mapped.filter(o=>o.status!=='ditolak')
       .sort((a,b)=>(b.priority-a.priority)||(b.mins-a.mins)).slice(0,4);
 
@@ -651,11 +900,37 @@ class Component extends DCLogic {
     const topMenu = TOPMENU.map((m,i)=>({ name:m.name, count:m.count, w:Math.round(m.count/maxTop*100)+'%',
       bg:i===0?'linear-gradient(90deg,#FFB870,#FF7A1A)':'#FFCE8F' }));
 
+    // ===== TIER / LEVEL =====
+    const curMeta = TIER_META[CURRENT_TIER];
+    const curIdx = TIER_ORDER.indexOf(CURRENT_TIER);
+    const nextId = TIER_ORDER[curIdx+1] || null;
+    const nextMeta = nextId ? TIER_META[nextId] : null;
+    const tiers = TIER_ORDER.map(id=>{ const meta=TIER_META[id]; const isCur=id===CURRENT_TIER; const idx=TIER_ORDER.indexOf(id);
+      return { id, name:meta.name, color:meta.color, grad:meta.grad, req:TIER_REQ[id], medal:H(MEDAL_SVG),
+        iconBg:meta.iconBg, isCurrent:isCur, shadowSoft:meta.shadow,
+        border: isCur?('2px solid '+meta.color):'1px solid #EBE0D2',
+        shadow: isCur?('0 16px 36px '+meta.shadow):'0 6px 16px rgba(35,24,15,.05)',
+        opacity: idx<curIdx?'.62':'1', scale: isCur?'scale(1.015)':'none',
+        benefits: TIER_BENEFITS[id].map((b,i)=>({label:b.label, detail:b.detail, icon:Hc(BENEFIT_ICONS[i], meta.color)})) }; });
+    const tierPayout = CURRENT_TIER==='bronze'?'1× sehari (tiap malam)':CURRENT_TIER==='silver'?'2× sehari (siang & malam)':'instan, tiap transaksi';
+    const goldGrad = TIER_META.gold.grad;
+    const lockedBars = [38,54,44,66,58,72,63,81,71,90].map(v=>({h:v+'%'}));
+    // tier-up modal targets next tier (gold from silver)
+    const upMeta = nextMeta || curMeta;
+    const tierUpBenefits = (TIER_BENEFITS[nextId||CURRENT_TIER]).map((b,i)=>({label:b.label, icon:Hc(BENEFIT_ICONS[i], upMeta.color)}));
+    const confettiLayer = S.tierUpOpen ? React.createElement('div',{style:{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none'}},
+      (S.confettiPieces||[]).map((p,i)=>React.createElement('div',{key:i,style:{position:'absolute',top:'-24px',left:p.left+'%',width:p.size+'px',height:(p.round?p.size:Math.round(p.size*0.5))+'px',background:p.bg,borderRadius:p.round?'50%':'2px',transform:'rotate('+p.rot+'deg)',boxShadow:'0 1px 2px rgba(0,0,0,.08)',animation:'confettiFall '+p.dur+'s ease-in '+p.delay+'s both'}}))) : null;
+
+    // ===== SETTINGS =====
+    const notif = NOTIF_DEF.map(n=>{ const on=S.notif[n.id]; return {...n, on,
+      track:on?'#16C784':'#DDD2C4', knob:on?'27px':'3px', toggle:()=>this.toggleNotif(n.id) }; });
+
     return {
       nav, pageTitle:pg.title, pageSub,
       isHome:S.tab==='home', isOrders:S.tab==='orders', isReport:S.tab==='report',
       isLoyal:S.tab==='loyal', isMenu:S.tab==='menu', isSettle:S.tab==='settle',
-      goSettlement:()=>this.go('settle'), goOrders:()=>this.go('orders'), goMenu:()=>this.go('menu'),
+      isLevel:S.tab==='level', isSettings:S.tab==='settings',
+      goSettlement:()=>this.go('settle'), goOrders:()=>this.go('orders'), goMenu:()=>this.go('menu'), goLevel:()=>this.go('level'),
       // warung
       warungOpen:S.warungOpen, toggleWarung:()=>this.toggleWarung(),
       warungBg: S.warungOpen?'rgba(22,199,132,.14)':'rgba(196,64,47,.14)',
@@ -666,6 +941,7 @@ class Component extends DCLogic {
       kpis, chart, homeOrders, hasHabis:habisCount>0, habisCountStr:String(habisCount),
       // orders
       columns, rejectedList, hasRejected:rejectedList.length>0,
+      prioUsedStr:String(prioUsed), prioQuotaStr:String(PRIORITY_QUOTA), prioSlots,
       // menu
       menu, menuCountStr:String(menuCount), menuTotalStr:String(MENU.length), markAllOut:()=>this.markAllOut(),
       // report
@@ -687,6 +963,18 @@ class Component extends DCLogic {
       confirmReject:()=>this.confirmReject(),
       rejectDisabled:!S.rejectReason, rejectCursor:S.rejectReason?'pointer':'not-allowed',
       rejectBtnBg:S.rejectReason?'#C4402F':'#E0B5AD',
+      // tier / level
+      tiers, tierName:curMeta.name, tierColor:curMeta.color, tierGrad:curMeta.grad, tierShadow:curMeta.shadow,
+      tierMedal:H(MEDAL_SVG), nextTierName: nextMeta?nextMeta.name:'tier maksimal',
+      tierProgressPct:'77%', tierProgressLabel:'23/30', tierReqText:'23/30 pesanan hari ini · Respon rata-rata 3 menit',
+      tierPayout, goldGrad, lockedBars, showLocked: CURRENT_TIER!=='gold',
+      scoreInfoOpen:S.scoreInfoOpen, toggleScoreInfo:()=>this.setState(st=>({scoreInfoOpen:!st.scoreInfoOpen})),
+      openTierUp:()=>this.openTierUp(), closeTierUp:()=>this.closeTierUp(), tierUpOpen:S.tierUpOpen, confettiLayer,
+      tierUpGrad:upMeta.grad, tierUpShadow:upMeta.shadow, tierUpColor:upMeta.color, tierUpName:upMeta.name,
+      tierUpIconBg:upMeta.iconBg, tierUpMedal:H(MEDAL_SVG), tierUpBenefits,
+      seeNewBenefits:()=>{ this.setState({tierUpOpen:false}); this.go('level'); },
+      // settings
+      notif, jam:JAM, warungInfo:WARUNG_INFO,
     };
   }
 }

@@ -1,10 +1,10 @@
 'use client';
 import { useEffect } from 'react';
-import { useWarung, type Warung } from '@jajanhub/api';
+import { useWarung, type Vendor } from '@jajanhub/api';
 import { useCartStore } from '../../lib/cart-store';
 
 export interface MerchantScreenView {
-  warung: Warung | undefined;
+  warung: Vendor | undefined;
   isLoading: boolean;
   isError: boolean;
   refetch: () => void;
@@ -17,13 +17,13 @@ export interface MerchantScreenView {
  * doesn't exist at all on desktop (which goes straight to the merged
  * catalog+cart screen) — so it lives in `MerchantMobileView` instead.
  */
-export function useMerchantScreen(merchantId: string): MerchantScreenView {
-  const { data: warung, isLoading, isError, refetch } = useWarung(merchantId);
-  const ensureMerchant = useCartStore((s) => s.ensureMerchant);
+export function useMerchantScreen(vendorId: string): MerchantScreenView {
+  const { data: warung, isLoading, isError, refetch } = useWarung(vendorId);
+  const ensureVendor = useCartStore((s) => s.ensureVendor);
 
   useEffect(() => {
-    ensureMerchant(merchantId);
-  }, [merchantId, ensureMerchant]);
+    ensureVendor(vendorId);
+  }, [vendorId, ensureVendor]);
 
   return { warung, isLoading, isError, refetch };
 }

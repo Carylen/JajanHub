@@ -51,7 +51,7 @@ export function Pickup({ orderId }: { orderId: string }) {
         <RatingSheet
           open={pf.ratingOpen}
           onClose={pf.finish}
-          merchantName={order.merchantName}
+          merchantName={order.vendorName}
           orderCode={order.code}
           onSubmit={pf.finish}
         />
@@ -105,13 +105,13 @@ export function Pickup({ orderId }: { orderId: string }) {
             <BrandMark size={20} />
           </div>
           <div className="flex-1">
-            <div className="font-bold text-sm">{order.merchantName}</div>
+            <div className="font-bold text-sm">{order.vendorName}</div>
             <div className="text-xs text-faint">Pesanan {order.code}</div>
           </div>
         </div>
         <div className="pt-3 flex flex-col gap-2">
           {order.lines.map((l) => (
-            <div key={l.itemId} className="flex items-center gap-2.5 text-sm">
+            <div key={l.menuItemId} className="flex items-center gap-2.5 text-sm">
               <span className="flex-none min-w-[28px] h-[26px] px-[7px] rounded-lg bg-[#FFF3E7] text-brand-deep font-extrabold text-[13px] flex items-center justify-center">
                 {l.qty}×
               </span>

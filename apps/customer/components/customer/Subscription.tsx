@@ -104,7 +104,7 @@ export function Subscription() {
                   <div className="text-faint text-xs mt-px">{p.note}</div>
                 </div>
                 <div className="text-right">
-                  <Money amount={p.price} display className="text-lg text-ink" />
+                  <Money amount={p.priceRp} display className="text-lg text-ink" />
                   <div className="text-[11px] text-faint">{p.per}</div>
                 </div>
                 {p.badge && (
@@ -120,7 +120,7 @@ export function Subscription() {
 
       <div className="fixed left-1/2 -translate-x-1/2 bottom-0 w-full max-w-app px-5 pt-4 pb-[22px] bg-[linear-gradient(to_top,#FFF8F1_72%,transparent)] z-20">
         <Button variant="prio" fullWidth onClick={() => router.back()}>
-          Langganan Sekarang · <Money amount={selected?.price} />
+          Langganan Sekarang · <Money amount={selected?.priceRp} />
         </Button>
         <div className="text-center text-[#B8A99B] text-[11px] mt-2.5">Batalkan kapan aja, tanpa ribet</div>
       </div>

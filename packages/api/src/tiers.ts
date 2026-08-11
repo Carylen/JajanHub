@@ -1,4 +1,4 @@
-import type { VendorSummary, VendorTier } from './types';
+import type { VendorTier, VendorTierStatus } from './types';
 
 const TIER_ORDER: VendorTier[] = ['bronze', 'silver', 'gold'];
 
@@ -21,18 +21,10 @@ export interface TierDefinition {
   payoutFrequencyLabel: string;
 }
 
-/** Requirement to advance FROM this tier to the next one. Absent for the max tier (gold). */
-export interface TierRequirement {
-  ordersNeeded: number;
-  ordersWindowLabel: string;
-  avgResponseLabel: string;
-}
-
 /**
- * Centralized tier definitions (BRIEF D4 §5/§6) — numbers and copy live here,
- * not scattered across mobile/desktop components, so they can be adjusted
- * later (payout schedule and priority-fee split depend on payment-gateway
- * verification still pending, per BRIEF §6) without touching any screen.
+ * Centralized tier definitions (visual/copy only — the underlying numbers
+ * come from `GET /vendors/:id/tier`, see `VendorTierStatus`) so they can be
+ * adjusted later without touching any screen.
  */
 export const TIERS: TierDefinition[] = [
   {
@@ -82,10 +74,10 @@ export const TIERS: TierDefinition[] = [
   },
 ];
 
-/** Requirement to advance FROM the keyed tier to the next one — no entry for `gold` (already max). */
-export const TIER_REQUIREMENTS: Record<'bronze' | 'silver', TierRequirement> = {
-  bronze: { ordersNeeded: 20, ordersWindowLabel: 'pesanan minggu ini', avgResponseLabel: '4 mnt' },
-  silver: { ordersNeeded: 30, ordersWindowLabel: 'pesanan minggu ini', avgResponseLabel: '3 mnt' },
+/** Display copy paired with a tier's progress requirement — the actual thresholds (`ordersRequired`, `responseRequiredSec`, …) come from `GET /vendors/:id/tier` (`VendorTierStatus`); this only holds copy the network response doesn't carry. No entry for `gold` (already max). */
+export const TIER_COPY: Record<'bronze' | 'silver', { ordersWindowLabel: string }> = {
+  bronze: { ordersWindowLabel: 'pesanan minggu ini' },
+  silver: { ordersWindowLabel: 'pesanan minggu ini' },
 };
 
 export function tierDefinition(id: VendorTier): TierDefinition {
@@ -98,34 +90,43 @@ export interface VendorTierProgress {
   /** 0–100. Always 100 for the max tier. */
   progress: number;
   requirementsMet: boolean;
-  requirement: TierRequirement | null;
+  requirement: { ordersWindowLabel: string; avgResponseLabel: string } | null;
   ordersHave: number;
   ordersNeeded: number;
   isMaxTier: boolean;
 }
 
+function formatSeconds(sec: number): string {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  if (m === 0) return `${s} dtk`;
+  if (s === 0) return `${m} mnt`;
+  return `${m} mnt ${s} dtk`;
+}
+
 /**
- * Pure, testable — the single place tier progress is computed from raw
- * vendor data, shared by every mobile/desktop screen that shows it (Beranda
- * card, Level Pedagang detail, Settlement banner, Analytics lock).
+ * Pure, testable — the single place tier progress is computed from the raw
+ * `GET /vendors/:id/tier` response, shared by every mobile/desktop screen
+ * that shows it (Beranda card, Level Pedagang detail, Settlement banner,
+ * Analytics lock).
  */
-export function getVendorTierProgress(vendor: Pick<VendorSummary, 'tier' | 'tierOrdersThisWindow'>): VendorTierProgress {
-  const idx = TIER_ORDER.indexOf(vendor.tier);
-  const current = tierDefinition(vendor.tier);
-  const next = idx >= 0 && idx < TIER_ORDER.length - 1 ? tierDefinition(TIER_ORDER[idx + 1]!) : null;
-  const requirement = next ? TIER_REQUIREMENTS[vendor.tier as 'bronze' | 'silver'] : null;
-  const ordersNeeded = requirement?.ordersNeeded ?? 0;
-  const ordersHave = vendor.tierOrdersThisWindow;
-  const progress = requirement ? Math.min(100, Math.round((ordersHave / requirement.ordersNeeded) * 100)) : 100;
+export function getVendorTierProgress(status: VendorTierStatus): VendorTierProgress {
+  const current = tierDefinition(status.current);
+  const next = status.next ? tierDefinition(status.next) : null;
+  const { ordersCompleted, ordersRequired, responseRequiredSec } = status.progress;
+  const progress = next ? Math.min(100, Math.round((ordersCompleted / Math.max(1, ordersRequired)) * 100)) : 100;
+  const copy = next ? TIER_COPY[status.current as 'bronze' | 'silver'] : null;
 
   return {
     current,
     next,
     progress,
-    requirementsMet: requirement ? ordersHave >= requirement.ordersNeeded : true,
-    requirement,
-    ordersHave,
-    ordersNeeded,
+    requirementsMet: next ? ordersCompleted >= ordersRequired : true,
+    requirement: copy
+      ? { ordersWindowLabel: copy.ordersWindowLabel, avgResponseLabel: formatSeconds(responseRequiredSec) }
+      : null,
+    ordersHave: ordersCompleted,
+    ordersNeeded: ordersRequired,
     isMaxTier: next === null,
   };
 }

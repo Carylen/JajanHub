@@ -50,7 +50,7 @@ export function MenuDesktopView() {
                   <div className="flex-1 min-w-0">
                     <div className={cn('font-bold text-[15px] leading-[1.2]', !m.inStock && 'line-through text-faint')}>{m.name}</div>
                     <div className="text-[13px] text-faint mt-[3px]">
-                      Rp{m.price.toLocaleString('id-ID')} ·{' '}
+                      Rp{m.priceRp.toLocaleString('id-ID')} ·{' '}
                       <span className={cn('font-bold', m.inStock ? 'text-mint-deep' : 'text-brand-press')}>
                         {m.inStock ? 'Tersedia' : 'Stok Habis'}
                       </span>
