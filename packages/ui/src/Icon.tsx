@@ -49,7 +49,8 @@ export type IconName =
   | 'search'
   | 'utensils'
   | 'medal'
-  | 'percent';
+  | 'percent'
+  | 'receipt';
 
 const PATHS: Record<IconName, JSX.Element> = {
   'chevron-left': <path d="M15 6l-6 6 6 6" />,
@@ -258,6 +259,12 @@ const PATHS: Record<IconName, JSX.Element> = {
       <circle cx="7" cy="7" r="2.4" />
       <circle cx="17" cy="17" r="2.4" />
       <path d="M18 6L6 18" />
+    </>
+  ),
+  receipt: (
+    <>
+      <path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" />
+      <path d="M9 8h6M9 12h6" />
     </>
   ),
 };

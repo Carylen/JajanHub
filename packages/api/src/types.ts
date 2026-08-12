@@ -184,6 +184,8 @@ export interface Stall {
   /** Map pin position as CSS percentages. */
   mapX: string;
   mapY: string;
+  /** Loyalty badge shown on the card (bronze = no badge). */
+  tier?: VendorTier;
 }
 
 export interface SubscriptionPlan {

@@ -1,5 +1,6 @@
 'use client';
 import type { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from './cn';
 import { useOverlayBehavior } from './useOverlayBehavior';
 
@@ -21,19 +22,20 @@ export interface ModalProps {
  * scale+fade `modalIn` entrance instead of a bottom slide, and no
  * drag-to-dismiss (that's a mobile-sheet-only affordance).
  *
- * The backdrop is a plain `fixed inset-0` — it relies on an ancestor
- * (AppShell's content wrapper) establishing a CSS containing block for
- * `position: fixed` descendants (any `transform` does this per spec), so the
- * backdrop fills the app's content column instead of the full browser
- * viewport once a sidebar is present. Without that ancestor this covers the
- * whole window, which is still acceptable (just dims the sidebar too).
+ * Portaled to `document.body` for the same reason as {@link BottomSheet}:
+ * `fixed inset-0` inside AppShell's transformed content wrapper spans that
+ * wrapper's own (scrollable) content height rather than the viewport on any
+ * route taller than one screen, pushing the backdrop off-screen. Escaping
+ * via the portal means this always covers the actual viewport (dimming the
+ * sidebar too) — which this doc comment already treated as an acceptable
+ * fallback before the portal made it the only behavior.
  */
 export function Modal({ open, onClose, children, label, width = '420px', className }: ModalProps) {
   useOverlayBehavior(open, onClose);
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       role="presentation"
       onClick={onClose}
@@ -49,6 +51,7 @@ export function Modal({ open, onClose, children, label, width = '420px', classNa
       >
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

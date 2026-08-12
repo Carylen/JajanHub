@@ -9,9 +9,11 @@ import { useCartStore } from '../../lib/cart-store';
 import { computeTotals } from '../../lib/pricing';
 import { itemGradient } from '../../lib/visuals';
 import { PickupPicker } from './PickupPicker';
+import { useAuth } from './auth/AuthContext';
 
 export function Cart({ vendorId }: { vendorId: string }) {
   const router = useRouter();
+  const { requireAuth } = useAuth();
   const { data: warung, isLoading, isError, refetch } = useWarung(vendorId);
   const items = useCartStore((s) => s.items);
   const priority = useCartStore((s) => s.priority);
@@ -49,10 +51,12 @@ export function Cart({ vendorId }: { vendorId: string }) {
   }
 
   const submit = () => {
-    createOrder.mutate(
-      { vendorId, cart: items, isPriority: priority, pickupMode, pickupSlot: pickupSlot ?? undefined },
-      { onSuccess: (order) => router.push(`/order/${order.id}/pay`) },
-    );
+    requireAuth(() => {
+      createOrder.mutate(
+        { vendorId, cart: items, isPriority: priority, pickupMode, pickupSlot: pickupSlot ?? undefined },
+        { onSuccess: (order) => router.push(`/order/${order.id}/pay`) },
+      );
+    });
   };
 
   return (

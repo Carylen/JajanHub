@@ -4,13 +4,16 @@ import { useRouter } from 'next/navigation';
 import { usePlans, useBenefits } from '@jajanhub/api';
 import { Button, IconButton, Icon, Money, cn } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
+import { usePageAuthGuard } from './auth/usePageAuthGuard';
 
 export function Subscription() {
   const router = useRouter();
+  const isLoggedIn = usePageAuthGuard();
   const plansQuery = usePlans();
   const benefitsQuery = useBenefits();
   const [planId, setPlanId] = useState('tahun');
 
+  if (!isLoggedIn) return <LoadingState />;
   if (plansQuery.isLoading || benefitsQuery.isLoading) return <LoadingState />;
   if (plansQuery.isError || benefitsQuery.isError || !plansQuery.data || !benefitsQuery.data) {
     return (

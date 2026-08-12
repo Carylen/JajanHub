@@ -1,5 +1,6 @@
 'use client';
 import { useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from './cn';
 import { useOverlayBehavior } from './useOverlayBehavior';
 
@@ -18,6 +19,14 @@ export interface BottomSheetProps {
  * Reusable bottom sheet backing every sheet/overlay in the app (BRIEF §5):
  * backdrop fade-in, `sheetUp` slide, Escape-to-close, body-scroll lock, and
  * optional drag-to-dismiss. Constrained to the app column width.
+ *
+ * Portaled to `document.body`: AppShell's content wrapper carries a
+ * `transform` (see its doc comment) so it becomes the containing block for
+ * `position: fixed` descendants — but that containing block's height is its
+ * own (scrollable) content height, not the viewport, so `inset-y-0` spans
+ * the whole page rather than the visible screen on any route taller than one
+ * viewport (e.g. Beranda's vendor list). The portal escapes that ancestor so
+ * `fixed` means the actual viewport again, which is what every sheet needs.
  */
 export function BottomSheet({
   open,
@@ -50,7 +59,7 @@ export function BottomSheet({
     startY.current = null;
   };
 
-  return (
+  return createPortal(
     <div
       role="presentation"
       onClick={onClose}
@@ -79,6 +88,7 @@ export function BottomSheet({
         />
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

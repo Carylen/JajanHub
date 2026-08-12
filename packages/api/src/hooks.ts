@@ -48,6 +48,7 @@ export const queryKeys = {
   benefits: ['benefits'] as const,
   subscriptionStatus: ['subscription', 'status'] as const,
   profile: ['profile'] as const,
+  activeOrders: ['orders', 'active'] as const,
   vendorSummary: ['vendor', 'summary'] as const,
   vendorTier: ['vendor', 'tier'] as const,
   vendorOrders: ['vendor', 'orders'] as const,
@@ -149,6 +150,9 @@ export function useSubscriptionStatus(): UseQueryResult<SubscriptionStatus> {
 }
 export function useProfile(): UseQueryResult<UserProfile> {
   return useQuery({ queryKey: queryKeys.profile, queryFn: () => getClient().getProfile() });
+}
+export function useActiveOrders(): UseQueryResult<Order[]> {
+  return useQuery({ queryKey: queryKeys.activeOrders, queryFn: () => getClient().getActiveOrders() });
 }
 
 export function useVendorSummary(): UseQueryResult<VendorSummary> {

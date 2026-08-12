@@ -9,5 +9,6 @@ export { useOverlayBehavior } from './useOverlayBehavior';
 export { Icon, type IconProps, type IconName } from './Icon';
 export { Card, Chip, Toggle, Spinner, type ChipProps, type ToggleProps } from './primitives';
 export { QrCode, type QrCodeProps } from './QrCode';
+export { OtpInput, type OtpInputProps } from './OtpInput';
 export { BREAKPOINTS } from './breakpoints';
 export { useBreakpoint, type Breakpoint } from './useBreakpoint';

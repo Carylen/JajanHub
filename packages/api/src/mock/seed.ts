@@ -40,6 +40,15 @@ export const MENU: MenuItem[] = [
   { id: 'esjeruk', name: 'Es Jeruk Peras', desc: 'Jeruk peras asli, seger', priceRp: 10000, cat: 'drink', isAvailable: true },
 ];
 
+/** Second orderable vendor (E1 multi-vendor demo — cross-vendor cart switch needs at least two). */
+const TAICHAN_MENU: MenuItem[] = [
+  { id: 'taichan-original', name: 'Sate Taichan Original', desc: 'Ayam bakar tanpa bumbu, sambal korek pedas', priceRp: 20000, cat: 'food', isBestSeller: true, isAvailable: true },
+  { id: 'taichan-keju', name: 'Sate Taichan Keju', desc: 'Taburan keju parut, sambal korek', priceRp: 23000, cat: 'food', isAvailable: true },
+  { id: 'sayap-bakar', name: 'Sayap Bakar Madu', desc: 'Sayap ayam bakar manis pedas, 3 tusuk', priceRp: 18000, cat: 'food', isAvailable: true },
+  { id: 'es-teh-taichan', name: 'Es Teh Manis', desc: 'Teh manis dingin segar', priceRp: 6000, cat: 'drink', isBestSeller: true, isAvailable: true },
+  { id: 'es-jeruk-taichan', name: 'Es Jeruk Peras', desc: 'Jeruk peras asli, seger', priceRp: 9000, cat: 'drink', isAvailable: true },
+];
+
 export const WARUNGS: Record<string, Vendor> = {
   'my-bosz': {
     id: 'my-bosz',
@@ -58,6 +67,23 @@ export const WARUNGS: Record<string, Vendor> = {
     openFrom: '10.00',
     openTo: '22.00',
     menu: MENU,
+  },
+  'taichan-jul': {
+    id: 'taichan-jul',
+    name: 'Sate Taichan Bang Jul',
+    category: 'jajanan',
+    photoUrl: '',
+    isOpen: true,
+    tier: 'silver',
+    queueEstimate: { peopleAhead: 8, etaMin: 13 },
+    avgServeTimeSec: 200,
+    location: { lat: -6.2211, lng: 106.8331, address: 'Jl. Sudirman Kav.7' },
+    tagline: 'Sambal korek nampol, bakar di tempat',
+    rating: 4.7,
+    orderCount: 210,
+    openFrom: '16.00',
+    openTo: '23.00',
+    menu: TAICHAN_MENU,
   },
 };
 
@@ -84,12 +110,12 @@ export const PLANS: SubscriptionPlan[] = [
 ];
 
 export const STALLS: Stall[] = [
-  { id: 'my-bosz', name: 'Ayam Penyet My Bosz', type: 'Nasi · Ayam', category: 'nasi', distance: '80 m', queue: 3, open: true, mapX: '46%', mapY: '42%' },
-  { id: 'mie-gino', name: 'Mie Ayam Pak Gino', type: 'Mie · Bakso', category: 'mie', distance: '120 m', queue: 15, open: true, mapX: '72%', mapY: '26%' },
+  { id: 'my-bosz', name: 'Ayam Penyet My Bosz', type: 'Nasi · Ayam', category: 'nasi', distance: '80 m', queue: 3, open: true, mapX: '46%', mapY: '42%', tier: 'gold' },
+  { id: 'mie-gino', name: 'Mie Ayam Pak Gino', type: 'Mie · Bakso', category: 'mie', distance: '120 m', queue: 15, open: true, mapX: '72%', mapY: '26%', tier: 'silver' },
   { id: 'kelapa-nur', name: 'Es Kelapa Bu Nur', type: 'Minuman', category: 'minuman', distance: '60 m', queue: 2, open: true, mapX: '28%', mapY: '62%' },
-  { id: 'taichan-jul', name: 'Sate Taichan Bang Jul', type: 'Jajanan · Sate', category: 'jajanan', distance: '200 m', queue: 8, open: true, mapX: '60%', mapY: '68%' },
+  { id: 'taichan-jul', name: 'Sate Taichan Bang Jul', type: 'Jajanan · Sate', category: 'jajanan', distance: '200 m', queue: 8, open: true, mapX: '60%', mapY: '68%', tier: 'silver' },
   { id: 'padang-sederhana', name: 'Nasi Padang Sederhana', type: 'Nasi Padang', category: 'nasi', distance: '150 m', queue: 6, open: true, mapX: '18%', mapY: '32%' },
-  { id: 'kopi-kaki-lima', name: 'Kopi Kaki Lima', type: 'Minuman · Kopi', category: 'minuman', distance: '90 m', queue: 4, open: true, mapX: '84%', mapY: '54%' },
+  { id: 'kopi-kaki-lima', name: 'Kopi Kaki Lima', type: 'Minuman · Kopi', category: 'minuman', distance: '90 m', queue: 4, open: true, mapX: '84%', mapY: '54%', tier: 'gold' },
   { id: 'batagor-kingsley', name: 'Batagor Kingsley', type: 'Jajanan', category: 'jajanan', distance: '240 m', queue: 0, open: false, mapX: '48%', mapY: '82%' },
   { id: 'bakmi-gm', name: 'Bakmi GM Gerobak', type: 'Mie', category: 'mie', distance: '300 m', queue: 0, open: false, mapX: '86%', mapY: '80%' },
 ];

@@ -198,6 +198,14 @@ export function createHttpClient(baseUrl: string, vendorId = 'me'): JajanhubClie
     // No contract endpoint for benefit copy — presentation-only, stays frontend content.
     getBenefits: () => Promise.resolve<SubscriptionBenefit[]>([]),
     getSubscriptionStatus: () => req<SubscriptionStatus>('/me/subscription'),
+    // Contract wraps each item as `{ order, vendor }` (API_CONTRACT.md §13) — the
+    // vendor summary isn't part of our `Order` type, so unwrap and drop it for now.
+    getActiveOrders: async () => {
+      const items = await req<{ order: Order; vendor: { id: string; name: string; photoUrl: string } }[]>(
+        '/orders/active',
+      );
+      return items.map((i) => i.order);
+    },
     // TODO confirm with backend — no contract endpoint for the full profile
     // (name/points/favorites/totalOrders); best-effort from the auth `Customer`.
     getProfile: async () => {

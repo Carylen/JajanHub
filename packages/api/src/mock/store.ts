@@ -39,6 +39,10 @@ export const orderStore = {
     hydrate();
     return mem.get(id);
   },
+  list(): Order[] {
+    hydrate();
+    return [...mem.values()];
+  },
   put(order: Order): Order {
     hydrate();
     mem.set(order.id, order);

@@ -2,16 +2,22 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useProfile } from '@jajanhub/api';
+import { useProfile, useLogout } from '@jajanhub/api';
 import { Card, IconButton, Icon, Toggle, type IconName } from '@jajanhub/ui';
 import { LoadingState, ErrorState } from '../StateViews';
+import { usePageAuthGuard } from './auth/usePageAuthGuard';
+import { LogoutSheet } from './LogoutSheet';
 
 export function Profile() {
   const router = useRouter();
+  const isLoggedIn = usePageAuthGuard();
   const { data: profile, isLoading, isError, refetch } = useProfile();
   const [notifStatus, setNotifStatus] = useState(true);
   const [notifPromo, setNotifPromo] = useState(true);
+  const [logoutOpen, setLogoutOpen] = useState(false);
+  const logout = useLogout();
 
+  if (!isLoggedIn) return <LoadingState />;
   if (isLoading) return <LoadingState />;
   if (isError || !profile) return <ErrorState onRetry={() => refetch()} />;
 
@@ -112,13 +118,20 @@ export function Profile() {
       <div className="px-5 pt-5">
         <button
           type="button"
-          onClick={() => router.push('/')}
+          onClick={() => setLogoutOpen(true)}
           className="w-full bg-danger-soft text-danger rounded-[18px] py-4 font-extrabold text-[15px] flex items-center justify-center gap-2 transition-transform active:scale-[.98]"
         >
           <Icon name="logout" size={18} />
           Keluar
         </button>
       </div>
+
+      <LogoutSheet
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+        pending={logout.isPending}
+        onConfirm={() => logout.mutate(undefined, { onSuccess: () => router.push('/') })}
+      />
     </div>
   );
 }

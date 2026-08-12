@@ -47,6 +47,7 @@ import {
   WARUNGS,
 } from './seed';
 import { orderStore } from './store';
+import { authStore } from './authStore';
 
 const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
@@ -54,7 +55,8 @@ let queueSeq = 26;
 
 /** Demo phone/OTP — no real WhatsApp provider wired (API_CONTRACT.md §1). TODO confirm with backend. */
 const DEMO_OTP_CODE = '123456';
-let mockCustomer: Customer | null = null;
+/** Non-terminal order statuses (API_CONTRACT.md §13's `GET /orders/active`: "belum selesai" = `pending_payment` s/d `ready`). */
+const ACTIVE_ORDER_STATUSES: OrderStatus[] = ['pending_payment', 'waiting_confirmation', 'cooking', 'ready'];
 
 function buildLines(vendor: Vendor, cart: Record<string, number>): OrderLine[] {
   return vendor.menu
@@ -90,23 +92,26 @@ export function createMockClient(): JajanhubClient {
         throw new ApiError('OTP_INVALID', 'Kode OTP salah', { details: { attemptsLeft: 2 } });
       }
       const masked = phone.length >= 3 ? `0${phone.slice(0, 3)}-••••-${phone.slice(-3)}` : phone;
-      mockCustomer = {
+      const isNewCustomer = !authStore.get();
+      const customer: Customer = {
         id: 'cus_demo',
         phone: `+62${phone}`,
         phoneMasked: masked,
         createdAt: new Date().toISOString(),
-        isNewCustomer: true,
+        isNewCustomer,
       };
-      return mockCustomer;
+      authStore.set(customer);
+      return customer;
     },
     async getMe(): Promise<Customer> {
       await delay(100);
-      if (!mockCustomer) throw new ApiError('UNAUTHENTICATED', 'Belum login');
-      return mockCustomer;
+      const customer = authStore.get();
+      if (!customer) throw new ApiError('UNAUTHENTICATED', 'Belum login');
+      return customer;
     },
     async logout(): Promise<void> {
       await delay(100);
-      mockCustomer = null;
+      authStore.clear();
     },
 
     async getWarung(id) {
@@ -138,7 +143,7 @@ export function createMockClient(): JajanhubClient {
       const order: Order = {
         id,
         vendorId: vendor.id,
-        customerId: mockCustomer?.id ?? 'cus_guest',
+        customerId: authStore.get()?.id ?? 'cus_guest',
         queueNumber: num,
         lines,
         subtotalRp,
@@ -356,7 +361,13 @@ export function createMockClient(): JajanhubClient {
     },
     async getProfile() {
       await delay(150);
+      const customer = authStore.get();
+      if (customer) return { ...PROFILE, phone: customer.phone };
       return PROFILE;
+    },
+    async getActiveOrders() {
+      await delay(200);
+      return orderStore.list().filter((o) => ACTIVE_ORDER_STATUSES.includes(o.status));
     },
 
     async getVendorSummary() {

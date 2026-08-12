@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { Providers } from './providers';
 import { ServiceWorkerRegister } from '../components/ServiceWorkerRegister';
 import { AppShell } from '../components/AppShell';
+import { AuthProvider } from '../components/customer/auth/AuthProvider';
 import './globals.css';
 
 const bricolage = Bricolage_Grotesque({
@@ -39,8 +40,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="id" className={`${bricolage.variable} ${jakarta.variable}`}>
       <body className="bg-sand text-ink font-sans">
         <Providers>
-          <ServiceWorkerRegister />
-          <AppShell>{children}</AppShell>
+          <AuthProvider>
+            <ServiceWorkerRegister />
+            <AppShell>{children}</AppShell>
+          </AuthProvider>
         </Providers>
       </body>
     </html>

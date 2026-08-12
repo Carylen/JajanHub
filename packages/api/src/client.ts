@@ -68,6 +68,8 @@ export interface JajanhubClient {
   getBenefits(): Promise<SubscriptionBenefit[]>;
   getSubscriptionStatus(): Promise<SubscriptionStatus>;
   getProfile(): Promise<UserProfile>;
+  /** Orders across all vendors that aren't picked up/cancelled/rejected yet (API_CONTRACT.md §13's `GET /orders/active`). */
+  getActiveOrders(): Promise<Order[]>;
 
   /* vendor */
   getVendorSummary(): Promise<VendorSummary>;
